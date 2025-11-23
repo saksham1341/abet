@@ -1,27 +1,552 @@
 [
-    {
-            "idx": 0,
-            "input": "Value of 2 + 2?",
-            "optimal_message_sequence": [
-                {
-                    "message_type": "UserMessage",
-                    "content": "Value of 2 + 2?"
-                },
-                {
-                    "message_type": "ToolCallMessage",
-                    "content": "add",
-                    "tool_kwargs": {"a": 2, "b": 2},
-                    "tool_call_id": null
-                },
-                {
-                    "message_type": "ToolResponseMessage",
-                    "tool_call_id": null,
-                    "content": "4.0"
-                },
-                {
-                    "message_type": "AIMessage",
-                    "content": "4"
-                }
-            ]
-        }
+  {
+    "input": "Value of 10.5 + 4.2?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of 10.5 + 4.2?" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 10.5, "b": 4.2 } },
+      { "message_type": "ToolResponseMessage", "content": "14.700" },
+      { "message_type": "AIMessage", "content": "14.700" }
+    ]
+  },
+  {
+    "input": "Value of 3.333 * 3?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of 3.333 * 3?" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 3.333, "b": 3 } },
+      { "message_type": "ToolResponseMessage", "content": "9.999" },
+      { "message_type": "AIMessage", "content": "9.999" }
+    ]
+  },
+  {
+    "input": "Value of 100.0 / 3.0?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of 100.0 / 3.0?" },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 100.0, "b": 3.0 } },
+      { "message_type": "ToolResponseMessage", "content": "33.333" },
+      { "message_type": "AIMessage", "content": "33.333" }
+    ]
+  },
+  {
+    "input": "Value of (5.5 + 2.5) * 2.0?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of (5.5 + 2.5) * 2.0?" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 5.5, "b": 2.5 } },
+      { "message_type": "ToolResponseMessage", "content": "8.000" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 8.0, "b": 2.0 } },
+      { "message_type": "ToolResponseMessage", "content": "16.000" },
+      { "message_type": "AIMessage", "content": "16.000" }
+    ]
+  },
+  {
+    "input": "Value of 12.5 - 2.5 * 3.0?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of 12.5 - 2.5 * 3.0?" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 2.5, "b": 3.0 } },
+      { "message_type": "ToolResponseMessage", "content": "7.500" },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 12.5, "b": 7.5 } },
+      { "message_type": "ToolResponseMessage", "content": "5.000" },
+      { "message_type": "AIMessage", "content": "5.000" }
+    ]
+  },
+  {
+    "input": "Value of (10.5 - 2.5) + (3.2 * 2.0)?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of (10.5 - 2.5) + (3.2 * 2.0)?" },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 10.5, "b": 2.5 } },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 3.2, "b": 2.0 } },
+      { "message_type": "ToolResponseMessage", "content": "8.000" },
+      { "message_type": "ToolResponseMessage", "content": "6.400" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 8.0, "b": 6.4 } },
+      { "message_type": "ToolResponseMessage", "content": "14.400" },
+      { "message_type": "AIMessage", "content": "14.400" }
+    ]
+  },
+  {
+    "input": "Value of 15.125 + 0.875?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of 15.125 + 0.875?" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 15.125, "b": 0.875 } },
+      { "message_type": "ToolResponseMessage", "content": "16.000" },
+      { "message_type": "AIMessage", "content": "16.000" }
+    ]
+  },
+  {
+    "input": "Value of 5.5 / 2.0 * 4.0?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of 5.5 / 2.0 * 4.0?" },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 5.5, "b": 2.0 } },
+      { "message_type": "ToolResponseMessage", "content": "2.750" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 2.75, "b": 4.0 } },
+      { "message_type": "ToolResponseMessage", "content": "11.000" },
+      { "message_type": "AIMessage", "content": "11.000" }
+    ]
+  },
+  {
+    "input": "Value of (8.4 / 2.1) + (9.6 / 3.2)?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of (8.4 / 2.1) + (9.6 / 3.2)?" },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 8.4, "b": 2.1 } },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 9.6, "b": 3.2 } },
+      { "message_type": "ToolResponseMessage", "content": "4.000" },
+      { "message_type": "ToolResponseMessage", "content": "3.000" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 4.0, "b": 3.0 } },
+      { "message_type": "ToolResponseMessage", "content": "7.000" },
+      { "message_type": "AIMessage", "content": "7.000" }
+    ]
+  },
+  {
+    "input": "Value of 2.718 + 3.142?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of 2.718 + 3.142?" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 2.718, "b": 3.142 } },
+      { "message_type": "ToolResponseMessage", "content": "5.860" },
+      { "message_type": "AIMessage", "content": "5.860" }
+    ]
+  },
+  {
+    "input": "Value of (100.5 - 50.25) * 0.5?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of (100.5 - 50.25) * 0.5?" },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 100.5, "b": 50.25 } },
+      { "message_type": "ToolResponseMessage", "content": "50.250" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 50.25, "b": 0.5 } },
+      { "message_type": "ToolResponseMessage", "content": "25.125" },
+      { "message_type": "AIMessage", "content": "25.125" }
+    ]
+  },
+  {
+    "input": "Value of 1.2 * 1.2 * 1.2?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of 1.2 * 1.2 * 1.2?" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 1.2, "b": 1.2 } },
+      { "message_type": "ToolResponseMessage", "content": "1.440" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 1.44, "b": 1.2 } },
+      { "message_type": "ToolResponseMessage", "content": "1.728" },
+      { "message_type": "AIMessage", "content": "1.728" }
+    ]
+  },
+  {
+    "input": "Value of 0.1 + 0.2?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of 0.1 + 0.2?" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 0.1, "b": 0.2 } },
+      { "message_type": "ToolResponseMessage", "content": "0.300" },
+      { "message_type": "AIMessage", "content": "0.300" }
+    ]
+  },
+  {
+    "input": "Value of (5.5 + 4.5) / (2.0 + 3.0)?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of (5.5 + 4.5) / (2.0 + 3.0)?" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 5.5, "b": 4.5 } },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 2.0, "b": 3.0 } },
+      { "message_type": "ToolResponseMessage", "content": "10.000" },
+      { "message_type": "ToolResponseMessage", "content": "5.000" },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 10.0, "b": 5.0 } },
+      { "message_type": "ToolResponseMessage", "content": "2.000" },
+      { "message_type": "AIMessage", "content": "2.000" }
+    ]
+  },
+  {
+    "input": "Value of 7.5 % 2.0?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of 7.5 - (3 * 2.0)?" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 3, "b": 2.0 } },
+      { "message_type": "ToolResponseMessage", "content": "6.000" },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 7.5, "b": 6.0 } },
+      { "message_type": "ToolResponseMessage", "content": "1.500" },
+      { "message_type": "AIMessage", "content": "1.500" }
+    ]
+  },
+  {
+    "input": "Value of (100.0 / 4.0) - (10.5 * 2.0)?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of (100.0 / 4.0) - (10.5 * 2.0)?" },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 100.0, "b": 4.0 } },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 10.5, "b": 2.0 } },
+      { "message_type": "ToolResponseMessage", "content": "25.000" },
+      { "message_type": "ToolResponseMessage", "content": "21.000" },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 25.0, "b": 21.0 } },
+      { "message_type": "ToolResponseMessage", "content": "4.000" },
+      { "message_type": "AIMessage", "content": "4.000" }
+    ]
+  },
+  {
+    "input": "Value of 0.05 * 200.0?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of 0.05 * 200.0?" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 0.05, "b": 200.0 } },
+      { "message_type": "ToolResponseMessage", "content": "10.000" },
+      { "message_type": "AIMessage", "content": "10.000" }
+    ]
+  },
+  {
+    "input": "Value of (1.1 + 2.2 + 3.3) * 2.0?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of (1.1 + 2.2 + 3.3) * 2.0?" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 1.1, "b": 2.2 } },
+      { "message_type": "ToolResponseMessage", "content": "3.300" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 3.3, "b": 3.3 } },
+      { "message_type": "ToolResponseMessage", "content": "6.600" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 6.6, "b": 2.0 } },
+      { "message_type": "ToolResponseMessage", "content": "13.200" },
+      { "message_type": "AIMessage", "content": "13.200" }
+    ]
+  },
+  {
+    "input": "Value of 6.0 / (1.5 + 0.5)?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of 6.0 / (1.5 + 0.5)?" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 1.5, "b": 0.5 } },
+      { "message_type": "ToolResponseMessage", "content": "2.000" },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 6.0, "b": 2.0 } },
+      { "message_type": "ToolResponseMessage", "content": "3.000" },
+      { "message_type": "AIMessage", "content": "3.000" }
+    ]
+  },
+  {
+    "input": "Value of 9.81 * 10.0?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of 9.81 * 10.0?" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 9.81, "b": 10.0 } },
+      { "message_type": "ToolResponseMessage", "content": "98.100" },
+      { "message_type": "AIMessage", "content": "98.100" }
+    ]
+  },
+  {
+    "input": "Value of 50.0 - (12.5 + 12.5 + 12.5)?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of 50.0 - (12.5 + 12.5 + 12.5)?" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 12.5, "b": 12.5 } },
+      { "message_type": "ToolResponseMessage", "content": "25.000" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 25.0, "b": 12.5 } },
+      { "message_type": "ToolResponseMessage", "content": "37.500" },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 50.0, "b": 37.5 } },
+      { "message_type": "ToolResponseMessage", "content": "12.500" },
+      { "message_type": "AIMessage", "content": "12.500" }
+    ]
+  },
+  {
+    "input": "Value of (3.5 * 2.0) + (4.5 / 1.5)?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of (3.5 * 2.0) + (4.5 / 1.5)?" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 3.5, "b": 2.0 } },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 4.5, "b": 1.5 } },
+      { "message_type": "ToolResponseMessage", "content": "7.000" },
+      { "message_type": "ToolResponseMessage", "content": "3.000" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 7.0, "b": 3.0 } },
+      { "message_type": "ToolResponseMessage", "content": "10.000" },
+      { "message_type": "AIMessage", "content": "10.000" }
+    ]
+  },
+  {
+    "input": "Value of 123.456 + 0.544?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of 123.456 + 0.544?" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 123.456, "b": 0.544 } },
+      { "message_type": "ToolResponseMessage", "content": "124.000" },
+      { "message_type": "AIMessage", "content": "124.000" }
+    ]
+  },
+  {
+    "input": "Value of -10.5 + 5.5?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of -10.5 + 5.5?" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": -10.5, "b": 5.5 } },
+      { "message_type": "ToolResponseMessage", "content": "-5.000" },
+      { "message_type": "AIMessage", "content": "-5.000" }
+    ]
+  },
+  {
+    "input": "Value of (10.0 / 3.0) + (20.0 / 3.0)?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of (10.0 / 3.0) + (20.0 / 3.0)?" },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 10.0, "b": 3.0 } },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 20.0, "b": 3.0 } },
+      { "message_type": "ToolResponseMessage", "content": "3.333" },
+      { "message_type": "ToolResponseMessage", "content": "6.667" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 3.333, "b": 6.667 } },
+      { "message_type": "ToolResponseMessage", "content": "10.000" },
+      { "message_type": "AIMessage", "content": "10.000" }
+    ]
+  },
+  {
+    "input": "Value of 0.001 * 5000.0?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of 0.001 * 5000.0?" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 0.001, "b": 5000.0 } },
+      { "message_type": "ToolResponseMessage", "content": "5.000" },
+      { "message_type": "AIMessage", "content": "5.000" }
+    ]
+  },
+  {
+    "input": "Value of (6.25 + 3.75) * (10.5 - 0.5)?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of (6.25 + 3.75) * (10.5 - 0.5)?" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 6.25, "b": 3.75 } },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 10.5, "b": 0.5 } },
+      { "message_type": "ToolResponseMessage", "content": "10.000" },
+      { "message_type": "ToolResponseMessage", "content": "10.000" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 10.0, "b": 10.0 } },
+      { "message_type": "ToolResponseMessage", "content": "100.000" },
+      { "message_type": "AIMessage", "content": "100.000" }
+    ]
+  },
+  {
+    "input": "Value of 3.14159 * 2.0?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of 3.14159 * 2.0?" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 3.14159, "b": 2.0 } },
+      { "message_type": "ToolResponseMessage", "content": "6.283" },
+      { "message_type": "AIMessage", "content": "6.283" }
+    ]
+  },
+  {
+    "input": "Value of (2.0 + 3.0) * (4.0 + 5.0) - 10.0?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of (2.0 + 3.0) * (4.0 + 5.0) - 10.0?" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 2.0, "b": 3.0 } },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 4.0, "b": 5.0 } },
+      { "message_type": "ToolResponseMessage", "content": "5.000" },
+      { "message_type": "ToolResponseMessage", "content": "9.000" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 5.0, "b": 9.0 } },
+      { "message_type": "ToolResponseMessage", "content": "45.000" },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 45.0, "b": 10.0 } },
+      { "message_type": "ToolResponseMessage", "content": "35.000" },
+      { "message_type": "AIMessage", "content": "35.000" }
+    ]
+  },
+  {
+    "input": "Value of 15.0 / (3.0 * 2.0)?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of 15.0 / (3.0 * 2.0)?" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 3.0, "b": 2.0 } },
+      { "message_type": "ToolResponseMessage", "content": "6.000" },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 15.0, "b": 6.0 } },
+      { "message_type": "ToolResponseMessage", "content": "2.500" },
+      { "message_type": "AIMessage", "content": "2.500" }
+    ]
+  },
+  {
+    "input": "Value of 100.123 - 0.123?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of 100.123 - 0.123?" },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 100.123, "b": 0.123 } },
+      { "message_type": "ToolResponseMessage", "content": "100.000" },
+      { "message_type": "AIMessage", "content": "100.000" }
+    ]
+  },
+  {
+    "input": "Value of (7.5 * 2.0) / 3.0 + 1.0?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of (7.5 * 2.0) / 3.0 + 1.0?" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 7.5, "b": 2.0 } },
+      { "message_type": "ToolResponseMessage", "content": "15.000" },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 15.0, "b": 3.0 } },
+      { "message_type": "ToolResponseMessage", "content": "5.000" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 5.0, "b": 1.0 } },
+      { "message_type": "ToolResponseMessage", "content": "6.000" },
+      { "message_type": "AIMessage", "content": "6.000" }
+    ]
+  },
+  {
+    "input": "Value of 25.5 + 25.5 - 1.0?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of 25.5 + 25.5 - 1.0?" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 25.5, "b": 25.5 } },
+      { "message_type": "ToolResponseMessage", "content": "51.000" },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 51.0, "b": 1.0 } },
+      { "message_type": "ToolResponseMessage", "content": "50.000" },
+      { "message_type": "AIMessage", "content": "50.000" }
+    ]
+  },
+  {
+    "input": "Value of 0.333 + 0.333 + 0.333?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of 0.333 + 0.333 + 0.333?" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 0.333, "b": 0.333 } },
+      { "message_type": "ToolResponseMessage", "content": "0.666" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 0.666, "b": 0.333 } },
+      { "message_type": "ToolResponseMessage", "content": "0.999" },
+      { "message_type": "AIMessage", "content": "0.999" }
+    ]
+  },
+  {
+    "input": "Value of 42.0 * 0.5?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of 42.0 * 0.5?" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 42.0, "b": 0.5 } },
+      { "message_type": "ToolResponseMessage", "content": "21.000" },
+      { "message_type": "AIMessage", "content": "21.000" }
+    ]
+  },
+  {
+    "input": "Value of (12.4 + 7.6) / (0.5 * 4.0)?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of (12.4 + 7.6) / (0.5 * 4.0)?" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 12.4, "b": 7.6 } },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 0.5, "b": 4.0 } },
+      { "message_type": "ToolResponseMessage", "content": "20.000" },
+      { "message_type": "ToolResponseMessage", "content": "2.000" },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 20.0, "b": 2.0 } },
+      { "message_type": "ToolResponseMessage", "content": "10.000" },
+      { "message_type": "AIMessage", "content": "10.000" }
+    ]
+  },
+  {
+    "input": "Value of 99.99 + 0.01?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of 99.99 + 0.01?" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 99.99, "b": 0.01 } },
+      { "message_type": "ToolResponseMessage", "content": "100.000" },
+      { "message_type": "AIMessage", "content": "100.000" }
+    ]
+  },
+  {
+    "input": "Value of (1.5 * 1.5) - (0.5 * 0.5)?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of (1.5 * 1.5) - (0.5 * 0.5)?" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 1.5, "b": 1.5 } },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 0.5, "b": 0.5 } },
+      { "message_type": "ToolResponseMessage", "content": "2.250" },
+      { "message_type": "ToolResponseMessage", "content": "0.250" },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 2.25, "b": 0.25 } },
+      { "message_type": "ToolResponseMessage", "content": "2.000" },
+      { "message_type": "AIMessage", "content": "2.000" }
+    ]
+  },
+  {
+    "input": "Value of 8.0 / 3.0?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of 8.0 / 3.0?" },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 8.0, "b": 3.0 } },
+      { "message_type": "ToolResponseMessage", "content": "2.667" },
+      { "message_type": "AIMessage", "content": "2.667" }
+    ]
+  },
+  {
+    "input": "Value of (2.0 + 2.0 + 2.0) * 2.5?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of (2.0 + 2.0 + 2.0) * 2.5?" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 2.0, "b": 2.0 } },
+      { "message_type": "ToolResponseMessage", "content": "4.000" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 4.0, "b": 2.0 } },
+      { "message_type": "ToolResponseMessage", "content": "6.000" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 6.0, "b": 2.5 } },
+      { "message_type": "ToolResponseMessage", "content": "15.000" },
+      { "message_type": "AIMessage", "content": "15.000" }
+    ]
+  },
+  {
+    "input": "Value of 1000.0 / 10.0 / 10.0?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of 1000.0 / 10.0 / 10.0?" },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 1000.0, "b": 10.0 } },
+      { "message_type": "ToolResponseMessage", "content": "100.000" },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 100.0, "b": 10.0 } },
+      { "message_type": "ToolResponseMessage", "content": "10.000" },
+      { "message_type": "AIMessage", "content": "10.000" }
+    ]
+  },
+  {
+    "input": "Value of 5.5 - 2.2 - 1.1?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of 5.5 - 2.2 - 1.1?" },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 5.5, "b": 2.2 } },
+      { "message_type": "ToolResponseMessage", "content": "3.300" },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 3.3, "b": 1.1 } },
+      { "message_type": "ToolResponseMessage", "content": "2.200" },
+      { "message_type": "AIMessage", "content": "2.200" }
+    ]
+  },
+  {
+    "input": "Value of (50.5 + 49.5) / 5.0?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of (50.5 + 49.5) / 5.0?" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 50.5, "b": 49.5 } },
+      { "message_type": "ToolResponseMessage", "content": "100.000" },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 100.0, "b": 5.0 } },
+      { "message_type": "ToolResponseMessage", "content": "20.000" },
+      { "message_type": "AIMessage", "content": "20.000" }
+    ]
+  },
+  {
+    "input": "Value of 1.23 * 2.0 + 3.45?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of 1.23 * 2.0 + 3.45?" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 1.23, "b": 2.0 } },
+      { "message_type": "ToolResponseMessage", "content": "2.460" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 2.46, "b": 3.45 } },
+      { "message_type": "ToolResponseMessage", "content": "5.910" },
+      { "message_type": "AIMessage", "content": "5.910" }
+    ]
+  },
+  {
+    "input": "Value of (10.0 - 1.5) * (2.0 + 0.5)?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of (10.0 - 1.5) * (2.0 + 0.5)?" },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 10.0, "b": 1.5 } },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 2.0, "b": 0.5 } },
+      { "message_type": "ToolResponseMessage", "content": "8.500" },
+      { "message_type": "ToolResponseMessage", "content": "2.500" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 8.5, "b": 2.5 } },
+      { "message_type": "ToolResponseMessage", "content": "21.250" },
+      { "message_type": "AIMessage", "content": "21.250" }
+    ]
+  },
+  {
+    "input": "Value of 6.6 / 2.2 * 3.0?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of 6.6 / 2.2 * 3.0?" },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 6.6, "b": 2.2 } },
+      { "message_type": "ToolResponseMessage", "content": "3.000" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 3.0, "b": 3.0 } },
+      { "message_type": "ToolResponseMessage", "content": "9.000" },
+      { "message_type": "AIMessage", "content": "9.000" }
+    ]
+  },
+  {
+    "input": "Value of 0.25 * 0.25 * 16.0?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of 0.25 * 0.25 * 16.0?" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 0.25, "b": 0.25 } },
+      { "message_type": "ToolResponseMessage", "content": "0.063" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 0.0625, "b": 16.0 } },
+      { "message_type": "ToolResponseMessage", "content": "1.000" },
+      { "message_type": "AIMessage", "content": "1.000" }
+    ]
+  },
+  {
+    "input": "Value of 100.5 / 2.0 - 0.25?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of 100.5 / 2.0 - 0.25?" },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 100.5, "b": 2.0 } },
+      { "message_type": "ToolResponseMessage", "content": "50.250" },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 50.25, "b": 0.25 } },
+      { "message_type": "ToolResponseMessage", "content": "50.000" },
+      { "message_type": "AIMessage", "content": "50.000" }
+    ]
+  },
+  {
+    "input": "Value of (5.0 + 15.0) / (2.0 + 2.0)?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of (5.0 + 15.0) / (2.0 + 2.0)?" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 5.0, "b": 15.0 } },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 2.0, "b": 2.0 } },
+      { "message_type": "ToolResponseMessage", "content": "20.000" },
+      { "message_type": "ToolResponseMessage", "content": "4.000" },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 20.0, "b": 4.0 } },
+      { "message_type": "ToolResponseMessage", "content": "5.000" },
+      { "message_type": "AIMessage", "content": "5.000" }
+    ]
+  },
+  {
+    "input": "Value of 2.2 * 3.3?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Value of 2.2 * 3.3?" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 2.2, "b": 3.3 } },
+      { "message_type": "ToolResponseMessage", "content": "7.260" },
+      { "message_type": "AIMessage", "content": "7.260" }
+    ]
+  }
 ]

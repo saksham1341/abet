@@ -13,7 +13,7 @@ def load_dataset(path: str) -> ListDataset:
 
     inputs = []
     targets = []
-    for r in raw_data:
+    for r in raw_data[:10]:
         inputs.append(r["input"])
         _ = list()
 
@@ -21,6 +21,8 @@ def load_dataset(path: str) -> ListDataset:
             _.append(
                 AnyMessage(**msg_kwargs)
             )
+        
+        targets.append(_)
          
     return ListDataset(
         inputs=inputs,

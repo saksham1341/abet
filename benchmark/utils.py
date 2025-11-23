@@ -8,6 +8,7 @@ from core.dataset import AbstractDataset
 from core.evaluationresult import AbstractEvaluationResult
 from typing import Any, Dict, TypeVar, Type, Callable
 import importlib
+from tqdm import tqdm
 
 AgentBuilder_T = TypeVar("AgentBuilder_T", bound=AbstractAgentBuilder)
 Translator_T = TypeVar("Translator_T", bound=AbstractTranslator)
@@ -85,7 +86,7 @@ def run(config: Dict = None) -> None:
 
     # run agent on the dataset and store translated outptus
     keys = dataset.get_keys()
-    for key in keys:
+    for key in tqdm(keys, total=len(keys)):
         inp = dataset.get_input(key)
         output = agent(inp)
 
