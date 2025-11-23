@@ -19,10 +19,24 @@ from langchain_core.messages import (
     ToolCall, 
     ToolMessage
 ) 
-from typing import Dict, List
+from typing import Dict, List, Union
 
 
 class LangGraphTranslator(BaseTranslator):
+    def _parse_content(self, content: Union[str, List[dict]]) -> str:
+        if isinstance(content, str):
+            return content
+        
+        if isinstance(content, list):
+            text_parts = [
+                block.get("text", "") 
+                for block in content 
+                if isinstance(block, dict) and block.get("type") == "text"
+            ]
+            return "".join(text_parts)
+            
+        return str(content)
+
     def from_native_output(self, native_output: Dict) -> AgentOutput:
         messages = native_output["messages"]
         
@@ -32,9 +46,10 @@ class LangGraphTranslator(BaseTranslator):
             if isinstance(msg, SystemMessage):
                 continue
             elif isinstance(msg, AIMessage):
-                new_translated_messages.append(_AIMessage(
-                    content=msg.content
-                ))
+                if self._parse_content(msg.content):
+                    new_translated_messages.append(_AIMessage(
+                        content=self._parse_content(msg.content)
+                    ))
 
                 if msg.tool_calls:
                     for tc in msg.tool_calls:
@@ -45,12 +60,12 @@ class LangGraphTranslator(BaseTranslator):
                         ))
             elif isinstance(msg, HumanMessage):
                 new_translated_messages.append(_UserMessage(
-                    content=msg.content
+                    content=self._parse_content(msg.content)
                 ))
             elif isinstance(msg, ToolMessage):
                 new_translated_messages.append(_ToolResponseMessage(
                     tool_call_id=msg.tool_call_id,
-                    content=msg.content
+                    content=self._parse_content(msg.content)
                 ))
             else:
                 new_translated_messages.append( _ErrorMessage(
