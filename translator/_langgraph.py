@@ -4,7 +4,7 @@ LangGraphTranslator module.
 
 from .base import AbstractTranslator
 from message import (
-    AbstractMessage as _AbstractMesage, 
+    AbstractMessage as _AbstractMessage, 
     AIMessage as _AIMessage, 
     UserMessage as _UserMessage, 
     ToolCallMessage as _ToolCallMessage, 
@@ -22,7 +22,7 @@ from typing import  List
 
 
 class LangGraphTranslator(AbstractTranslator):
-    def from_framework(self, messages: List[BaseMessage]) -> List[AbstractMessage]:
+    def from_framework(self, messages: List[BaseMessage]) -> List[_AbstractMessage]:
         _ = []
         for msg in messages:
             translated_message = None

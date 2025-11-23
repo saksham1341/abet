@@ -11,7 +11,7 @@ from agentbuilder import agentbuilders
 CONFIG_PATH: Path = Path(Path(__file__).resolve().parent, "config.yaml")
 DEFAULT_CONFIG: dict = {}
 with open(CONFIG_PATH, "r") as CONFIG_FILE:
-    DEFAULT_CONFIG = yaml.load(CONFIG_FILE)
+    DEFAULT_CONFIG = yaml.safe_load(CONFIG_FILE)
 
 def run(custom_config: dict = None) -> None:
     global DEFAULT_CONFIG
@@ -24,16 +24,17 @@ def run(custom_config: dict = None) -> None:
 
     framework = config["framework"]
 
-    agbr = agentbuilders[framework]
-    tltr = translators[framework]
-    
-    system_prompt = open(config["system_prompt_path"], "r").read()
-
-    agent = agbr.build(
-        model=config["model"],
-        tools=...,
-        system_prompt=system_prompt
+    agbr_config = config["agentbuilder_config"]
+    agbr = agentbuilders[framework](
+        config=agbr_config
     )
+    agent = agbr.build()
+
+    tltr_config = config["translator_config"]
+    tltr = translators[framework](
+        config=tltr_config
+    )
+    
 
     # TODO:
     # 1. Create a dataset

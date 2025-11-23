@@ -1,0 +1,8 @@
+framework: langgraph
+
+agentbuilder_config:
+  model: gemini-2.5-pro
+  tools: benchmark.tool_call.tools.tools
+  system_prompt_path: benchmark/tool_call/system_prompt.txt
+
+translator_config:
