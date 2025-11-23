@@ -19,3 +19,7 @@ datasetloader_kwargs:
 evaluator_callable: null
 evaulator_kwargs:
   {}
+# Evaluation result saver function
+evaluationresultsaver_callable: null
+evaluationresultsaver_kwargs:
+  {}
