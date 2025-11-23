@@ -4,6 +4,7 @@ Tool Call Benchmark LangGraphAgentBuilder module
 
 from .base import BaseAgentBuilder
 from langchain.agents import create_agent
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.tools import BaseTool, tool
 from typing import List, Callable
 import importlib
@@ -28,8 +29,13 @@ class LangGraphAgentBuilder(BaseAgentBuilder):
         self.system_prompt = open(config["system_prompt_path"], "r").read()
 
     def build(self) -> Callable:
+        # Need to just use create_agent with self.model
+        # But it is breaking for now since I don't have a GCP project for gemini
+        # so this is a temporary solution exclusively supporing a gemini model
+
+        x = ChatGoogleGenerativeAI(model=self.model)
         agent = create_agent(
-            model=self.model,
+            model=x,
             tools=self.tools,
             system_prompt=self.system_prompt
         )
@@ -47,4 +53,6 @@ class LangGraphAgentBuilder(BaseAgentBuilder):
                 stream_mode="values"
             )
 
-            return resp["content"]
+            return resp
+        
+        return _
