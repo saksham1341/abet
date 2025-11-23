@@ -1,0 +1,666 @@
+[
+  {
+    "input": "A factory has two machines. Machine A produces 50 widgets per hour and runs for 8 hours a day. Machine B produces 40 widgets per hour but breaks down after 6 hours. If the daily target is 700 widgets, how many more are needed?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "A factory has two machines. Machine A produces 50 widgets per hour and runs for 8 hours a day. Machine B produces 40 widgets per hour but breaks down after 6 hours. If the daily target is 700 widgets, how many more are needed?" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 50, "b": 8 } },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 40, "b": 6 } },
+      { "message_type": "ToolResponseMessage", "content": "400" },
+      { "message_type": "ToolResponseMessage", "content": "240" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 400, "b": 240 } },
+      { "message_type": "ToolResponseMessage", "content": "640" },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 700, "b": 640 } },
+      { "message_type": "ToolResponseMessage", "content": "60" },
+      { "message_type": "AIMessage", "content": "60" }
+    ]
+  },
+  {
+    "input": "John is planning a party for 20 guests. He estimates each guest will eat 3 slices of pizza. Each pizza has 8 slices and costs $15. He has a budget of $150. How much money will he have left (or need) after buying just enough whole pizzas?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "John is planning a party for 20 guests. He estimates each guest will eat 3 slices of pizza. Each pizza has 8 slices and costs $15. He has a budget of $150. How much money will he have left (or need) after buying just enough whole pizzas?" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 20, "b": 3 } },
+      { "message_type": "ToolResponseMessage", "content": "60" },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 60, "b": 8 } },
+      { "message_type": "ToolResponseMessage", "content": "7.5" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 8, "b": 15 } }, 
+      { "message_type": "ToolResponseMessage", "content": "120" },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 150, "b": 120 } },
+      { "message_type": "ToolResponseMessage", "content": "30" },
+      { "message_type": "AIMessage", "content": "30" }
+    ]
+  },
+  {
+    "input": "A freelancer charges $50 per hour. She works 6 hours on Monday, 8 hours on Tuesday, and 4 hours on Wednesday. However, on Tuesday she gives a $20 discount for a long session. What is her total earnings?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "A freelancer charges $50 per hour. She works 6 hours on Monday, 8 hours on Tuesday, and 4 hours on Wednesday. However, on Tuesday she gives a $20 discount for a long session. What is her total earnings?" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 6, "b": 8 } },
+      { "message_type": "ToolResponseMessage", "content": "14" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 14, "b": 4 } },
+      { "message_type": "ToolResponseMessage", "content": "18" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 18, "b": 50 } },
+      { "message_type": "ToolResponseMessage", "content": "900" },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 900, "b": 20 } },
+      { "message_type": "ToolResponseMessage", "content": "880" },
+      { "message_type": "AIMessage", "content": "880" }
+    ]
+  },
+  {
+    "input": "A rectangular room is 12 feet by 10 feet. Carpet costs $3 per square foot. The installer charges a flat fee of $100 plus $15 per hour. It takes him 4 hours to install. What is the total cost?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "A rectangular room is 12 feet by 10 feet. Carpet costs $3 per square foot. The installer charges a flat fee of $100 plus $15 per hour. It takes him 4 hours to install. What is the total cost?" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 12, "b": 10 } },
+      { "message_type": "ToolResponseMessage", "content": "120" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 120, "b": 3 } },
+      { "message_type": "ToolResponseMessage", "content": "360" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 15, "b": 4 } },
+      { "message_type": "ToolResponseMessage", "content": "60" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 100, "b": 60 } },
+      { "message_type": "ToolResponseMessage", "content": "160" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 360, "b": 160 } },
+      { "message_type": "ToolResponseMessage", "content": "520" },
+      { "message_type": "AIMessage", "content": "520" }
+    ]
+  },
+  {
+    "input": "Sarah runs a bakery. To make a batch of 12 cupcakes, she needs 2 cups of flour. She has a 5kg bag of flour. Assuming 1 cup of flour is approx 125 grams (0.125 kg). How many complete batches can she make?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Sarah runs a bakery. To make a batch of 12 cupcakes, she needs 2 cups of flour. She has a 5kg bag of flour. Assuming 1 cup of flour is approx 125 grams (0.125 kg). How many complete batches can she make?" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 2, "b": 0.125 } },
+      { "message_type": "ToolResponseMessage", "content": "0.25" },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 5, "b": 0.25 } },
+      { "message_type": "ToolResponseMessage", "content": "20" },
+      { "message_type": "AIMessage", "content": "20" }
+    ]
+  },
+  {
+    "input": "A car travels 300 miles. For the first 100 miles, it drives at 50 mph. For the remaining 200 miles, it speeds up to 100 mph. What was the total time taken in hours?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "A car travels 300 miles. For the first 100 miles, it drives at 50 mph. For the remaining 200 miles, it speeds up to 100 mph. What was the total time taken in hours?" },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 100, "b": 50 } },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 200, "b": 100 } },
+      { "message_type": "ToolResponseMessage", "content": "2" },
+      { "message_type": "ToolResponseMessage", "content": "2" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 2, "b": 2 } },
+      { "message_type": "ToolResponseMessage", "content": "4" },
+      { "message_type": "AIMessage", "content": "4" }
+    ]
+  },
+  {
+    "input": "I have a $100 bill. I buy 3 books costing $12 each, and 2 pens costing $2.50 each. Tax is 10% (0.10) applied to the total cost of items. How much change do I get?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "I have a $100 bill. I buy 3 books costing $12 each, and 2 pens costing $2.50 each. Tax is 10% (0.10) applied to the total cost of items. How much change do I get?" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 3, "b": 12 } },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 2, "b": 2.5 } },
+      { "message_type": "ToolResponseMessage", "content": "36" },
+      { "message_type": "ToolResponseMessage", "content": "5" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 36, "b": 5 } },
+      { "message_type": "ToolResponseMessage", "content": "41" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 41, "b": 0.10 } },
+      { "message_type": "ToolResponseMessage", "content": "4.1" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 41, "b": 4.1 } },
+      { "message_type": "ToolResponseMessage", "content": "45.1" },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 100, "b": 45.1 } },
+      { "message_type": "ToolResponseMessage", "content": "54.9" },
+      { "message_type": "AIMessage", "content": "54.9" }
+    ]
+  },
+  {
+    "input": "The stock price opened at $150. It rose by $5 in the first hour, dropped by $2.50 in the second, and then increased by 10% (multiply current value by 1.1) in the third. What is the final price?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "The stock price opened at $150. It rose by $5 in the first hour, dropped by $2.50 in the second, and then increased by 10% (multiply current value by 1.1) in the third. What is the final price?" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 150, "b": 5 } },
+      { "message_type": "ToolResponseMessage", "content": "155" },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 155, "b": 2.5 } },
+      { "message_type": "ToolResponseMessage", "content": "152.5" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 152.5, "b": 1.1 } },
+      { "message_type": "ToolResponseMessage", "content": "167.75" },
+      { "message_type": "AIMessage", "content": "167.75" }
+    ]
+  },
+  {
+    "input": "A water tank holds 500 gallons. Pipe A fills it at 20 gallons/min. Pipe B drains it at 5 gallons/min. If both pipes are open, how many minutes to fill the empty tank?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "A water tank holds 500 gallons. Pipe A fills it at 20 gallons/min. Pipe B drains it at 5 gallons/min. If both pipes are open, how many minutes to fill the empty tank?" },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 20, "b": 5 } },
+      { "message_type": "ToolResponseMessage", "content": "15" },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 500, "b": 15 } },
+      { "message_type": "ToolResponseMessage", "content": "33.333" },
+      { "message_type": "AIMessage", "content": "33.333" }
+    ]
+  },
+  {
+    "input": "There are 3 classes in a school. Class A has 25 students. Class B has twice as many as Class A. Class C has 10 less than Class B. How many students in total?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "There are 3 classes in a school. Class A has 25 students. Class B has twice as many as Class A. Class C has 10 less than Class B. How many students in total?" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 25, "b": 2 } },
+      { "message_type": "ToolResponseMessage", "content": "50" },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 50, "b": 10 } },
+      { "message_type": "ToolResponseMessage", "content": "40" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 25, "b": 50 } },
+      { "message_type": "ToolResponseMessage", "content": "75" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 75, "b": 40 } },
+      { "message_type": "ToolResponseMessage", "content": "115" },
+      { "message_type": "AIMessage", "content": "115" }
+    ]
+  },
+  {
+    "input": "A runner's stride is 0.8 meters. He takes 1500 steps. He wants to know if he completed a 1 km (1000m) race. How many meters over or under 1000m is he?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "A runner's stride is 0.8 meters. He takes 1500 steps. He wants to know if he completed a 1 km (1000m) race. How many meters over or under 1000m is he?" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 1500, "b": 0.8 } },
+      { "message_type": "ToolResponseMessage", "content": "1200" },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 1200, "b": 1000 } },
+      { "message_type": "ToolResponseMessage", "content": "200" },
+      { "message_type": "AIMessage", "content": "200" }
+    ]
+  },
+  {
+    "input": "Company X has 100 employees. 40% are engineers. Of the engineers, 25% are senior. How many senior engineers are there?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Company X has 100 employees. 40% are engineers. Of the engineers, 25% are senior. How many senior engineers are there?" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 100, "b": 0.40 } },
+      { "message_type": "ToolResponseMessage", "content": "40" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 40, "b": 0.25 } },
+      { "message_type": "ToolResponseMessage", "content": "10" },
+      { "message_type": "AIMessage", "content": "10" }
+    ]
+  },
+  {
+    "input": "I'm driving 400 miles. My car has a 12 gallon tank and gets 25 mpg. I start with a full tank. Gas costs $4/gallon. How many gallons do I need to BUY (since I start with 12) to finish the trip, and what will it cost?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "I'm driving 400 miles. My car has a 12 gallon tank and gets 25 mpg. I start with a full tank. Gas costs $4/gallon. How many gallons do I need to BUY (since I start with 12) to finish the trip, and what will it cost?" },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 400, "b": 25 } },
+      { "message_type": "ToolResponseMessage", "content": "16" },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 16, "b": 12 } },
+      { "message_type": "ToolResponseMessage", "content": "4" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 4, "b": 4 } },
+      { "message_type": "ToolResponseMessage", "content": "16" },
+      { "message_type": "AIMessage", "content": "16" }
+    ]
+  },
+  {
+    "input": "A recipe serves 4 people and requires 200g of sugar and 300g of flour. I want to serve 10 people. What is the total weight of ingredients (sugar + flour) needed?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "A recipe serves 4 people and requires 200g of sugar and 300g of flour. I want to serve 10 people. What is the total weight of ingredients (sugar + flour) needed?" },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 10, "b": 4 } },
+      { "message_type": "ToolResponseMessage", "content": "2.5" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 200, "b": 300 } },
+      { "message_type": "ToolResponseMessage", "content": "500" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 500, "b": 2.5 } },
+      { "message_type": "ToolResponseMessage", "content": "1250" },
+      { "message_type": "AIMessage", "content": "1250" }
+    ]
+  },
+  {
+    "input": "An investment of $1000 grows at 5% per year simple interest (total = principal + principal * rate * years). How much is it worth after 3 years?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "An investment of $1000 grows at 5% per year simple interest (total = principal + principal * rate * years). How much is it worth after 3 years?" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 1000, "b": 0.05 } },
+      { "message_type": "ToolResponseMessage", "content": "50" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 50, "b": 3 } },
+      { "message_type": "ToolResponseMessage", "content": "150" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 1000, "b": 150 } },
+      { "message_type": "ToolResponseMessage", "content": "1150" },
+      { "message_type": "AIMessage", "content": "1150" }
+    ]
+  },
+  {
+    "input": "A server processes 50 requests/sec. We add 2 more servers. One is twice as fast (100 req/sec), the other is half as fast (25 req/sec). What is the total capacity?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "A server processes 50 requests/sec. We add 2 more servers. One is twice as fast (100 req/sec), the other is half as fast (25 req/sec). What is the total capacity?" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 50, "b": 2 } },
+      { "message_type": "ToolResponseMessage", "content": "100" },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 50, "b": 2 } },
+      { "message_type": "ToolResponseMessage", "content": "25" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 50, "b": 100 } },
+      { "message_type": "ToolResponseMessage", "content": "150" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 150, "b": 25 } },
+      { "message_type": "ToolResponseMessage", "content": "175" },
+      { "message_type": "AIMessage", "content": "175" }
+    ]
+  },
+  {
+    "input": "I have a 200 page book. I read 10 pages on day 1. On day 2, I read double day 1. On day 3, I read double day 2. How many pages are left?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "I have a 200 page book. I read 10 pages on day 1. On day 2, I read double day 1. On day 3, I read double day 2. How many pages are left?" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 10, "b": 2 } },
+      { "message_type": "ToolResponseMessage", "content": "20" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 20, "b": 2 } },
+      { "message_type": "ToolResponseMessage", "content": "40" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 10, "b": 20 } },
+      { "message_type": "ToolResponseMessage", "content": "30" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 30, "b": 40 } },
+      { "message_type": "ToolResponseMessage", "content": "70" },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 200, "b": 70 } },
+      { "message_type": "ToolResponseMessage", "content": "130" },
+      { "message_type": "AIMessage", "content": "130" }
+    ]
+  },
+  {
+    "input": "A box weighs 10kg. It contains 20 identical balls. The empty box weighs 2kg. What is the weight of one ball?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "A box weighs 10kg. It contains 20 identical balls. The empty box weighs 2kg. What is the weight of one ball?" },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 10, "b": 2 } },
+      { "message_type": "ToolResponseMessage", "content": "8" },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 8, "b": 20 } },
+      { "message_type": "ToolResponseMessage", "content": "0.4" },
+      { "message_type": "AIMessage", "content": "0.4" }
+    ]
+  },
+  {
+    "input": "Temperature conversion: It is 25 degrees Celsius. Convert to Fahrenheit. Formula: (C * 1.8) + 32.",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Temperature conversion: It is 25 degrees Celsius. Convert to Fahrenheit. Formula: (C * 1.8) + 32." },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 25, "b": 1.8 } },
+      { "message_type": "ToolResponseMessage", "content": "45" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 45, "b": 32 } },
+      { "message_type": "ToolResponseMessage", "content": "77" },
+      { "message_type": "AIMessage", "content": "77" }
+    ]
+  },
+  {
+    "input": "A store has a 'Buy 3 Get 1 Free' deal on $20 shirts. I want to buy 8 shirts. How much do I pay?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "A store has a 'Buy 3 Get 1 Free' deal on $20 shirts. I want to buy 8 shirts. How much do I pay?" },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 8, "b": 4 } }, 
+      { "message_type": "ToolResponseMessage", "content": "2" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 2, "b": 3 } }, 
+      { "message_type": "ToolResponseMessage", "content": "6" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 6, "b": 20 } },
+      { "message_type": "ToolResponseMessage", "content": "120" },
+      { "message_type": "AIMessage", "content": "120" }
+    ]
+  },
+  {
+    "input": "A painter can paint a room in 4 hours. His assistant takes 6 hours. If they work together, their combined rate is (1/4 + 1/6) rooms per hour. How long (in decimal hours) to paint one room? (Divide 1 by combined rate).",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "A painter can paint a room in 4 hours. His assistant takes 6 hours. If they work together, their combined rate is (1/4 + 1/6) rooms per hour. How long (in decimal hours) to paint one room? (Divide 1 by combined rate)." },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 1, "b": 4 } },
+      { "message_type": "ToolResponseMessage", "content": "0.25" },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 1, "b": 6 } },
+      { "message_type": "ToolResponseMessage", "content": "0.1666" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 0.25, "b": 0.1666 } },
+      { "message_type": "ToolResponseMessage", "content": "0.4166" },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 1, "b": 0.4166 } },
+      { "message_type": "ToolResponseMessage", "content": "2.4" },
+      { "message_type": "AIMessage", "content": "2.4" }
+    ]
+  },
+  {
+    "input": "I earn $50,000 a year. I pay 20% tax on the first $30,000, and 30% tax on the remaining amount. What is my total tax bill?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "I earn $50,000 a year. I pay 20% tax on the first $30,000, and 30% tax on the remaining amount. What is my total tax bill?" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 30000, "b": 0.20 } },
+      { "message_type": "ToolResponseMessage", "content": "6000" },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 50000, "b": 30000 } },
+      { "message_type": "ToolResponseMessage", "content": "20000" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 20000, "b": 0.30 } },
+      { "message_type": "ToolResponseMessage", "content": "6000" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 6000, "b": 6000 } },
+      { "message_type": "ToolResponseMessage", "content": "12000" },
+      { "message_type": "AIMessage", "content": "12000" }
+    ]
+  },
+  {
+    "input": "A cinema has 200 seats. Tickets are $10 for adults and $5 for children. On Saturday, 150 seats were sold. 100 were adults. How much total revenue was made?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "A cinema has 200 seats. Tickets are $10 for adults and $5 for children. On Saturday, 150 seats were sold. 100 were adults. How much total revenue was made?" },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 150, "b": 100 } },
+      { "message_type": "ToolResponseMessage", "content": "50" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 100, "b": 10 } },
+      { "message_type": "ToolResponseMessage", "content": "1000" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 50, "b": 5 } },
+      { "message_type": "ToolResponseMessage", "content": "250" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 1000, "b": 250 } },
+      { "message_type": "ToolResponseMessage", "content": "1250" },
+      { "message_type": "AIMessage", "content": "1250" }
+    ]
+  },
+  {
+    "input": "The speed of light is 300,000 km/s. The distance to the moon is 384,000 km. How many seconds does it take for light to bounce off the moon and return (round trip)?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "The speed of light is 300,000 km/s. The distance to the moon is 384,000 km. How many seconds does it take for light to bounce off the moon and return (round trip)?" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 384000, "b": 2 } },
+      { "message_type": "ToolResponseMessage", "content": "768000" },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 768000, "b": 300000 } },
+      { "message_type": "ToolResponseMessage", "content": "2.56" },
+      { "message_type": "AIMessage", "content": "2.56" }
+    ]
+  },
+  {
+    "input": "A cell divides every 10 minutes. If you start with 1 cell, how many cells are there after 30 minutes?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "A cell divides every 10 minutes. If you start with 1 cell, how many cells are there after 30 minutes?" },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 30, "b": 10 } },
+      { "message_type": "ToolResponseMessage", "content": "3" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 1, "b": 2 } }, 
+      { "message_type": "ToolResponseMessage", "content": "2" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 2, "b": 2 } },
+      { "message_type": "ToolResponseMessage", "content": "4" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 4, "b": 2 } },
+      { "message_type": "ToolResponseMessage", "content": "8" },
+      { "message_type": "AIMessage", "content": "8" }
+    ]
+  },
+  {
+    "input": "There are 5 shelves. Each shelf has 10 compartments. Each compartment has 3 books. 20 books are removed. How many left?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "There are 5 shelves. Each shelf has 10 compartments. Each compartment has 3 books. 20 books are removed. How many left?" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 5, "b": 10 } },
+      { "message_type": "ToolResponseMessage", "content": "50" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 50, "b": 3 } },
+      { "message_type": "ToolResponseMessage", "content": "150" },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 150, "b": 20 } },
+      { "message_type": "ToolResponseMessage", "content": "130" },
+      { "message_type": "AIMessage", "content": "130" }
+    ]
+  },
+  {
+    "input": "A pool is 10m long, 5m wide, and 2m deep. Water costs $2 per cubic meter. How much to fill the pool?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "A pool is 10m long, 5m wide, and 2m deep. Water costs $2 per cubic meter. How much to fill the pool?" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 10, "b": 5 } },
+      { "message_type": "ToolResponseMessage", "content": "50" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 50, "b": 2 } },
+      { "message_type": "ToolResponseMessage", "content": "100" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 100, "b": 2 } },
+      { "message_type": "ToolResponseMessage", "content": "200" },
+      { "message_type": "AIMessage", "content": "200" }
+    ]
+  },
+  {
+    "input": "A password must be changed every 90 days. I last changed it 10 days ago. How many weeks until I must change it again?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "A password must be changed every 90 days. I last changed it 10 days ago. How many weeks until I must change it again?" },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 90, "b": 10 } },
+      { "message_type": "ToolResponseMessage", "content": "80" },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 80, "b": 7 } },
+      { "message_type": "ToolResponseMessage", "content": "11.428" },
+      { "message_type": "AIMessage", "content": "11.428" }
+    ]
+  },
+  {
+    "input": "Three friends win a lottery of $1000. They donate $100 to charity. They split the rest equally. One friend spends $50 of his share. How much does that friend have left?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "Three friends win a lottery of $1000. They donate $100 to charity. They split the rest equally. One friend spends $50 of his share. How much does that friend have left?" },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 1000, "b": 100 } },
+      { "message_type": "ToolResponseMessage", "content": "900" },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 900, "b": 3 } },
+      { "message_type": "ToolResponseMessage", "content": "300" },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 300, "b": 50 } },
+      { "message_type": "ToolResponseMessage", "content": "250" },
+      { "message_type": "AIMessage", "content": "250" }
+    ]
+  },
+  {
+    "input": "A coffee shop sells 100 coffees a day at $3 each. Their daily cost is $150. How many days to reach $1500 profit?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "A coffee shop sells 100 coffees a day at $3 each. Their daily cost is $150. How many days to reach $1500 profit?" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 100, "b": 3 } },
+      { "message_type": "ToolResponseMessage", "content": "300" },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 300, "b": 150 } },
+      { "message_type": "ToolResponseMessage", "content": "150" },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 1500, "b": 150 } },
+      { "message_type": "ToolResponseMessage", "content": "10" },
+      { "message_type": "AIMessage", "content": "10" }
+    ]
+  },
+  {
+    "input": "I have 4 cats. Each eats 0.2kg of food a day. Food comes in 10kg bags costing $20. How much does it cost to feed them for 30 days?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "I have 4 cats. Each eats 0.2kg of food a day. Food comes in 10kg bags costing $20. How much does it cost to feed them for 30 days?" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 4, "b": 0.2 } },
+      { "message_type": "ToolResponseMessage", "content": "0.8" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 0.8, "b": 30 } },
+      { "message_type": "ToolResponseMessage", "content": "24" },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 24, "b": 10 } },
+      { "message_type": "ToolResponseMessage", "content": "2.4" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 2.4, "b": 20 } },
+      { "message_type": "ToolResponseMessage", "content": "48" },
+      { "message_type": "AIMessage", "content": "48" }
+    ]
+  },
+  {
+    "input": "A train has 10 carriages. Each carriage has 40 seats. 80% of seats are taken. How many empty seats?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "A train has 10 carriages. Each carriage has 40 seats. 80% of seats are taken. How many empty seats?" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 10, "b": 40 } },
+      { "message_type": "ToolResponseMessage", "content": "400" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 400, "b": 0.8 } },
+      { "message_type": "ToolResponseMessage", "content": "320" },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 400, "b": 320 } },
+      { "message_type": "ToolResponseMessage", "content": "80" },
+      { "message_type": "AIMessage", "content": "80" }
+    ]
+  },
+  {
+    "input": "A digital photo is 5MB. I have a 16GB memory card (1GB = 1000MB). I already have 500MB of data on it. How many photos can I fit?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "A digital photo is 5MB. I have a 16GB memory card (1GB = 1000MB). I already have 500MB of data on it. How many photos can I fit?" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 16, "b": 1000 } },
+      { "message_type": "ToolResponseMessage", "content": "16000" },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 16000, "b": 500 } },
+      { "message_type": "ToolResponseMessage", "content": "15500" },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 15500, "b": 5 } },
+      { "message_type": "ToolResponseMessage", "content": "3100" },
+      { "message_type": "AIMessage", "content": "3100" }
+    ]
+  },
+  {
+    "input": "John works 9am to 5pm (8 hours) with a 1 hour unpaid break. He earns $20/hr. He works 5 days a week. How much does he earn in 4 weeks?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "John works 9am to 5pm (8 hours) with a 1 hour unpaid break. He earns $20/hr. He works 5 days a week. How much does he earn in 4 weeks?" },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 8, "b": 1 } },
+      { "message_type": "ToolResponseMessage", "content": "7" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 7, "b": 20 } },
+      { "message_type": "ToolResponseMessage", "content": "140" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 140, "b": 5 } },
+      { "message_type": "ToolResponseMessage", "content": "700" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 700, "b": 4 } },
+      { "message_type": "ToolResponseMessage", "content": "2800" },
+      { "message_type": "AIMessage", "content": "2800" }
+    ]
+  },
+  {
+    "input": "A farmer has 10 cows and 20 chickens. Cows have 4 legs, chickens 2. He buys 5 more cows. How many legs in total now?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "A farmer has 10 cows and 20 chickens. Cows have 4 legs, chickens 2. He buys 5 more cows. How many legs in total now?" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 10, "b": 5 } },
+      { "message_type": "ToolResponseMessage", "content": "15" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 15, "b": 4 } },
+      { "message_type": "ToolResponseMessage", "content": "60" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 20, "b": 2 } },
+      { "message_type": "ToolResponseMessage", "content": "40" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 60, "b": 40 } },
+      { "message_type": "ToolResponseMessage", "content": "100" },
+      { "message_type": "AIMessage", "content": "100" }
+    ]
+  },
+  {
+    "input": "A bucket has a leak. It loses 0.5 liters per hour. It holds 10 liters. It is being filled at 2 liters per hour. How long to fill?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "A bucket has a leak. It loses 0.5 liters per hour. It holds 10 liters. It is being filled at 2 liters per hour. How long to fill?" },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 2, "b": 0.5 } },
+      { "message_type": "ToolResponseMessage", "content": "1.5" },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 10, "b": 1.5 } },
+      { "message_type": "ToolResponseMessage", "content": "6.667" },
+      { "message_type": "AIMessage", "content": "6.667" }
+    ]
+  },
+  {
+    "input": "A book series has 3 books. Book 1 is 200 pages. Book 2 is 50 pages longer than Book 1. Book 3 is double the length of Book 2. Total pages?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "A book series has 3 books. Book 1 is 200 pages. Book 2 is 50 pages longer than Book 1. Book 3 is double the length of Book 2. Total pages?" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 200, "b": 50 } },
+      { "message_type": "ToolResponseMessage", "content": "250" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 250, "b": 2 } },
+      { "message_type": "ToolResponseMessage", "content": "500" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 200, "b": 250 } },
+      { "message_type": "ToolResponseMessage", "content": "450" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 450, "b": 500 } },
+      { "message_type": "ToolResponseMessage", "content": "950" },
+      { "message_type": "AIMessage", "content": "950" }
+    ]
+  },
+  {
+    "input": "I am tiling a floor 10m x 10m. Tiles are 1m x 1m. I have 50 tiles. How many more do I need?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "I am tiling a floor 10m x 10m. Tiles are 1m x 1m. I have 50 tiles. How many more do I need?" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 10, "b": 10 } },
+      { "message_type": "ToolResponseMessage", "content": "100" },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 100, "b": 50 } },
+      { "message_type": "ToolResponseMessage", "content": "50" },
+      { "message_type": "AIMessage", "content": "50" }
+    ]
+  },
+  {
+    "input": "A taxi charges $3 base fare plus $2 per mile. I have $20. What is the max miles I can travel? (Ignore tip).",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "A taxi charges $3 base fare plus $2 per mile. I have $20. What is the max miles I can travel? (Ignore tip)." },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 20, "b": 3 } },
+      { "message_type": "ToolResponseMessage", "content": "17" },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 17, "b": 2 } },
+      { "message_type": "ToolResponseMessage", "content": "8.5" },
+      { "message_type": "AIMessage", "content": "8.5" }
+    ]
+  },
+  {
+    "input": "A YouTube video earns $2 per 1000 views. It has 500,000 views. The creator pays an editor 20% of earnings. How much does the creator keep?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "A YouTube video earns $2 per 1000 views. It has 500,000 views. The creator pays an editor 20% of earnings. How much does the creator keep?" },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 500000, "b": 1000 } },
+      { "message_type": "ToolResponseMessage", "content": "500" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 500, "b": 2 } },
+      { "message_type": "ToolResponseMessage", "content": "1000" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 1000, "b": 0.20 } },
+      { "message_type": "ToolResponseMessage", "content": "200" },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 1000, "b": 200 } },
+      { "message_type": "ToolResponseMessage", "content": "800" },
+      { "message_type": "AIMessage", "content": "800" }
+    ]
+  },
+  {
+    "input": "I have 240 cookies. I pack them into boxes of 12. I sell each box for $10. The cost of materials per box is $2. What is my total profit?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "I have 240 cookies. I pack them into boxes of 12. I sell each box for $10. The cost of materials per box is $2. What is my total profit?" },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 240, "b": 12 } },
+      { "message_type": "ToolResponseMessage", "content": "20" },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 10, "b": 2 } },
+      { "message_type": "ToolResponseMessage", "content": "8" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 20, "b": 8 } },
+      { "message_type": "ToolResponseMessage", "content": "160" },
+      { "message_type": "AIMessage", "content": "160" }
+    ]
+  },
+  {
+    "input": "A staircase has 20 steps. Each step is 20cm high. I climb it 5 times. How many meters did I climb vertically?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "A staircase has 20 steps. Each step is 20cm high. I climb it 5 times. How many meters did I climb vertically?" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 20, "b": 20 } },
+      { "message_type": "ToolResponseMessage", "content": "400" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 400, "b": 5 } },
+      { "message_type": "ToolResponseMessage", "content": "2000" },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 2000, "b": 100 } },
+      { "message_type": "ToolResponseMessage", "content": "20" },
+      { "message_type": "AIMessage", "content": "20" }
+    ]
+  },
+  {
+    "input": "A bacteria colony doubles every hour. It starts at 100. How many after 4 hours?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "A bacteria colony doubles every hour. It starts at 100. How many after 4 hours?" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 100, "b": 2 } },
+      { "message_type": "ToolResponseMessage", "content": "200" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 200, "b": 2 } },
+      { "message_type": "ToolResponseMessage", "content": "400" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 400, "b": 2 } },
+      { "message_type": "ToolResponseMessage", "content": "800" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 800, "b": 2 } },
+      { "message_type": "ToolResponseMessage", "content": "1600" },
+      { "message_type": "AIMessage", "content": "1600" }
+    ]
+  },
+  {
+    "input": "A car rents for $40 a day plus $0.10 per mile. I rent it for 3 days and drive 500 miles. Total cost?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "A car rents for $40 a day plus $0.10 per mile. I rent it for 3 days and drive 500 miles. Total cost?" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 40, "b": 3 } },
+      { "message_type": "ToolResponseMessage", "content": "120" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 500, "b": 0.10 } },
+      { "message_type": "ToolResponseMessage", "content": "50" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 120, "b": 50 } },
+      { "message_type": "ToolResponseMessage", "content": "170" },
+      { "message_type": "AIMessage", "content": "170" }
+    ]
+  },
+  {
+    "input": "To pass a test, I need an average of 80 over 3 exams. I scored 70 and 80 on the first two. What must I score on the third?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "To pass a test, I need an average of 80 over 3 exams. I scored 70 and 80 on the first two. What must I score on the third?" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 80, "b": 3 } },
+      { "message_type": "ToolResponseMessage", "content": "240" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 70, "b": 80 } },
+      { "message_type": "ToolResponseMessage", "content": "150" },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 240, "b": 150 } },
+      { "message_type": "ToolResponseMessage", "content": "90" },
+      { "message_type": "AIMessage", "content": "90" }
+    ]
+  },
+  {
+    "input": "A flight costs $200. I have 1000 miles points. Each point is worth $0.05 off. There is a $20 booking fee added after the discount. Final price?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "A flight costs $200. I have 1000 miles points. Each point is worth $0.05 off. There is a $20 booking fee added after the discount. Final price?" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 1000, "b": 0.05 } },
+      { "message_type": "ToolResponseMessage", "content": "50" },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 200, "b": 50 } },
+      { "message_type": "ToolResponseMessage", "content": "150" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 150, "b": 20 } },
+      { "message_type": "ToolResponseMessage", "content": "170" },
+      { "message_type": "AIMessage", "content": "170" }
+    ]
+  },
+  {
+    "input": "A library has 5000 books. 20% are fiction. Half of the fiction books are checked out. How many fiction books are currently in the library?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "A library has 5000 books. 20% are fiction. Half of the fiction books are checked out. How many fiction books are currently in the library?" },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 5000, "b": 0.20 } },
+      { "message_type": "ToolResponseMessage", "content": "1000" },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 1000, "b": 2 } },
+      { "message_type": "ToolResponseMessage", "content": "500" },
+      { "message_type": "AIMessage", "content": "500" }
+    ]
+  },
+  {
+    "input": "A box of cereal has 500g. A serving is 30g. I eat 1 serving a day. How many full days will the box last?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "A box of cereal has 500g. A serving is 30g. I eat 1 serving a day. How many full days will the box last?" },
+      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 500, "b": 30 } },
+      { "message_type": "ToolResponseMessage", "content": "16.66" },
+      { "message_type": "AIMessage", "content": "16" }
+    ]
+  },
+  {
+    "input": "I have 500 bricks. A wall requires 1200 bricks. I buy 3 pallets of bricks. Each pallet has 300 bricks. Do I have enough? (Answer with surplus or deficit amount).",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "I have 500 bricks. A wall requires 1200 bricks. I buy 3 pallets of bricks. Each pallet has 300 bricks. Do I have enough? (Answer with surplus or deficit amount)." },
+      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 3, "b": 300 } },
+      { "message_type": "ToolResponseMessage", "content": "900" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 500, "b": 900 } },
+      { "message_type": "ToolResponseMessage", "content": "1400" },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 1400, "b": 1200 } },
+      { "message_type": "ToolResponseMessage", "content": "200" },
+      { "message_type": "AIMessage", "content": "200" }
+    ]
+  },
+  {
+    "input": "A standard deck of cards has 52 cards. 4 suits. 13 cards per suit. If I lose 3 hearts and 2 spades, how many cards left?",
+    "optimal_message_sequence": [
+      { "message_type": "UserMessage", "content": "A standard deck of cards has 52 cards. 4 suits. 13 cards per suit. If I lose 3 hearts and 2 spades, how many cards left?" },
+      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 3, "b": 2 } },
+      { "message_type": "ToolResponseMessage", "content": "5" },
+      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 52, "b": 5 } },
+      { "message_type": "ToolResponseMessage", "content": "47" },
+      { "message_type": "AIMessage", "content": "47" }
+    ]
+  }
+]

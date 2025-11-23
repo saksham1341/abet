@@ -1,0 +1,18 @@
+agentbuilder_class: core.agentbuilder.LangGraphAgentBuilder
+agentbuilder_config:
+  model: gemini-2.5-pro
+  tools: benchmark.tool_call.tools.tools
+  system_prompt_path: benchmark/tool_call/system_prompt.txt
+
+translator_class: core.translator.LangGraphTranslator
+translator_config: {}
+
+datasetloader_callable: benchmark.tool_call.datasetloader.load_dataset
+datasetloader_kwargs:
+  path: benchmark/tool_call/dataset.json
+
+evaluator_callable: benchmark.tool_call.evaluator.evaluate
+evaluator_kwargs: {}
+
+evaluationresultsaver_callable: benchmark.tool_call.evaluator.save_result
+evaluationresultsaver_kwargs: {}
