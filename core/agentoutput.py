@@ -7,5 +7,9 @@ from dataclasses import dataclass
 from typing import List
 
 @dataclass
-class AgentOutput:
+class AbstractAgentOutput:
+    pass
+
+@dataclass
+class AgentOutput(AbstractAgentOutput):
     messages: List[AbstractMessage] = None

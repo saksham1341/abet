@@ -3,18 +3,18 @@ Module for AbstractTranslator
 """
 
 from core.message import AbstractMessage
-from typing import Any, List
+from typing import Any, Dict, List
 
 
 class AbstractTranslator:
-    def __init__(self, config: dict) -> None:
+    def __init__(self, config: Dict) -> None:
         raise NotImplementedError()
 
-    def front_native_output(self, native_output: Any) -> List[AbstractMessage]:
+    def from_native_output(self, native_output: Any) -> List[AbstractMessage]:
         raise NotImplementedError()
 
 class BaseTranslator:
-    config: dict
+    config: Dict
 
-    def __init__(self, config: dict) -> None:
+    def __init__(self, config: Dict) -> None:
         self.config = config

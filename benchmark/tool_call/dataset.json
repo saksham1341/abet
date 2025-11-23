@@ -1,0 +1,27 @@
+[
+    {
+            "idx": 0,
+            "input": "Value of 2 + 2?",
+            "optimal_message_sequence": [
+                {
+                    "message_type": "UserMessage",
+                    "content": "Value of 2 + 2?"
+                },
+                {
+                    "message_type": "ToolCallMessage",
+                    "content": "add",
+                    "tool_kwargs": {"a": 2, "b": 2},
+                    "tool_call_id": null
+                },
+                {
+                    "message_type": "ToolResponseMessage",
+                    "tool_call_id": null,
+                    "content": "4.0"
+                },
+                {
+                    "message_type": "AIMessage",
+                    "content": "4"
+                }
+            ]
+        }
+]
