@@ -13,7 +13,7 @@ def load_dataset(path: str) -> ListDataset:
 
     inputs = []
     targets = []
-    for r in raw_data[:10]:
+    for r in raw_data:
         inputs.append(r["input"])
         _ = list()
 
