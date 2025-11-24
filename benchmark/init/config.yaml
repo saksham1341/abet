@@ -10,16 +10,17 @@ translator_class: null
 translator_config:
   {}
 
-# Dataset loader function
-datasetloader_callable: null
-datasetloader_kwargs:
+# DatasetLoader configurations
+datasetloader_class: null
+datasetloader_config:
   {}
 
-# Evaluator function
-evaluator_callable: null
-evaulator_kwargs:
+# Evaluator configurations
+evaluator_class: null
+evaulator_config:
   {}
-# Evaluation result saver function
-evaluationresultsaver_callable: null
-evaluationresultsaver_kwargs:
+  
+# EvaluationSaver configurations
+evaluationsaver_class: null
+evaluationsaver_config:
   {}

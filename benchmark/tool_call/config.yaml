@@ -7,12 +7,12 @@ agentbuilder_config:
 translator_class: core.translator.LangGraphTranslator
 translator_config: {}
 
-datasetloader_callable: benchmark.tool_call.datasetloader.load_dataset
-datasetloader_kwargs:
-  path: benchmark/tool_call/dataset.json
+datasetloader_class: benchmark.tool_call.utils.ToolCallBenchmarkDatasetLoader
+datasetloader_config:
+  path: benchmark/tool_call/dataset_expressions.json
 
-evaluator_callable: benchmark.tool_call.evaluator.evaluate
-evaluator_kwargs: {}
+evaluator_class: benchmark.tool_call.utils.ToolCallBenchmarkEvaluator
+evaluator_config: {}
 
-evaluationresultsaver_callable: benchmark.tool_call.evaluator.save_result
-evaluationresultsaver_kwargs: {}
+evaluationsaver_class: benchmark.tool_call.utils.ToolCallBenchmarkEvaluationSaver
+evaluationsaver_config: {}

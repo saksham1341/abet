@@ -416,8 +416,8 @@
       { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 24, "b": 10 } },
       { "message_type": "ToolResponseMessage", "content": "2.4" },
       { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 2.4, "b": 20 } },
-      { "message_type": "ToolResponseMessage", "content": "48" },
-      { "message_type": "AIMessage", "content": "48" }
+      { "message_type": "ToolResponseMessage", "content": "60" },
+      { "message_type": "AIMessage", "content": "60" }
     ]
   },
   {

@@ -4,14 +4,20 @@ General benchmar utilities
 
 from core.agentbuilder import AbstractAgentBuilder
 from core.translator import AbstractTranslator
+from core.datasetloader import AbstractDatasetLoader
 from core.dataset import AbstractDataset
-from core.evaluationresult import AbstractEvaluationResult
+from core.evaluator import AbstractEvaluator
+from core.evaluation import AbstractEvaluation
+from core.evaluationsaver import AbstractEvaluationSaver
 from typing import Any, Dict, TypeVar, Type, Callable
 import importlib
 from tqdm import tqdm
 
 AgentBuilder_T = TypeVar("AgentBuilder_T", bound=AbstractAgentBuilder)
 Translator_T = TypeVar("Translator_T", bound=AbstractTranslator)
+DatasetLoader_T = TypeVar("DatasetLoader_T", bound=AbstractDatasetLoader)
+Evaluator_T = TypeVar("Evaluator_T", bound=AbstractEvaluator)
+EvaluationSaver_T = TypeVar("EvaluationSaver_T", bound=AbstractEvaluationSaver)
 
 def import_item(s: str) -> Any:
     _ = s.split(".")
@@ -23,9 +29,6 @@ def import_item(s: str) -> Any:
 def get_agentbuilder_class_from_config(config: Dict) -> Type[AgentBuilder_T]:
     return import_item(config["agentbuilder_class"])
 
-def get_translator_class_from_config(config: Dict) -> Type[Translator_T]:
-    return import_item(config["translator_class"])
-
 def create_agent_from_config(config: Dict) -> Callable:
     agentbuilder_class = get_agentbuilder_class_from_config(config)
     agentbuilder_obj = agentbuilder_class(
@@ -33,6 +36,9 @@ def create_agent_from_config(config: Dict) -> Callable:
     )
 
     return agentbuilder_obj.build()
+
+def get_translator_class_from_config(config: Dict) -> Type[Translator_T]:
+    return import_item(config["translator_class"])
 
 def create_translator_from_config(config: Dict) -> AbstractTranslator:
     translator_class = get_translator_class_from_config(config)
@@ -42,37 +48,60 @@ def create_translator_from_config(config: Dict) -> AbstractTranslator:
 
     return translator_obj
 
-def get_datasetloader_callable_from_config(config: Dict) -> Callable:
-    return import_item(config["datasetloader_callable"])
+def get_datasetloader_class_from_config(config: Dict) -> Type[DatasetLoader_T]:
+    return import_item(config["datasetloader_class"])
+
+def create_datasetloader_from_config(config: Dict) -> AbstractDatasetLoader:
+    datasetloader_class = get_datasetloader_class_from_config(config)
+    datasetloader_obj = datasetloader_class(
+        config=config["datasetloader_config"]
+    )
+
+    return datasetloader_obj
 
 def load_dataset_from_config(config: Dict) -> AbstractDataset:
-    datasetloader_callable = get_datasetloader_callable_from_config(config)
+    datasetloader_obj = create_datasetloader_from_config(config)
+    dataset = datasetloader_obj()
     
-    return datasetloader_callable(
-        **config["datasetloader_kwargs"]
+    return dataset
+
+def get_evaluator_class_from_config(config: Dict) -> Type[Evaluator_T]:
+    return import_item(config["evaluator_class"])
+
+def create_evaluator_from_config(config: Dict) -> AbstractEvaluator:
+    evaluator_class = get_evaluator_class_from_config(config)
+    evaluator_obj = evaluator_class(
+        config=config["evaluator_config"]
     )
 
-def get_evaluator_callable_from_config(config: Dict) -> Callable[[AbstractDataset, ...], AbstractEvaluationResult]:
-    return import_item(config["evaluator_callable"])
+    return evaluator_obj
 
-def evaluate_from_config(dataset: AbstractDataset, config: Dict) -> AbstractEvaluationResult:
-    evaluator_callable = get_evaluator_callable_from_config(config)
-    
-    return evaluator_callable(
-        dataset=dataset,
-        **config["evaluator_kwargs"]
+def evaluate_from_config(config: Dict, dataset: AbstractDataset) -> AbstractEvaluation:
+    evaluator_obj = create_evaluator_from_config(config)
+    evaluation = evaluator_obj(
+        dataset=dataset
     )
 
-def get_evaluationresultsaver_callable_from_config(config: Dict) -> Callable:
-    return import_item(config["evaluationresultsaver_callable"])
+    return evaluation
 
-def save_evaluationresult_form_config(result: AbstractEvaluationResult, config: Dict) -> None:
-    evaluationresultsaver_callable = get_evaluationresultsaver_callable_from_config(config)
+def get_evaluationsaver_class_from_config(config: Dict) -> EvaluationSaver_T:
+    return import_item(config["evaluationsaver_class"])
 
-    return evaluationresultsaver_callable(
-        result=result,
-        **config["evaluationresultsaver_kwargs"]
+def create_evaluationsaver_from_config(config: Dict) -> AbstractEvaluationSaver:
+    evaluationsaver_class = get_evaluationsaver_class_from_config(config)
+    evaluationsaver_obj = evaluationsaver_class(
+        config=config["evaluationsaver_config"]
     )
+
+    return evaluationsaver_obj
+
+def save_evaluation_from_config(config: Dict, evaluation: AbstractEvaluation) -> bool:
+    evaluationsaver_obj = create_evaluationsaver_from_config(config)
+    result = evaluationsaver_obj(
+        evaluation=evaluation
+    )
+
+    return result
 
 def run(config: Dict = None) -> None:
     # build agent
@@ -84,22 +113,27 @@ def run(config: Dict = None) -> None:
     # load dataset
     dataset = load_dataset_from_config(config)
 
+    # create evaluator
+    evaluator = create_evaluator_from_config(config)
+
+    # create evaluation saver
+    evaluation_saver = create_evaluationsaver_from_config(config)
+
     # run agent on the dataset and store translated outptus
     keys = dataset.get_keys()
     for key in tqdm(keys, total=len(keys)):
         inp = dataset.get_input(key)
-        output = agent(inp)
+        native_output = agent(inp)
+        agent_output = translator(native_output)
 
-        dataset.set_output(key, translator.from_native_output(output))
+        dataset.set_output(key, agent_output)
     
     # evaluate
-    result = evaluate_from_config(
-        dataset=dataset,
-        config=config
+    evaluation = evaluator(
+        dataset=dataset
     )
 
-    # save evaluation result
-    save_evaluationresult_form_config(
-        result=result,
-        config=config
+    # save evaluation
+    result = evaluation_saver(
+        evaluation=evaluation
     )

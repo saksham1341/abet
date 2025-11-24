@@ -10,6 +10,7 @@ from dataclasses import dataclass, field
 @dataclass
 class AbstractMessage:
     content: str = None
+    token_counts: Dict = field(default_factory=dict)
 
 @dataclass
 class BaseMessage(AbstractMessage):
