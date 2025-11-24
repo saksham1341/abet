@@ -4,6 +4,7 @@ General benchmar utilities
 
 from core.agentbuilder import AbstractAgentBuilder
 from core.translator import AbstractTranslator
+from core.agentoutput import AbstractAgentOutput
 from core.datasetloader import AbstractDatasetLoader
 from core.dataset import AbstractDataset
 from core.evaluator import AbstractEvaluator
@@ -29,13 +30,19 @@ def import_item(s: str) -> Any:
 def get_agentbuilder_class_from_config(config: Dict) -> Type[AgentBuilder_T]:
     return import_item(config["agentbuilder_class"])
 
-def create_agent_from_config(config: Dict) -> Callable:
+def create_agentbuilder_from_config(config: Dict) -> AbstractAgentBuilder:
     agentbuilder_class = get_agentbuilder_class_from_config(config)
     agentbuilder_obj = agentbuilder_class(
         config=config["agentbuilder_config"]
     )
 
-    return agentbuilder_obj.build()
+    return agentbuilder_obj
+
+def create_agent_from_config(config: Dict) -> Callable:
+    agentbuilder_obj = create_agentbuilder_from_config(config)
+    agent = agentbuilder_obj()
+
+    return agent
 
 def get_translator_class_from_config(config: Dict) -> Type[Translator_T]:
     return import_item(config["translator_class"])
@@ -47,6 +54,14 @@ def create_translator_from_config(config: Dict) -> AbstractTranslator:
     )
 
     return translator_obj
+
+def translate_from_config(config: Dict, native_output: Any) -> AbstractAgentOutput:
+    translator_obj = create_translator_from_config(config)
+    agent_output = translator_obj(
+        native_output=native_output
+    )
+
+    return agent_output
 
 def get_datasetloader_class_from_config(config: Dict) -> Type[DatasetLoader_T]:
     return import_item(config["datasetloader_class"])

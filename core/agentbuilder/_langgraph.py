@@ -28,7 +28,7 @@ class LangGraphAgentBuilder(BaseAgentBuilder):
         
         self.system_prompt = open(config["system_prompt_path"], "r").read()
 
-    def build(self) -> Callable:
+    def _build(self) -> Callable:
         # Need to just use create_agent with self.model
         # But it is breaking for now since I don't have a GCP project for gemini
         # so this is a temporary solution exclusively supporing a gemini model
