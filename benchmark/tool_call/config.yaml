@@ -1,24 +1,24 @@
 agentbuilder_class: core.agentbuilder.LangGraphAgentBuilder
 agentbuilder_config:
-  model_name: llama3.1:8b
-  model_class: langchain_ollama.ChatOllama
+  model_name: gemini-2.5-pro
+  model_class: langchain_google_genai.ChatGoogleGenerativeAI
   tools: benchmark.tool_call.tools.tools
   system_prompt_path: benchmark/tool_call/system_prompt.txt
 
-translator_class: core.translator.LangGraphTranslator
+translator_class: benchmark.tool_call.utils.ToolCallBenchmarkTranslator
 translator_config: {}
 
 datasetloader_class: benchmark.tool_call.utils.ToolCallBenchmarkDatasetLoader
 datasetloader_config:
-  path: benchmark/tool_call/dataset_expressions.json
+  path: benchmark/tool_call/dataset.json
 
 agentrunner_class: core.agentrunner.SyncThreadPoolAgentRunner
 agentrunner_config:
-  thread_count: 1
+  thread_count: 10
 
 evaluator_class: benchmark.tool_call.utils.ToolCallBenchmarkEvaluator
 evaluator_config: {}
 
 evaluationsaver_class: benchmark.tool_call.utils.ToolCallBenchmarkEvaluationSaver
 evaluationsaver_config:
-  output_path: evaluation.dict
+  output_path: evaluation.json
