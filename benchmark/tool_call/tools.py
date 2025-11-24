@@ -58,9 +58,24 @@ def divide(a: float, b: float) -> float:
 
     return a / b
 
+def modulo(a: float, b: float) -> float:
+    """
+    Result of `a` % `b`
+
+    Args:
+        a (float): First number.
+        b (float): Second number.
+    
+    Returns:
+        float: Resunt of (a % b)
+    """
+
+    return a % b
+
 tools = [
     add, 
     subtract,
     multiply,
-    divide
+    divide,
+    modulo
 ]

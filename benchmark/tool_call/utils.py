@@ -25,7 +25,7 @@ class ToolCallBenchmarkDatasetLoader(AbstractDatasetLoader):
 
         inputs = []
         targets = []
-        for r in raw_data[:2]:
+        for r in raw_data:
             inputs.append(r["input"])
             
             messages = list()
@@ -126,6 +126,8 @@ class ToolCallBenchmarkEvaluationSaver(AbstractEvaluationSaver):
         self.config = config
     
     def _save_evaluation(self, evaluation: ToolCallBenchmarkEvaluation) -> bool:
+        del evaluation.dataset
+        
         pprint(evaluation.__dict__)
 
         return True

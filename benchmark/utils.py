@@ -7,6 +7,7 @@ from core.translator import AbstractTranslator
 from core.agentoutput import AbstractAgentOutput
 from core.datasetloader import AbstractDatasetLoader
 from core.dataset import AbstractDataset
+from core.agentrunner import AbstractAgentRunner
 from core.evaluator import AbstractEvaluator
 from core.evaluation import AbstractEvaluation
 from core.evaluationsaver import AbstractEvaluationSaver
@@ -17,6 +18,7 @@ from tqdm import tqdm
 AgentBuilder_T = TypeVar("AgentBuilder_T", bound=AbstractAgentBuilder)
 Translator_T = TypeVar("Translator_T", bound=AbstractTranslator)
 DatasetLoader_T = TypeVar("DatasetLoader_T", bound=AbstractDatasetLoader)
+AgentRunner_T = TypeVar("AgentRunner_T", bound=AbstractAgentRunner)
 Evaluator_T = TypeVar("Evaluator_T", bound=AbstractEvaluator)
 EvaluationSaver_T = TypeVar("EvaluationSaver_T", bound=AbstractEvaluationSaver)
 
@@ -80,6 +82,29 @@ def load_dataset_from_config(config: Dict) -> AbstractDataset:
     
     return dataset
 
+def get_agentrunner_class_from_config(config: Dict) -> Type[AgentRunner_T]:
+    return import_item(config["agentrunner_class"])
+
+def create_agentrunner_from_config(config: Dict, agent: Callable, translator: AbstractTranslator, dataset: AbstractDataset) -> AbstractAgentRunner:
+    agentrunner_class = get_agentrunner_class_from_config(config)
+    agentrunner_obj = agentrunner_class(
+        agent=agent,
+        translator=translator,
+        dataset=dataset,
+        config=config["agentrunner_config"]
+    )
+
+    return agentrunner_obj
+
+def run_agent_from_config(config: Dict, agent: Callable, translator: AbstractTranslator, dataset: AbstractDataset) -> None:
+    agentrunner_obj = create_agentrunner_from_config(
+        agent=agent,
+        translator=translator,
+        dataset=dataset,
+        config=config
+    )
+    agentrunner_obj()
+
 def get_evaluator_class_from_config(config: Dict) -> Type[Evaluator_T]:
     return import_item(config["evaluator_class"])
 
@@ -120,28 +145,40 @@ def save_evaluation_from_config(config: Dict, evaluation: AbstractEvaluation) ->
 
 def run(config: Dict = None) -> None:
     # build agent
-    agent = create_agent_from_config(config)
+    agent = create_agent_from_config(
+        config=config
+    )
 
     # create translator
-    translator = create_translator_from_config(config)
+    translator = create_translator_from_config(
+        config=config
+    )
     
     # load dataset
-    dataset = load_dataset_from_config(config)
+    dataset = load_dataset_from_config(
+        config=config
+    )
+
+    # create agentrunner
+    agent_runner = create_agentrunner_from_config(
+        config=config,
+        agent=agent,
+        translator=translator,
+        dataset=dataset
+    )
 
     # create evaluator
-    evaluator = create_evaluator_from_config(config)
+    evaluator = create_evaluator_from_config(
+        config=config
+    )
 
     # create evaluation saver
-    evaluation_saver = create_evaluationsaver_from_config(config)
+    evaluation_saver = create_evaluationsaver_from_config(
+        config=config
+    )
 
-    # run agent on the dataset and store translated outptus
-    keys = dataset.get_keys()
-    for key in tqdm(keys, total=len(keys)):
-        inp = dataset.get_input(key)
-        native_output = agent(inp)
-        agent_output = translator(native_output)
-
-        dataset.set_output(key, agent_output)
+    # run agent
+    agent_runner()
     
     # evaluate
     evaluation = evaluator(

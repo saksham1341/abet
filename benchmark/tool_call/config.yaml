@@ -11,6 +11,10 @@ datasetloader_class: benchmark.tool_call.utils.ToolCallBenchmarkDatasetLoader
 datasetloader_config:
   path: benchmark/tool_call/dataset_expressions.json
 
+agentrunner_class: core.agentrunner.SyncThreadPoolAgentRunner
+agentrunner_config:
+  thread_count: 10
+
 evaluator_class: benchmark.tool_call.utils.ToolCallBenchmarkEvaluator
 evaluator_config: {}
 

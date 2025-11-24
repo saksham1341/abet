@@ -15,11 +15,16 @@ datasetloader_class: null
 datasetloader_config:
   {}
 
+# AgentRunner configurations
+agentrunner_class: null
+agentrunner_config:
+  {}
+
 # Evaluator configurations
 evaluator_class: null
 evaulator_config:
   {}
-  
+
 # EvaluationSaver configurations
 evaluationsaver_class: null
 evaluationsaver_config:
