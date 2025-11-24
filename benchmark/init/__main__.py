@@ -15,7 +15,7 @@ target_root = Path(benchmark_root, target_name)
 target_root.mkdir(exist_ok=False)
 
 # Create target config file
-placeholder_config = Path(this_root, "config.yaml")
+placeholder_config = Path(this_root, "placeholder_config.yaml")
 target_config = Path(target_root, "config.yaml")
 copyfile(placeholder_config, target_config)
 
