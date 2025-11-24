@@ -1,6 +1,7 @@
 agentbuilder_class: core.agentbuilder.LangGraphAgentBuilder
 agentbuilder_config:
-  model: gemini-2.5-pro
+  model_name: llama3.1:8b
+  model_class: langchain_ollama.ChatOllama
   tools: benchmark.tool_call.tools.tools
   system_prompt_path: benchmark/tool_call/system_prompt.txt
 
@@ -13,10 +14,11 @@ datasetloader_config:
 
 agentrunner_class: core.agentrunner.SyncThreadPoolAgentRunner
 agentrunner_config:
-  thread_count: 10
+  thread_count: 1
 
 evaluator_class: benchmark.tool_call.utils.ToolCallBenchmarkEvaluator
 evaluator_config: {}
 
 evaluationsaver_class: benchmark.tool_call.utils.ToolCallBenchmarkEvaluationSaver
-evaluationsaver_config: {}
+evaluationsaver_config:
+  output_path: evaluation.dict

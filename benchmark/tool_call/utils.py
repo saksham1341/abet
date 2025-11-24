@@ -25,7 +25,7 @@ class ToolCallBenchmarkDatasetLoader(AbstractDatasetLoader):
 
         inputs = []
         targets = []
-        for r in raw_data:
+        for r in raw_data[:1]:
             inputs.append(r["input"])
             
             messages = list()
@@ -108,8 +108,8 @@ class ToolCallBenchmarkEvaluator(AbstractEvaluator):
             total_absolute_error += abs(_tgt - _out)
         
         incorrect_outputs = valid_outputs - correct_outputs
-        mean_absolute_error = 0 if incorrect_outputs == 0 else total_absolute_error / incorrect_outputs
-        mean_delta_tcc_perc = total_delta_tcc_perc / correct_outputs
+        mean_absolute_error = None if incorrect_outputs == 0 else total_absolute_error / incorrect_outputs
+        mean_delta_tcc_perc = None if correct_outputs == 0 else total_delta_tcc_perc / correct_outputs
 
         result = ToolCallBenchmarkEvaluation(
             dataset=dataset,
@@ -126,8 +126,7 @@ class ToolCallBenchmarkEvaluationSaver(AbstractEvaluationSaver):
         self.config = config
     
     def _save_evaluation(self, evaluation: ToolCallBenchmarkEvaluation) -> bool:
-        del evaluation.dataset
-        
-        pprint(evaluation.__dict__)
+        with open(self.config["output_path"], "w") as f:
+            pprint(evaluation.__dict__, stream=f)
 
         return True
