@@ -11,7 +11,7 @@ from core.message import (
     ToolResponseMessage as _ToolResponseMessage,
     ErrorMessage as _ErrorMessage
 )
-from core.agentoutput import AgentOutput
+from core.agentoutput import AgentOutputWithMessages
 from langchain_core.messages import ( 
     SystemMessage, 
     AIMessage, 
@@ -37,7 +37,7 @@ class LangGraphTranslator(BaseTranslator):
             
         return str(content)
 
-    def from_native_output(self, native_output: Dict) -> AgentOutput:
+    def _translate(self, native_output: Dict) -> AgentOutputWithMessages:
         messages = native_output["messages"]
         
         translated_messages = []
@@ -78,6 +78,6 @@ class LangGraphTranslator(BaseTranslator):
                 if isinstance(translated_messages[-1], _ErrorMessage):
                     break
 
-        return AgentOutput(
+        return AgentOutputWithMessages(
             messages=translated_messages
         )

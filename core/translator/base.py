@@ -2,7 +2,7 @@
 Module for AbstractTranslator
 """
 
-from core.message import AbstractMessage
+from core.agentoutput import AbstractAgentOutput
 from typing import Any, Dict, List
 
 
@@ -10,10 +10,15 @@ class AbstractTranslator:
     def __init__(self, config: Dict) -> None:
         raise NotImplementedError()
 
-    def from_native_output(self, native_output: Any) -> List[AbstractMessage]:
+    def _translate(self, native_output: Any) -> AbstractAgentOutput:
         raise NotImplementedError()
+    
+    def __call__(self, native_output: Any) -> AbstractAgentOutput:
+        return self._translate(
+            native_output=native_output
+        )
 
-class BaseTranslator:
+class BaseTranslator(AbstractTranslator):
     config: Dict
 
     def __init__(self, config: Dict) -> None:

@@ -1,0 +1,31 @@
+# Placeholder config for a benchmark
+
+# AgentBuilder Configurations
+agentbuilder_class: null
+agentbuilder_config:
+  {}
+
+# Translator Configurations
+translator_class: null
+translator_config:
+  {}
+
+# DatasetLoader configurations
+datasetloader_class: null
+datasetloader_config:
+  {}
+
+# AgentRunner configurations
+agentrunner_class: null
+agentrunner_config:
+  {}
+
+# Evaluator configurations
+evaluator_class: null
+evaulator_config:
+  {}
+
+# EvaluationSaver configurations
+evaluationsaver_class: null
+evaluationsaver_config:
+  {}

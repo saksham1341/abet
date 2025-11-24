@@ -11,5 +11,5 @@ class AbstractAgentOutput:
     pass
 
 @dataclass
-class AgentOutput(AbstractAgentOutput):
+class AgentOutputWithMessages(AbstractAgentOutput):
     messages: List[AbstractMessage] = None

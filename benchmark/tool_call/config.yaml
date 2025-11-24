@@ -1,18 +1,24 @@
 agentbuilder_class: core.agentbuilder.LangGraphAgentBuilder
 agentbuilder_config:
-  model: gemini-2.5-pro
+  model_name: gemini-2.5-pro
+  model_class: langchain_google_genai.ChatGoogleGenerativeAI
   tools: benchmark.tool_call.tools.tools
   system_prompt_path: benchmark/tool_call/system_prompt.txt
 
-translator_class: core.translator.LangGraphTranslator
+translator_class: benchmark.tool_call.utils.ToolCallBenchmarkTranslator
 translator_config: {}
 
-datasetloader_callable: benchmark.tool_call.datasetloader.load_dataset
-datasetloader_kwargs:
+datasetloader_class: benchmark.tool_call.utils.ToolCallBenchmarkDatasetLoader
+datasetloader_config:
   path: benchmark/tool_call/dataset.json
 
-evaluator_callable: benchmark.tool_call.evaluator.evaluate
-evaluator_kwargs: {}
+agentrunner_class: core.agentrunner.SyncThreadPoolAgentRunner
+agentrunner_config:
+  thread_count: 10
 
-evaluationresultsaver_callable: benchmark.tool_call.evaluator.save_result
-evaluationresultsaver_kwargs: {}
+evaluator_class: benchmark.tool_call.utils.ToolCallBenchmarkEvaluator
+evaluator_config: {}
+
+evaluationsaver_class: benchmark.tool_call.utils.ToolCallBenchmarkEvaluationSaver
+evaluationsaver_config:
+  output_path: evaluation.json

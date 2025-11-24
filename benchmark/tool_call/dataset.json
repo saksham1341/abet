@@ -1,552 +1,497 @@
 [
   {
-    "input": "Value of 10.5 + 4.2?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of 10.5 + 4.2?" },
-      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 10.5, "b": 4.2 } },
-      { "message_type": "ToolResponseMessage", "content": "14.700" },
-      { "message_type": "AIMessage", "content": "14.700" }
-    ]
+    "input": "User alice@example.com is reporting a stolen account. Find her ID, reset her password immediately, and ban the IP 192.168.1.55 associated with the login.",
+    "tool_call_names": ["lookup_user_by_email", "reset_user_password", "blacklist_ip_address"],
+    "tool_call_args": [{"email": "alice@example.com"}, {"user_id": "u_12345", "temporary": true}, {"ip_address": "192.168.1.55", "duration_hours": 24}]
   },
   {
-    "input": "Value of 3.333 * 3?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of 3.333 * 3?" },
-      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 3.333, "b": 3 } },
-      { "message_type": "ToolResponseMessage", "content": "9.999" },
-      { "message_type": "AIMessage", "content": "9.999" }
-    ]
+    "input": "I need to refund the last order for user 'johndoe_99' and give them a $10 apology credit.",
+    "tool_call_names": ["lookup_user_by_username", "search_orders", "request_refund", "apply_account_credit"],
+    "tool_call_args": [{"username": "johndoe_99"}, {"user_id": "u_98765", "limit": 1}, {"order_id": "#ORD-555", "amount": 0, "full_refund": true}, {"user_id": "u_98765", "amount": 10.0, "memo": "Apology for order issue"}]
   },
   {
-    "input": "Value of 100.0 / 3.0?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of 100.0 / 3.0?" },
-      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 100.0, "b": 3.0 } },
-      { "message_type": "ToolResponseMessage", "content": "33.333" },
-      { "message_type": "AIMessage", "content": "33.333" }
-    ]
+    "input": "Check stock for 'Wireless Headphones'. If we have any, remove 2 units for 'quality control testing' and check the remaining level.",
+    "tool_call_names": ["search_products", "check_inventory_level", "remove_stock", "check_inventory_level"],
+    "tool_call_args": [{"query": "Wireless Headphones"}, {"sku": "SKU_WH_100"}, {"sku": "SKU_WH_100", "quantity": 2, "reason": "quality control testing"}, {"sku": "SKU_WH_100"}]
   },
   {
-    "input": "Value of (5.5 + 2.5) * 2.0?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of (5.5 + 2.5) * 2.0?" },
-      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 5.5, "b": 2.5 } },
-      { "message_type": "ToolResponseMessage", "content": "8.000" },
-      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 8.0, "b": 2.0 } },
-      { "message_type": "ToolResponseMessage", "content": "16.000" },
-      { "message_type": "AIMessage", "content": "16.000" }
-    ]
+    "input": "User bob@company.com wants to change his email to bob.new@company.com and needs a confirmation email sent to the new address.",
+    "tool_call_names": ["lookup_user_by_email", "update_user_email", "send_transactional_email"],
+    "tool_call_args": [{"email": "bob@company.com"}, {"user_id": "u_bob_001", "new_email": "bob.new@company.com"}, {"email": "bob.new@company.com", "template_id": "email_change_confirm", "context": {}}]
   },
   {
-    "input": "Value of 12.5 - 2.5 * 3.0?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of 12.5 - 2.5 * 3.0?" },
-      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 2.5, "b": 3.0 } },
-      { "message_type": "ToolResponseMessage", "content": "7.500" },
-      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 12.5, "b": 7.5 } },
-      { "message_type": "ToolResponseMessage", "content": "5.000" },
-      { "message_type": "AIMessage", "content": "5.000" }
-    ]
+    "input": "Find the order #999, check its shipping status. If it's lost (assume bad status), cancel it and refund the user.",
+    "tool_call_names": ["get_order_details", "get_shipping_status", "cancel_order", "request_refund"],
+    "tool_call_args": [{"order_id": "#999"}, {"tracking_number": "1Z999ABC"}, {"order_id": "#999", "reason": "Lost in transit"}, {"order_id": "#999", "amount": 0, "full_refund": true}]
   },
   {
-    "input": "Value of (10.5 - 2.5) + (3.2 * 2.0)?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of (10.5 - 2.5) + (3.2 * 2.0)?" },
-      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 10.5, "b": 2.5 } },
-      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 3.2, "b": 2.0 } },
-      { "message_type": "ToolResponseMessage", "content": "8.000" },
-      { "message_type": "ToolResponseMessage", "content": "6.400" },
-      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 8.0, "b": 6.4 } },
-      { "message_type": "ToolResponseMessage", "content": "14.400" },
-      { "message_type": "AIMessage", "content": "14.400" }
-    ]
+    "input": "System alert: Database is slow. Check system status for DB, then escalate ticket T-DB-FAIL to engineering with high priority note.",
+    "tool_call_names": ["get_system_status", "escalate_ticket", "update_ticket_comment"],
+    "tool_call_args": [{"service_name": "db"}, {"ticket_id": "T-DB-FAIL", "department": "engineering"}, {"ticket_id": "T-DB-FAIL", "comment": "System reports slow response times", "internal_note": true}]
   },
   {
-    "input": "Value of 15.125 + 0.875?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of 15.125 + 0.875?" },
-      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 15.125, "b": 0.875 } },
-      { "message_type": "ToolResponseMessage", "content": "16.000" },
-      { "message_type": "AIMessage", "content": "16.000" }
-    ]
+    "input": "A customer wants to buy 'Gaming Mouse'. Check the price in USD, then EUR, then check if we have it in the 'west' warehouse.",
+    "tool_call_names": ["search_products", "get_product_pricing", "get_product_pricing", "check_inventory_level"],
+    "tool_call_args": [{"query": "Gaming Mouse"}, {"sku": "SKU_GMOUSE", "currency": "USD"}, {"sku": "SKU_GMOUSE", "currency": "EUR"}, {"sku": "SKU_GMOUSE", "warehouse_id": "west"}]
   },
   {
-    "input": "Value of 5.5 / 2.0 * 4.0?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of 5.5 / 2.0 * 4.0?" },
-      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 5.5, "b": 2.0 } },
-      { "message_type": "ToolResponseMessage", "content": "2.750" },
-      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 2.75, "b": 4.0 } },
-      { "message_type": "ToolResponseMessage", "content": "11.000" },
-      { "message_type": "AIMessage", "content": "11.000" }
-    ]
+    "input": "User u_123 requests their data (GDPR). Export it, then close their open ticket T-123 saying 'Data Sent'.",
+    "tool_call_names": ["export_user_data", "update_ticket_comment"],
+    "tool_call_args": [{"user_id": "u_123", "format": "json"}, {"ticket_id": "T-123", "comment": "GDPR Data Sent", "internal_note": false}]
   },
   {
-    "input": "Value of (8.4 / 2.1) + (9.6 / 3.2)?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of (8.4 / 2.1) + (9.6 / 3.2)?" },
-      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 8.4, "b": 2.1 } },
-      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 9.6, "b": 3.2 } },
-      { "message_type": "ToolResponseMessage", "content": "4.000" },
-      { "message_type": "ToolResponseMessage", "content": "3.000" },
-      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 4.0, "b": 3.0 } },
-      { "message_type": "ToolResponseMessage", "content": "7.000" },
-      { "message_type": "AIMessage", "content": "7.000" }
-    ]
+    "input": "Onboard new employee: Create account for 'new_guy' (mocked as lookup/create flow), send welcome email to new@work.com, and give $50 starter credit.",
+    "tool_call_names": ["lookup_user_by_username", "send_transactional_email", "apply_account_credit"],
+    "tool_call_args": [{"username": "new_guy"}, {"email": "new@work.com", "template_id": "welcome_employee", "context": {}}, {"user_id": "u_new_guy_01", "amount": 50.0, "memo": "Starter Credit"}]
   },
   {
-    "input": "Value of 2.718 + 3.142?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of 2.718 + 3.142?" },
-      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 2.718, "b": 3.142 } },
-      { "message_type": "ToolResponseMessage", "content": "5.860" },
-      { "message_type": "AIMessage", "content": "5.860" }
-    ]
+    "input": "Investigate 'fraud_user'. Get their profile, list their last 10 orders, and check if their IP 10.0.0.99 is already banned.",
+    "tool_call_names": ["lookup_user_by_username", "get_user_profile_details", "search_orders", "blacklist_ip_address"],
+    "tool_call_args": [{"username": "fraud_user"}, {"user_id": "u_fraud_007"}, {"user_id": "u_fraud_007", "limit": 10}, {"ip_address": "10.0.0.99", "duration_hours": 24}]
   },
   {
-    "input": "Value of (100.5 - 50.25) * 0.5?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of (100.5 - 50.25) * 0.5?" },
-      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 100.5, "b": 50.25 } },
-      { "message_type": "ToolResponseMessage", "content": "50.250" },
-      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 50.25, "b": 0.5 } },
-      { "message_type": "ToolResponseMessage", "content": "25.125" },
-      { "message_type": "AIMessage", "content": "25.125" }
-    ]
+    "input": "Restock flow: Check stock for SKU_ABC. Add 100 units. Check stock again to verify.",
+    "tool_call_names": ["check_inventory_level", "add_stock", "check_inventory_level"],
+    "tool_call_args": [{"sku": "SKU_ABC"}, {"sku": "SKU_ABC", "quantity": 100, "reason": "Manual Restock"}, {"sku": "SKU_ABC"}]
   },
   {
-    "input": "Value of 1.2 * 1.2 * 1.2?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of 1.2 * 1.2 * 1.2?" },
-      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 1.2, "b": 1.2 } },
-      { "message_type": "ToolResponseMessage", "content": "1.440" },
-      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 1.44, "b": 1.2 } },
-      { "message_type": "ToolResponseMessage", "content": "1.728" },
-      { "message_type": "AIMessage", "content": "1.728" }
-    ]
+    "input": "Refund order #555 ($25) and create a support ticket for the user (u_555) to follow up.",
+    "tool_call_names": ["request_refund", "create_support_ticket"],
+    "tool_call_args": [{"order_id": "#555", "amount": 25.0}, {"user_id": "u_555", "subject": "Refund Processed", "priority": "normal"}]
   },
   {
-    "input": "Value of 0.1 + 0.2?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of 0.1 + 0.2?" },
-      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 0.1, "b": 0.2 } },
-      { "message_type": "ToolResponseMessage", "content": "0.300" },
-      { "message_type": "AIMessage", "content": "0.300" }
-    ]
+    "input": "Retrieve the last 3 invoices for user u_888 (Jan, Feb, Mar 2023).",
+    "tool_call_names": ["generate_invoice_pdf", "generate_invoice_pdf", "generate_invoice_pdf"],
+    "tool_call_args": [{"user_id": "u_888", "month": "January", "year": 2023}, {"user_id": "u_888", "month": "February", "year": 2023}, {"user_id": "u_888", "month": "March", "year": 2023}]
   },
   {
-    "input": "Value of (5.5 + 4.5) / (2.0 + 3.0)?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of (5.5 + 4.5) / (2.0 + 3.0)?" },
-      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 5.5, "b": 4.5 } },
-      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 2.0, "b": 3.0 } },
-      { "message_type": "ToolResponseMessage", "content": "10.000" },
-      { "message_type": "ToolResponseMessage", "content": "5.000" },
-      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 10.0, "b": 5.0 } },
-      { "message_type": "ToolResponseMessage", "content": "2.000" },
-      { "message_type": "AIMessage", "content": "2.000" }
-    ]
+    "input": "Customer sarah@mail.com is locked out. Find her, reset password (temp), and email her the instructions.",
+    "tool_call_names": ["lookup_user_by_email", "reset_user_password", "send_transactional_email"],
+    "tool_call_args": [{"email": "sarah@mail.com"}, {"user_id": "u_sarah_101", "temporary": true}, {"email": "sarah@mail.com", "template_id": "password_reset_instructions", "context": {"temp_pass": "TEMP_PASS_123"}}]
   },
   {
-    "input": "Value of 7.5 % 2.0?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of 7.5 - (3 * 2.0)?" },
-      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 3, "b": 2.0 } },
-      { "message_type": "ToolResponseMessage", "content": "6.000" },
-      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 7.5, "b": 6.0 } },
-      { "message_type": "ToolResponseMessage", "content": "1.500" },
-      { "message_type": "AIMessage", "content": "1.500" }
-    ]
+    "input": "Check 'Laptop Stand' price. If < $50, add 10 to stock (assume buying).",
+    "tool_call_names": ["search_products", "get_product_pricing", "add_stock"],
+    "tool_call_args": [{"query": "Laptop Stand"}, {"sku": "SKU_LAP_STAND", "currency": "USD"}, {"sku": "SKU_LAP_STAND", "quantity": 10, "reason": "Purchase"}]
   },
   {
-    "input": "Value of (100.0 / 4.0) - (10.5 * 2.0)?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of (100.0 / 4.0) - (10.5 * 2.0)?" },
-      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 100.0, "b": 4.0 } },
-      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 10.5, "b": 2.0 } },
-      { "message_type": "ToolResponseMessage", "content": "25.000" },
-      { "message_type": "ToolResponseMessage", "content": "21.000" },
-      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 25.0, "b": 21.0 } },
-      { "message_type": "ToolResponseMessage", "content": "4.000" },
-      { "message_type": "AIMessage", "content": "4.000" }
-    ]
+    "input": "Ticket T-100 is stuck. Check status, escalate to 'billing', and add a comment 'Customer waiting'.",
+    "tool_call_names": ["get_ticket_status", "escalate_ticket", "update_ticket_comment"],
+    "tool_call_args": [{"ticket_id": "T-100"}, {"ticket_id": "T-100", "department": "billing"}, {"ticket_id": "T-100", "comment": "Customer waiting", "internal_note": false}]
   },
   {
-    "input": "Value of 0.05 * 200.0?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of 0.05 * 200.0?" },
-      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 0.05, "b": 200.0 } },
-      { "message_type": "ToolResponseMessage", "content": "10.000" },
-      { "message_type": "AIMessage", "content": "10.000" }
-    ]
+    "input": "Find user by email 'test@test.com'. If active, get their profile address.",
+    "tool_call_names": ["lookup_user_by_email", "get_user_profile_details"],
+    "tool_call_args": [{"email": "test@test.com"}, {"user_id": "u_test_999"}]
   },
   {
-    "input": "Value of (1.1 + 2.2 + 3.3) * 2.0?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of (1.1 + 2.2 + 3.3) * 2.0?" },
-      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 1.1, "b": 2.2 } },
-      { "message_type": "ToolResponseMessage", "content": "3.300" },
-      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 3.3, "b": 3.3 } },
-      { "message_type": "ToolResponseMessage", "content": "6.600" },
-      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 6.6, "b": 2.0 } },
-      { "message_type": "ToolResponseMessage", "content": "13.200" },
-      { "message_type": "AIMessage", "content": "13.200" }
-    ]
+    "input": "Return process: Get order #ABC details, checking shipping. If delivered, request full refund.",
+    "tool_call_names": ["get_order_details", "get_shipping_status", "request_refund"],
+    "tool_call_args": [{"order_id": "#ABC"}, {"tracking_number": "TRK_ABC_123"}, {"order_id": "#ABC", "amount": 0, "full_refund": true}]
   },
   {
-    "input": "Value of 6.0 / (1.5 + 0.5)?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of 6.0 / (1.5 + 0.5)?" },
-      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 1.5, "b": 0.5 } },
-      { "message_type": "ToolResponseMessage", "content": "2.000" },
-      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 6.0, "b": 2.0 } },
-      { "message_type": "ToolResponseMessage", "content": "3.000" },
-      { "message_type": "AIMessage", "content": "3.000" }
-    ]
+    "input": "Emergency: Ban IP 1.2.3.4, check API status, check DB status.",
+    "tool_call_names": ["blacklist_ip_address", "get_system_status", "get_system_status"],
+    "tool_call_args": [{"ip_address": "1.2.3.4", "duration_hours": 24}, {"service_name": "api"}, {"service_name": "db"}]
   },
   {
-    "input": "Value of 9.81 * 10.0?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of 9.81 * 10.0?" },
-      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 9.81, "b": 10.0 } },
-      { "message_type": "ToolResponseMessage", "content": "98.100" },
-      { "message_type": "AIMessage", "content": "98.100" }
-    ]
+    "input": "User u_999 changed mind. Cancel order #O-999 and refund $50 deposit.",
+    "tool_call_names": ["cancel_order", "request_refund"],
+    "tool_call_args": [{"order_id": "#O-999", "reason": "User request"}, {"order_id": "#O-999", "amount": 50.0}]
   },
   {
-    "input": "Value of 50.0 - (12.5 + 12.5 + 12.5)?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of 50.0 - (12.5 + 12.5 + 12.5)?" },
-      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 12.5, "b": 12.5 } },
-      { "message_type": "ToolResponseMessage", "content": "25.000" },
-      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 25.0, "b": 12.5 } },
-      { "message_type": "ToolResponseMessage", "content": "37.500" },
-      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 50.0, "b": 37.5 } },
-      { "message_type": "ToolResponseMessage", "content": "12.500" },
-      { "message_type": "AIMessage", "content": "12.500" }
-    ]
+    "input": "Look up 'monitor_lizard'. Get profile. Update email to lizard@monitor.com.",
+    "tool_call_names": ["lookup_user_by_username", "get_user_profile_details", "update_user_email"],
+    "tool_call_args": [{"username": "monitor_lizard"}, {"user_id": "u_liz_555"}, {"user_id": "u_liz_555", "new_email": "lizard@monitor.com"}]
   },
   {
-    "input": "Value of (3.5 * 2.0) + (4.5 / 1.5)?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of (3.5 * 2.0) + (4.5 / 1.5)?" },
-      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 3.5, "b": 2.0 } },
-      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 4.5, "b": 1.5 } },
-      { "message_type": "ToolResponseMessage", "content": "7.000" },
-      { "message_type": "ToolResponseMessage", "content": "3.000" },
-      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 7.0, "b": 3.0 } },
-      { "message_type": "ToolResponseMessage", "content": "10.000" },
-      { "message_type": "AIMessage", "content": "10.000" }
-    ]
+    "input": "Inventory audit: Check stock for SKU_1, SKU_2, and SKU_3.",
+    "tool_call_names": ["check_inventory_level", "check_inventory_level", "check_inventory_level"],
+    "tool_call_args": [{"sku": "SKU_1"}, {"sku": "SKU_2"}, {"sku": "SKU_3"}]
   },
   {
-    "input": "Value of 123.456 + 0.544?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of 123.456 + 0.544?" },
-      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 123.456, "b": 0.544 } },
-      { "message_type": "ToolResponseMessage", "content": "124.000" },
-      { "message_type": "AIMessage", "content": "124.000" }
-    ]
+    "input": "User u_444 is VIP. Create ticket 'VIP Support' high priority, and credit account $100.",
+    "tool_call_names": ["create_support_ticket", "apply_account_credit"],
+    "tool_call_args": [{"user_id": "u_444", "subject": "VIP Support", "priority": "high"}, {"user_id": "u_444", "amount": 100.0, "memo": "VIP Benefit"}]
   },
   {
-    "input": "Value of -10.5 + 5.5?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of -10.5 + 5.5?" },
-      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": -10.5, "b": 5.5 } },
-      { "message_type": "ToolResponseMessage", "content": "-5.000" },
-      { "message_type": "AIMessage", "content": "-5.000" }
-    ]
+    "input": "Process return for 'broken_item' (SKU_BRK). Remove 1 from stock (damage), refund order #BRK-1 full amount.",
+    "tool_call_names": ["remove_stock", "request_refund"],
+    "tool_call_args": [{"sku": "SKU_BRK", "quantity": 1, "reason": "damage"}, {"order_id": "#BRK-1", "amount": 0, "full_refund": true}]
   },
   {
-    "input": "Value of (10.0 / 3.0) + (20.0 / 3.0)?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of (10.0 / 3.0) + (20.0 / 3.0)?" },
-      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 10.0, "b": 3.0 } },
-      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 20.0, "b": 3.0 } },
-      { "message_type": "ToolResponseMessage", "content": "3.333" },
-      { "message_type": "ToolResponseMessage", "content": "6.667" },
-      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 3.333, "b": 6.667 } },
-      { "message_type": "ToolResponseMessage", "content": "10.000" },
-      { "message_type": "AIMessage", "content": "10.000" }
-    ]
+    "input": "Find user dave@mail.com. Find his last order. Get details of that order.",
+    "tool_call_names": ["lookup_user_by_email", "search_orders", "get_order_details"],
+    "tool_call_args": [{"email": "dave@mail.com"}, {"user_id": "u_dave_007", "limit": 1}, {"order_id": "#ORD-DAVE-1"}]
   },
   {
-    "input": "Value of 0.001 * 5000.0?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of 0.001 * 5000.0?" },
-      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 0.001, "b": 5000.0 } },
-      { "message_type": "ToolResponseMessage", "content": "5.000" },
-      { "message_type": "AIMessage", "content": "5.000" }
-    ]
+    "input": "Update ticket T-555: Add comment 'Investigating', then escalate to 'security'.",
+    "tool_call_names": ["update_ticket_comment", "escalate_ticket"],
+    "tool_call_args": [{"ticket_id": "T-555", "comment": "Investigating", "internal_note": false}, {"ticket_id": "T-555", "department": "security"}]
   },
   {
-    "input": "Value of (6.25 + 3.75) * (10.5 - 0.5)?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of (6.25 + 3.75) * (10.5 - 0.5)?" },
-      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 6.25, "b": 3.75 } },
-      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 10.5, "b": 0.5 } },
-      { "message_type": "ToolResponseMessage", "content": "10.000" },
-      { "message_type": "ToolResponseMessage", "content": "10.000" },
-      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 10.0, "b": 10.0 } },
-      { "message_type": "ToolResponseMessage", "content": "100.000" },
-      { "message_type": "AIMessage", "content": "100.000" }
-    ]
+    "input": "Price match check: Get price of SKU_X in USD and GBP.",
+    "tool_call_names": ["get_product_pricing", "get_product_pricing"],
+    "tool_call_args": [{"sku": "SKU_X", "currency": "USD"}, {"sku": "SKU_X", "currency": "GBP"}]
   },
   {
-    "input": "Value of 3.14159 * 2.0?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of 3.14159 * 2.0?" },
-      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 3.14159, "b": 2.0 } },
-      { "message_type": "ToolResponseMessage", "content": "6.283" },
-      { "message_type": "AIMessage", "content": "6.283" }
-    ]
+    "input": "User u_202 wants to close account. Export data, then ban their IP (security protocol for closing).",
+    "tool_call_names": ["export_user_data", "blacklist_ip_address"],
+    "tool_call_args": [{"user_id": "u_202", "format": "json"}, {"ip_address": "0.0.0.0", "duration_hours": 8760}]
   },
   {
-    "input": "Value of (2.0 + 3.0) * (4.0 + 5.0) - 10.0?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of (2.0 + 3.0) * (4.0 + 5.0) - 10.0?" },
-      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 2.0, "b": 3.0 } },
-      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 4.0, "b": 5.0 } },
-      { "message_type": "ToolResponseMessage", "content": "5.000" },
-      { "message_type": "ToolResponseMessage", "content": "9.000" },
-      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 5.0, "b": 9.0 } },
-      { "message_type": "ToolResponseMessage", "content": "45.000" },
-      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 45.0, "b": 10.0 } },
-      { "message_type": "ToolResponseMessage", "content": "35.000" },
-      { "message_type": "AIMessage", "content": "35.000" }
-    ]
+    "input": "Search for 'Red Hat'. Check inventory. If > 0, check price.",
+    "tool_call_names": ["search_products", "check_inventory_level", "get_product_pricing"],
+    "tool_call_args": [{"query": "Red Hat"}, {"sku": "SKU_RED_HAT"}, {"sku": "SKU_RED_HAT", "currency": "USD"}]
   },
   {
-    "input": "Value of 15.0 / (3.0 * 2.0)?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of 15.0 / (3.0 * 2.0)?" },
-      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 3.0, "b": 2.0 } },
-      { "message_type": "ToolResponseMessage", "content": "6.000" },
-      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 15.0, "b": 6.0 } },
-      { "message_type": "ToolResponseMessage", "content": "2.500" },
-      { "message_type": "AIMessage", "content": "2.500" }
-    ]
+    "input": "Support triage: Get status of T-1. If open, add note 'Bump'.",
+    "tool_call_names": ["get_ticket_status", "update_ticket_comment"],
+    "tool_call_args": [{"ticket_id": "T-1"}, {"ticket_id": "T-1", "comment": "Bump", "internal_note": true}]
   },
   {
-    "input": "Value of 100.123 - 0.123?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of 100.123 - 0.123?" },
-      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 100.123, "b": 0.123 } },
-      { "message_type": "ToolResponseMessage", "content": "100.000" },
-      { "message_type": "AIMessage", "content": "100.000" }
-    ]
+    "input": "New user registration issue. Lookup 'n00b'. Reset password. Send 'welcome_pack' email.",
+    "tool_call_names": ["lookup_user_by_username", "reset_user_password", "send_transactional_email"],
+    "tool_call_args": [{"username": "n00b"}, {"user_id": "u_n00b_123", "temporary": false}, {"email": "n00b@email.com", "template_id": "welcome_pack", "context": {}}]
   },
   {
-    "input": "Value of (7.5 * 2.0) / 3.0 + 1.0?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of (7.5 * 2.0) / 3.0 + 1.0?" },
-      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 7.5, "b": 2.0 } },
-      { "message_type": "ToolResponseMessage", "content": "15.000" },
-      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 15.0, "b": 3.0 } },
-      { "message_type": "ToolResponseMessage", "content": "5.000" },
-      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 5.0, "b": 1.0 } },
-      { "message_type": "ToolResponseMessage", "content": "6.000" },
-      { "message_type": "AIMessage", "content": "6.000" }
-    ]
+    "input": "Order #777 is late. Check shipping. Refund $10 for delay.",
+    "tool_call_names": ["get_shipping_status", "request_refund"],
+    "tool_call_args": [{"tracking_number": "TRK_777_LATE"}, {"order_id": "#777", "amount": 10.0}]
   },
   {
-    "input": "Value of 25.5 + 25.5 - 1.0?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of 25.5 + 25.5 - 1.0?" },
-      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 25.5, "b": 25.5 } },
-      { "message_type": "ToolResponseMessage", "content": "51.000" },
-      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 51.0, "b": 1.0 } },
-      { "message_type": "ToolResponseMessage", "content": "50.000" },
-      { "message_type": "AIMessage", "content": "50.000" }
-    ]
+    "input": "Bulk update: Ban IP 1.1.1.1 and 2.2.2.2.",
+    "tool_call_names": ["blacklist_ip_address", "blacklist_ip_address"],
+    "tool_call_args": [{"ip_address": "1.1.1.1", "duration_hours": 24}, {"ip_address": "2.2.2.2", "duration_hours": 24}]
   },
   {
-    "input": "Value of 0.333 + 0.333 + 0.333?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of 0.333 + 0.333 + 0.333?" },
-      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 0.333, "b": 0.333 } },
-      { "message_type": "ToolResponseMessage", "content": "0.666" },
-      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 0.666, "b": 0.333 } },
-      { "message_type": "ToolResponseMessage", "content": "0.999" },
-      { "message_type": "AIMessage", "content": "0.999" }
-    ]
+    "input": "Find user tim@tool.com. Update email to tim@home.com. Reset password for new email.",
+    "tool_call_names": ["lookup_user_by_email", "update_user_email", "reset_user_password"],
+    "tool_call_args": [{"email": "tim@tool.com"}, {"user_id": "u_tim_009", "new_email": "tim@home.com"}, {"user_id": "u_tim_009", "temporary": false}]
   },
   {
-    "input": "Value of 42.0 * 0.5?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of 42.0 * 0.5?" },
-      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 42.0, "b": 0.5 } },
-      { "message_type": "ToolResponseMessage", "content": "21.000" },
-      { "message_type": "AIMessage", "content": "21.000" }
-    ]
+    "input": "Check system health. If 'api' is down (simulate check), update all open tickets (simulate 1 ticket T-GLOBAL) with note 'Outage'.",
+    "tool_call_names": ["get_system_status", "update_ticket_comment"],
+    "tool_call_args": [{"service_name": "api"}, {"ticket_id": "T-GLOBAL", "comment": "System Outage Detected", "internal_note": true}]
   },
   {
-    "input": "Value of (12.4 + 7.6) / (0.5 * 4.0)?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of (12.4 + 7.6) / (0.5 * 4.0)?" },
-      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 12.4, "b": 7.6 } },
-      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 0.5, "b": 4.0 } },
-      { "message_type": "ToolResponseMessage", "content": "20.000" },
-      { "message_type": "ToolResponseMessage", "content": "2.000" },
-      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 20.0, "b": 2.0 } },
-      { "message_type": "ToolResponseMessage", "content": "10.000" },
-      { "message_type": "AIMessage", "content": "10.000" }
-    ]
+    "input": "I need a refund on #ORD-1 and a copy of the invoice for my records (u_555).",
+    "tool_call_names": ["request_refund", "generate_invoice_pdf"],
+    "tool_call_args": [{"order_id": "#ORD-1", "amount": 0, "full_refund": true}, {"user_id": "u_555", "month": "Current", "year": 2024}]
   },
   {
-    "input": "Value of 99.99 + 0.01?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of 99.99 + 0.01?" },
-      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 99.99, "b": 0.01 } },
-      { "message_type": "ToolResponseMessage", "content": "100.000" },
-      { "message_type": "AIMessage", "content": "100.000" }
-    ]
+    "input": "Inventory cleanup: Remove 5 from SKU_A (expired) and 2 from SKU_B (damaged).",
+    "tool_call_names": ["remove_stock", "remove_stock"],
+    "tool_call_args": [{"sku": "SKU_A", "quantity": 5, "reason": "expired"}, {"sku": "SKU_B", "quantity": 2, "reason": "damaged"}]
   },
   {
-    "input": "Value of (1.5 * 1.5) - (0.5 * 0.5)?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of (1.5 * 1.5) - (0.5 * 0.5)?" },
-      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 1.5, "b": 1.5 } },
-      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 0.5, "b": 0.5 } },
-      { "message_type": "ToolResponseMessage", "content": "2.250" },
-      { "message_type": "ToolResponseMessage", "content": "0.250" },
-      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 2.25, "b": 0.25 } },
-      { "message_type": "ToolResponseMessage", "content": "2.000" },
-      { "message_type": "AIMessage", "content": "2.000" }
-    ]
+    "input": "User u_321 wants to know where they live and their last order total.",
+    "tool_call_names": ["get_user_profile_details", "search_orders"],
+    "tool_call_args": [{"user_id": "u_321"}, {"user_id": "u_321", "limit": 1}]
   },
   {
-    "input": "Value of 8.0 / 3.0?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of 8.0 / 3.0?" },
-      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 8.0, "b": 3.0 } },
-      { "message_type": "ToolResponseMessage", "content": "2.667" },
-      { "message_type": "AIMessage", "content": "2.667" }
-    ]
+    "input": "Prepare for sale: Check stock SKU_HOT. Add 500 units. Check price.",
+    "tool_call_names": ["check_inventory_level", "add_stock", "get_product_pricing"],
+    "tool_call_args": [{"sku": "SKU_HOT"}, {"sku": "SKU_HOT", "quantity": 500, "reason": "Sale Prep"}, {"sku": "SKU_HOT"}]
   },
   {
-    "input": "Value of (2.0 + 2.0 + 2.0) * 2.5?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of (2.0 + 2.0 + 2.0) * 2.5?" },
-      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 2.0, "b": 2.0 } },
-      { "message_type": "ToolResponseMessage", "content": "4.000" },
-      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 4.0, "b": 2.0 } },
-      { "message_type": "ToolResponseMessage", "content": "6.000" },
-      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 6.0, "b": 2.5 } },
-      { "message_type": "ToolResponseMessage", "content": "15.000" },
-      { "message_type": "AIMessage", "content": "15.000" }
-    ]
+    "input": "Fraud alert on #999. Cancel order. Ban IP 192.168.0.1. Flag ticket T-999 'Fraud'.",
+    "tool_call_names": ["cancel_order", "blacklist_ip_address", "update_ticket_comment"],
+    "tool_call_args": [{"order_id": "#999", "reason": "Fraud Detected"}, {"ip_address": "192.168.0.1", "duration_hours": 72}, {"ticket_id": "T-999", "comment": "Marked as Fraud", "internal_note": true}]
   },
   {
-    "input": "Value of 1000.0 / 10.0 / 10.0?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of 1000.0 / 10.0 / 10.0?" },
-      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 1000.0, "b": 10.0 } },
-      { "message_type": "ToolResponseMessage", "content": "100.000" },
-      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 100.0, "b": 10.0 } },
-      { "message_type": "ToolResponseMessage", "content": "10.000" },
-      { "message_type": "AIMessage", "content": "10.000" }
-    ]
+    "input": "Find user jane_doe. Create 'Billing' ticket. Escalate to 'finance'.",
+    "tool_call_names": ["lookup_user_by_username", "create_support_ticket", "escalate_ticket"],
+    "tool_call_args": [{"username": "jane_doe"}, {"user_id": "u_jane_500", "subject": "Billing Question", "priority": "normal"}, {"ticket_id": "TICKET-JANE-500", "department": "finance"}]
   },
   {
-    "input": "Value of 5.5 - 2.2 - 1.1?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of 5.5 - 2.2 - 1.1?" },
-      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 5.5, "b": 2.2 } },
-      { "message_type": "ToolResponseMessage", "content": "3.300" },
-      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 3.3, "b": 1.1 } },
-      { "message_type": "ToolResponseMessage", "content": "2.200" },
-      { "message_type": "AIMessage", "content": "2.200" }
-    ]
+    "input": "Shipment 1Z999 is stuck. Check status. Email user u_111 'delay_notification'.",
+    "tool_call_names": ["get_shipping_status", "send_transactional_email"],
+    "tool_call_args": [{"tracking_number": "1Z999"}, {"email": "user111@example.com", "template_id": "delay_notification", "context": {"tracking": "1Z999"}}]
   },
   {
-    "input": "Value of (50.5 + 49.5) / 5.0?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of (50.5 + 49.5) / 5.0?" },
-      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 50.5, "b": 49.5 } },
-      { "message_type": "ToolResponseMessage", "content": "100.000" },
-      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 100.0, "b": 5.0 } },
-      { "message_type": "ToolResponseMessage", "content": "20.000" },
-      { "message_type": "AIMessage", "content": "20.000" }
-    ]
+    "input": "Look up 'bad_guy'. Ban his IP (assume known 10.10.10.10). Cancel all his orders (simulate limit=3 orders).",
+    "tool_call_names": ["lookup_user_by_username", "blacklist_ip_address", "search_orders", "cancel_order", "cancel_order", "cancel_order"],
+    "tool_call_args": [{"username": "bad_guy"}, {"ip_address": "10.10.10.10", "duration_hours": 48}, {"user_id": "u_bad_guy_666", "limit": 3}, {"order_id": "#ORD-BG-1", "reason": "Banned"}, {"order_id": "#ORD-BG-2", "reason": "Banned"}, {"order_id": "#ORD-BG-3", "reason": "Banned"}]
   },
   {
-    "input": "Value of 1.23 * 2.0 + 3.45?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of 1.23 * 2.0 + 3.45?" },
-      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 1.23, "b": 2.0 } },
-      { "message_type": "ToolResponseMessage", "content": "2.460" },
-      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 2.46, "b": 3.45 } },
-      { "message_type": "ToolResponseMessage", "content": "5.910" },
-      { "message_type": "AIMessage", "content": "5.910" }
-    ]
+    "input": "Refund $5 to order #100, $5 to order #101, $5 to order #102.",
+    "tool_call_names": ["request_refund", "request_refund", "request_refund"],
+    "tool_call_args": [{"order_id": "#100", "amount": 5.0}, {"order_id": "#101", "amount": 5.0}, {"order_id": "#102", "amount": 5.0}]
   },
   {
-    "input": "Value of (10.0 - 1.5) * (2.0 + 0.5)?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of (10.0 - 1.5) * (2.0 + 0.5)?" },
-      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 10.0, "b": 1.5 } },
-      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 2.0, "b": 0.5 } },
-      { "message_type": "ToolResponseMessage", "content": "8.500" },
-      { "message_type": "ToolResponseMessage", "content": "2.500" },
-      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 8.5, "b": 2.5 } },
-      { "message_type": "ToolResponseMessage", "content": "21.250" },
-      { "message_type": "AIMessage", "content": "21.250" }
-    ]
+    "input": "Search 'Cable'. Get price of first result. Check stock of first result.",
+    "tool_call_names": ["search_products", "get_product_pricing", "check_inventory_level"],
+    "tool_call_args": [{"query": "Cable"}, {"sku": "SKU_CABLE_01"}, {"sku": "SKU_CABLE_01"}]
   },
   {
-    "input": "Value of 6.6 / 2.2 * 3.0?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of 6.6 / 2.2 * 3.0?" },
-      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 6.6, "b": 2.2 } },
-      { "message_type": "ToolResponseMessage", "content": "3.000" },
-      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 3.0, "b": 3.0 } },
-      { "message_type": "ToolResponseMessage", "content": "9.000" },
-      { "message_type": "AIMessage", "content": "9.000" }
-    ]
+    "input": "User u_777 requests full data export and account closure (ban).",
+    "tool_call_names": ["export_user_data", "blacklist_ip_address"],
+    "tool_call_args": [{"user_id": "u_777", "format": "json"}, {"ip_address": "0.0.0.0", "duration_hours": 99999}]
   },
   {
-    "input": "Value of 0.25 * 0.25 * 16.0?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of 0.25 * 0.25 * 16.0?" },
-      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 0.25, "b": 0.25 } },
-      { "message_type": "ToolResponseMessage", "content": "0.063" },
-      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 0.0625, "b": 16.0 } },
-      { "message_type": "ToolResponseMessage", "content": "1.000" },
-      { "message_type": "AIMessage", "content": "1.000" }
-    ]
+    "input": "Reset password for u_555 (temp). Email the temp password to them.",
+    "tool_call_names": ["reset_user_password", "send_transactional_email"],
+    "tool_call_args": [{"user_id": "u_555", "temporary": true}, {"email": "u555@example.com", "template_id": "manual_password_send", "context": {"password": "TEMP_PASS_555"}}]
   },
   {
-    "input": "Value of 100.5 / 2.0 - 0.25?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of 100.5 / 2.0 - 0.25?" },
-      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 100.5, "b": 2.0 } },
-      { "message_type": "ToolResponseMessage", "content": "50.250" },
-      { "message_type": "ToolCallMessage", "tool_name": "subtract", "tool_kwargs": { "a": 50.25, "b": 0.25 } },
-      { "message_type": "ToolResponseMessage", "content": "50.000" },
-      { "message_type": "AIMessage", "content": "50.000" }
-    ]
+    "input": "Check 'main' warehouse stock for SKU_Z. If 0, check 'east' warehouse.",
+    "tool_call_names": ["check_inventory_level", "check_inventory_level"],
+    "tool_call_args": [{"sku": "SKU_Z", "warehouse_id": "main"}, {"sku": "SKU_Z", "warehouse_id": "east"}]
   },
   {
-    "input": "Value of (5.0 + 15.0) / (2.0 + 2.0)?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of (5.0 + 15.0) / (2.0 + 2.0)?" },
-      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 5.0, "b": 15.0 } },
-      { "message_type": "ToolCallMessage", "tool_name": "add", "tool_kwargs": { "a": 2.0, "b": 2.0 } },
-      { "message_type": "ToolResponseMessage", "content": "20.000" },
-      { "message_type": "ToolResponseMessage", "content": "4.000" },
-      { "message_type": "ToolCallMessage", "tool_name": "divide", "tool_kwargs": { "a": 20.0, "b": 4.0 } },
-      { "message_type": "ToolResponseMessage", "content": "5.000" },
-      { "message_type": "AIMessage", "content": "5.000" }
-    ]
+    "input": "Ticket T-333: Add internal note 'Spam'. Close it (escalate to archive).",
+    "tool_call_names": ["update_ticket_comment", "escalate_ticket"],
+    "tool_call_args": [{"ticket_id": "T-333", "comment": "Spam", "internal_note": true}, {"ticket_id": "T-333", "department": "archive"}]
   },
   {
-    "input": "Value of 2.2 * 3.3?",
-    "optimal_message_sequence": [
-      { "message_type": "UserMessage", "content": "Value of 2.2 * 3.3?" },
-      { "message_type": "ToolCallMessage", "tool_name": "multiply", "tool_kwargs": { "a": 2.2, "b": 3.3 } },
-      { "message_type": "ToolResponseMessage", "content": "7.260" },
-      { "message_type": "AIMessage", "content": "7.260" }
-    ]
+    "input": "Find user 'vip_client'. Credit $200. Send 'gift_received' email.",
+    "tool_call_names": ["lookup_user_by_username", "apply_account_credit", "send_transactional_email"],
+    "tool_call_args": [{"username": "vip_client"}, {"user_id": "u_vip_001", "amount": 200.0, "memo": "Gift"}, {"email": "vip@client.com", "template_id": "gift_received", "context": {"amount": 200}}]
+  },
+  {
+    "input": "Order #404 missing. Check details. Refund fully. Create lost ticket.",
+    "tool_call_names": ["get_order_details", "request_refund", "create_support_ticket"],
+    "tool_call_args": [{"order_id": "#404"}, {"order_id": "#404", "amount": 0, "full_refund": true}, {"user_id": "u_unknown", "subject": "Order Lost #404", "priority": "high"}]
+  },
+  {
+    "input": "Admin routine: Check db status. Check web status. Check api status.",
+    "tool_call_names": ["get_system_status", "get_system_status", "get_system_status"],
+    "tool_call_args": [{"service_name": "db"}, {"service_name": "web"}, {"service_name": "api"}]
+  },
+  {
+    "input": "User u_123 updated profile. Send confirmation email.",
+    "tool_call_names": ["get_user_profile_details", "send_transactional_email"],
+    "tool_call_args": [{"user_id": "u_123"}, {"email": "u123@profile.com", "template_id": "profile_update", "context": {}}]
+  },
+  {
+    "input": "Remove 10 SKU_A (expired). Add 10 SKU_A (new batch).",
+    "tool_call_names": ["remove_stock", "add_stock"],
+    "tool_call_args": [{"sku": "SKU_A", "quantity": 10, "reason": "expired"}, {"sku": "SKU_A", "quantity": 10, "reason": "new batch"}]
+  },
+  {
+    "input": "Find user bill@ms.com. Reset pass. Escalate his ticket T-BILL to 'executive'.",
+    "tool_call_names": ["lookup_user_by_email", "reset_user_password", "escalate_ticket"],
+    "tool_call_args": [{"email": "bill@ms.com"}, {"user_id": "u_bill_001", "temporary": false}, {"ticket_id": "T-BILL", "department": "executive"}]
+  },
+  {
+    "input": "Order #111 refund failed? Check order details. Try refund again ($10).",
+    "tool_call_names": ["get_order_details", "request_refund"],
+    "tool_call_args": [{"order_id": "#111"}, {"order_id": "#111", "amount": 10.0}]
+  },
+  {
+    "input": "Search 'Mouse'. Check stock of result. Add 10 units if result found.",
+    "tool_call_names": ["search_products", "check_inventory_level", "add_stock"],
+    "tool_call_args": [{"query": "Mouse"}, {"sku": "SKU_MOUSE_01"}, {"sku": "SKU_MOUSE_01", "quantity": 10, "reason": "Auto-Refill"}]
+  },
+  {
+    "input": "Ban IP 5.5.5.5. Look up user u_555 (suspect). Cancel their order #555.",
+    "tool_call_names": ["blacklist_ip_address", "get_user_profile_details", "cancel_order"],
+    "tool_call_args": [{"ip_address": "5.5.5.5", "duration_hours": 24}, {"user_id": "u_555"}, {"order_id": "#555", "reason": "Suspicious Activity"}]
+  },
+  {
+    "input": "User u_101 requested invoice for Jan 2023 and Feb 2023.",
+    "tool_call_names": ["generate_invoice_pdf", "generate_invoice_pdf"],
+    "tool_call_args": [{"user_id": "u_101", "month": "Jan", "year": 2023}, {"user_id": "u_101", "month": "Feb", "year": 2023}]
+  },
+  {
+    "input": "Check stock SKU_Q. If > 0, check price.",
+    "tool_call_names": ["check_inventory_level", "get_product_pricing"],
+    "tool_call_args": [{"sku": "SKU_Q"}, {"sku": "SKU_Q", "currency": "USD"}]
+  },
+  {
+    "input": "Ticket T-900 update: 'Fixed'. Close ticket (escalate to closed).",
+    "tool_call_names": ["update_ticket_comment", "escalate_ticket"],
+    "tool_call_args": [{"ticket_id": "T-900", "comment": "Fixed"}, {"ticket_id": "T-900", "department": "closed"}]
+  },
+  {
+    "input": "Credit u_222 $5 (late shipping). Refund order #222 $5 (shipping cost).",
+    "tool_call_names": ["apply_account_credit", "request_refund"],
+    "tool_call_args": [{"user_id": "u_222", "amount": 5.0, "memo": "Late Shipping Comp"}, {"order_id": "#222", "amount": 5.0}]
+  },
+  {
+    "input": "Find user 'bad_actor'. Export data. Ban IP 9.9.9.9.",
+    "tool_call_names": ["lookup_user_by_username", "export_user_data", "blacklist_ip_address"],
+    "tool_call_args": [{"username": "bad_actor"}, {"user_id": "u_actor_666", "format": "json"}, {"ip_address": "9.9.9.9", "duration_hours": 72}]
+  },
+  {
+    "input": "Restock SKU_1 (50) and SKU_2 (50).",
+    "tool_call_names": ["add_stock", "add_stock"],
+    "tool_call_args": [{"sku": "SKU_1", "quantity": 50, "reason": "restock"}, {"sku": "SKU_2", "quantity": 50, "reason": "restock"}]
+  },
+  {
+    "input": "User u_900 email update to x@y.com. Send confirm to x@y.com.",
+    "tool_call_names": ["update_user_email", "send_transactional_email"],
+    "tool_call_args": [{"user_id": "u_900", "new_email": "x@y.com"}, {"email": "x@y.com", "template_id": "email_confirm", "context": {}}]
+  },
+  {
+    "input": "Lookup user a@b.com. If found, check their ticket T-AB status.",
+    "tool_call_names": ["lookup_user_by_email", "get_ticket_status"],
+    "tool_call_args": [{"email": "a@b.com"}, {"ticket_id": "T-AB"}]
+  },
+  {
+    "input": "Cancel order #1, #2, and #3.",
+    "tool_call_names": ["cancel_order", "cancel_order", "cancel_order"],
+    "tool_call_args": [{"order_id": "#1", "reason": "Batch Cancel"}, {"order_id": "#2", "reason": "Batch Cancel"}, {"order_id": "#3", "reason": "Batch Cancel"}]
+  },
+  {
+    "input": "Find user 'hacker'. Reset pass. Ban IP 6.6.6.6.",
+    "tool_call_names": ["lookup_user_by_username", "reset_user_password", "blacklist_ip_address"],
+    "tool_call_args": [{"username": "hacker"}, {"user_id": "u_hack_999", "temporary": true}, {"ip_address": "6.6.6.6", "duration_hours": 24}]
+  },
+  {
+    "input": "Check prices for SKU_A, SKU_B, SKU_C.",
+    "tool_call_names": ["get_product_pricing", "get_product_pricing", "get_product_pricing"],
+    "tool_call_args": [{"sku": "SKU_A"}, {"sku": "SKU_B"}, {"sku": "SKU_C"}]
+  },
+  {
+    "input": "Refund order #888 full. Credit user u_888 $10.",
+    "tool_call_names": ["request_refund", "apply_account_credit"],
+    "tool_call_args": [{"order_id": "#888", "amount": 0, "full_refund": true}, {"user_id": "u_888", "amount": 10.0, "memo": "Comp"}]
+  },
+  {
+    "input": "Search 'Speaker'. Get details of first result SKU.",
+    "tool_call_names": ["search_products", "get_product_pricing"],
+    "tool_call_args": [{"query": "Speaker"}, {"sku": "SKU_SPKR_01"}]
+  },
+  {
+    "input": "User u_123 wants invoice for Jan 2024. Email it to them.",
+    "tool_call_names": ["generate_invoice_pdf", "send_transactional_email"],
+    "tool_call_args": [{"user_id": "u_123", "month": "Jan", "year": 2024}, {"email": "u123@invoice.com", "template_id": "send_invoice", "context": {"link": "https://api.example.com/invoices/inv_123.pdf"}}]
+  },
+  {
+    "input": "Escalate T-1, T-2, T-3 to 'level2'.",
+    "tool_call_names": ["escalate_ticket", "escalate_ticket", "escalate_ticket"],
+    "tool_call_args": [{"ticket_id": "T-1", "department": "level2"}, {"ticket_id": "T-2", "department": "level2"}, {"ticket_id": "T-3", "department": "level2"}]
+  },
+  {
+    "input": "Create ticket for u_555 'Login Issue'. Reset password.",
+    "tool_call_names": ["create_support_ticket", "reset_user_password"],
+    "tool_call_args": [{"user_id": "u_555", "subject": "Login Issue", "priority": "high"}, {"user_id": "u_555", "temporary": true}]
+  },
+  {
+    "input": "Check stock SKU_X. Remove 1 'lost'. Check stock again.",
+    "tool_call_names": ["check_inventory_level", "remove_stock", "check_inventory_level"],
+    "tool_call_args": [{"sku": "SKU_X"}, {"sku": "SKU_X", "quantity": 1, "reason": "lost"}, {"sku": "SKU_X"}]
+  },
+  {
+    "input": "Find user sally@doe.com. Get her orders. Refund the first one.",
+    "tool_call_names": ["lookup_user_by_email", "search_orders", "request_refund"],
+    "tool_call_args": [{"email": "sally@doe.com"}, {"user_id": "u_sally_01", "limit": 1}, {"order_id": "#ORD-SAL-1", "amount": 0, "full_refund": true}]
+  },
+  {
+    "input": "Ban IP 1.2.3.4 (attack). Check system status.",
+    "tool_call_names": ["blacklist_ip_address", "get_system_status"],
+    "tool_call_args": [{"ip_address": "1.2.3.4", "duration_hours": 48}, {"service_name": "all"}]
+  },
+  {
+    "input": "Update ticket T-777 'Resolved'. Email user u_777 'ticket_closed'.",
+    "tool_call_names": ["update_ticket_comment", "send_transactional_email"],
+    "tool_call_args": [{"ticket_id": "T-777", "comment": "Resolved", "internal_note": false}, {"email": "u777@ticket.com", "template_id": "ticket_closed", "context": {"ticket_id": "T-777"}}]
+  },
+  {
+    "input": "Find product 'Key'. Check stock. If > 100, remove 10 'overstock'.",
+    "tool_call_names": ["search_products", "check_inventory_level", "remove_stock"],
+    "tool_call_args": [{"query": "Key"}, {"sku": "SKU_KEY_01"}, {"sku": "SKU_KEY_01", "quantity": 10, "reason": "overstock"}]
+  },
+  {
+    "input": "User u_999 wants to change email to n@n.com and get a password reset.",
+    "tool_call_names": ["update_user_email", "reset_user_password"],
+    "tool_call_args": [{"user_id": "u_999", "new_email": "n@n.com"}, {"user_id": "u_999", "temporary": false}]
+  },
+  {
+    "input": "Cancel order #555. Refund #555.",
+    "tool_call_names": ["cancel_order", "request_refund"],
+    "tool_call_args": [{"order_id": "#555", "reason": "User Cancel"}, {"order_id": "#555", "amount": 0, "full_refund": true}]
+  },
+  {
+    "input": "Search orders for u_123. Get details of the first order.",
+    "tool_call_names": ["search_orders", "get_order_details"],
+    "tool_call_args": [{"user_id": "u_123", "limit": 1}, {"order_id": "#ORD-123-A"}]
+  },
+  {
+    "input": "Apply $10 credit to u_1, u_2, u_3.",
+    "tool_call_names": ["apply_account_credit", "apply_account_credit", "apply_account_credit"],
+    "tool_call_args": [{"user_id": "u_1", "amount": 10.0, "memo": "Promo"}, {"user_id": "u_2", "amount": 10.0, "memo": "Promo"}, {"user_id": "u_3", "amount": 10.0, "memo": "Promo"}]
+  },
+  {
+    "input": "Find user tom@jerry.com. Check his ticket T-TOM.",
+    "tool_call_names": ["lookup_user_by_email", "get_ticket_status"],
+    "tool_call_args": [{"email": "tom@jerry.com"}, {"ticket_id": "T-TOM"}]
+  },
+  {
+    "input": "Remove 1 SKU_X (damage). Create ticket for 'Warehouse Manager' (u_admin).",
+    "tool_call_names": ["remove_stock", "create_support_ticket"],
+    "tool_call_args": [{"sku": "SKU_X", "quantity": 1, "reason": "damage"}, {"user_id": "u_admin", "subject": "Stock Damage SKU_X", "priority": "low"}]
+  },
+  {
+    "input": "Generate invoice u_555 May 2024. Email it to boss@company.com.",
+    "tool_call_names": ["generate_invoice_pdf", "send_transactional_email"],
+    "tool_call_args": [{"user_id": "u_555", "month": "May", "year": 2024}, {"email": "boss@company.com", "template_id": "invoice_copy", "context": {"link": "https://api.example.com/invoices/inv_555.pdf"}}]
+  },
+  {
+    "input": "Ban IP 1.1.1.1. Check 'api' status. If healthy, unban IP (simulate immediate unban).",
+    "tool_call_names": ["blacklist_ip_address", "get_system_status", "blacklist_ip_address"],
+    "tool_call_args": [{"ip_address": "1.1.1.1", "duration_hours": 1}, {"service_name": "api"}, {"ip_address": "1.1.1.1", "duration_hours": 0}]
+  },
+  {
+    "input": "Find user 'ghost'. Export data. Close ticket T-GHOST.",
+    "tool_call_names": ["lookup_user_by_username", "export_user_data", "update_ticket_comment"],
+    "tool_call_args": [{"username": "ghost"}, {"user_id": "u_ghost_000", "format": "json"}, {"ticket_id": "T-GHOST", "comment": "Closed account", "internal_note": true}]
+  },
+  {
+    "input": "Lookup user m@m.com. Credit $5. Refund order #M-1 $5.",
+    "tool_call_names": ["lookup_user_by_email", "apply_account_credit", "request_refund"],
+    "tool_call_args": [{"email": "m@m.com"}, {"user_id": "u_m_100", "amount": 5.0, "memo": "Comp"}, {"order_id": "#M-1", "amount": 5.0}]
+  },
+  {
+    "input": "Check stock SKU_1. Add 10. Check stock SKU_1.",
+    "tool_call_names": ["check_inventory_level", "add_stock", "check_inventory_level"],
+    "tool_call_args": [{"sku": "SKU_1"}, {"sku": "SKU_1", "quantity": 10, "reason": "Audit Correction"}, {"sku": "SKU_1"}]
+  },
+  {
+    "input": "Cancel order #999. Email user u_999 'order_cancelled'.",
+    "tool_call_names": ["cancel_order", "send_transactional_email"],
+    "tool_call_args": [{"order_id": "#999", "reason": "OOS"}, {"email": "u999@example.com", "template_id": "order_cancelled", "context": {"order_id": "#999"}}]
+  },
+  {
+    "input": "Escalate T-100 to 'engineering'. Add note 'Check logs'.",
+    "tool_call_names": ["escalate_ticket", "update_ticket_comment"],
+    "tool_call_args": [{"ticket_id": "T-100", "department": "engineering"}, {"ticket_id": "T-100", "comment": "Check logs", "internal_note": true}]
+  },
+  {
+    "input": "Find user 'test'. Get details. Reset pass.",
+    "tool_call_names": ["lookup_user_by_username", "get_user_profile_details", "reset_user_password"],
+    "tool_call_args": [{"username": "test"}, {"user_id": "u_test_001"}, {"user_id": "u_test_001", "temporary": false}]
+  },
+  {
+    "input": "Refund #100 full. Ban IP 12.12.12.12.",
+    "tool_call_names": ["request_refund", "blacklist_ip_address"],
+    "tool_call_args": [{"order_id": "#100", "amount": 0, "full_refund": true}, {"ip_address": "12.12.12.12", "duration_hours": 24}]
+  },
+  {
+    "input": "Search 'Bag'. Get price. Check stock.",
+    "tool_call_names": ["search_products", "get_product_pricing", "check_inventory_level"],
+    "tool_call_args": [{"query": "Bag"}, {"sku": "SKU_BAG_01"}, {"sku": "SKU_BAG_01"}]
+  },
+  {
+    "input": "User u_444. Update email new@mail.com. Credit $1.",
+    "tool_call_names": ["update_user_email", "apply_account_credit"],
+    "tool_call_args": [{"user_id": "u_444", "new_email": "new@mail.com"}, {"user_id": "u_444", "amount": 1.0, "memo": "Thanks"}]
+  },
+  {
+    "input": "Check system status. If healthy, process refund #123.",
+    "tool_call_names": ["get_system_status", "request_refund"],
+    "tool_call_args": [{"service_name": "all"}, {"order_id": "#123", "amount": 10.0}]
+  },
+  {
+    "input": "Find user x@x.com. Create ticket 'Hello'.",
+    "tool_call_names": ["lookup_user_by_email", "create_support_ticket"],
+    "tool_call_args": [{"email": "x@x.com"}, {"user_id": "u_x_101", "subject": "Hello", "priority": "low"}]
+  },
+  {
+    "input": "Remove 100 stock SKU_OLD. Add 100 stock SKU_NEW.",
+    "tool_call_names": ["remove_stock", "add_stock"],
+    "tool_call_args": [{"sku": "SKU_OLD", "quantity": 100, "reason": "Swap"}, {"sku": "SKU_NEW", "quantity": 100, "reason": "Swap"}]
   }
 ]
