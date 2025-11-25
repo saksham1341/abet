@@ -1,1 +1,1 @@
-from .base import AbstractEvaluator
+from .base import AbstractEvaluator, BaseEvaluator

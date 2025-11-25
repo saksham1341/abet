@@ -1,1 +1,1 @@
-from .base import AbstractDatasetLoader
+from .base import AbstractDatasetLoader, BaseDatasetLoader
