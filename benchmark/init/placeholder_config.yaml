@@ -22,7 +22,7 @@ agentrunner_config:
 
 # Evaluator configurations
 evaluator_class: null
-evaulator_config:
+evaluator_config:
   {}
 
 # EvaluationSaver configurations
