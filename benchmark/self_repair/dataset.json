@@ -1,0 +1,52 @@
+[
+    {
+        "desired_task": "Find the length of the longest substring without repeating characters in the string 'abcabcbb'",
+        "incomplete_code": "s = 'abcabcbb'\nchars = set()\nleft = 0\nresult = 0\nfor right in range(len(s)):\n    # Logic missing here to remove characters from set",
+        "correct_output": "3"
+    },
+    {
+        "desired_task": "Flatten a nested list [1, [2, [3, 4], 5], 6] into a single level list",
+        "incomplete_code": "nested = [1, [2, [3, 4], 5], 6]\nflat = []\ndef flatten(l):\n    for i in l:\n        # Check if i is list or integer missing\n        flat.append(i)\nflatten(nested)\nprint(flat)",
+        "correct_output": "[1, 2, 3, 4, 5, 6]"
+    },
+    {
+        "desired_task": "Calculate the factorial of 10 using recursion",
+        "incomplete_code": "def factorial(n):\n    if n == 0:\n        return 1\n    # Recursive step is missing\nprint(factorial(10))",
+        "correct_output": "3628800"
+    },
+    {
+        "desired_task": "Check if the string 'A man, a plan, a canal: Panama' is a palindrome, ignoring case and non-alphanumeric characters",
+        "incomplete_code": "s = 'A man, a plan, a canal: Panama'\ncleaned = []\nfor char in s:\n    if char.isalnum():\n        cleaned.append(char.lower())\n# Comparison logic is missing\nprint(is_palindrome)",
+        "correct_output": "True"
+    },
+    {
+        "desired_task": "Find the intersection of two lists [1, 2, 2, 1] and [2, 2] ensuring result is unique elements only",
+        "incomplete_code": "nums1 = [1, 2, 2, 1]\nnums2 = [2, 2]\n# Set conversion logic missing\nprint(list(intersection))",
+        "correct_output": "[2]"
+    },
+    {
+        "desired_task": "Group anagrams from the list ['eat', 'tea', 'tan', 'ate', 'nat', 'bat']",
+        "incomplete_code": "strs = ['eat', 'tea', 'tan', 'ate', 'nat', 'bat']\nanagrams = {}\nfor s in strs:\n    # Sorting key logic missing\n    if key not in anagrams:\n        anagrams[key] = []\n    anagrams[key].append(s)\nprint(list(anagrams.values()))",
+        "correct_output": "[['eat', 'tea', 'ate'], ['tan', 'nat'], ['bat']]"
+    },
+    {
+        "desired_task": "Implement a binary search to find the index of 7 in the sorted list [1, 2, 3, 4, 5, 6, 7, 8, 9]",
+        "incomplete_code": "arr = [1, 2, 3, 4, 5, 6, 7, 8, 9]\ntarget = 7\nlow = 0\nhigh = len(arr) - 1\nwhile low <= high:\n    mid = (low + high) // 2\n    # Comparison logic (if, elif, else) missing\n    low += 1",
+        "correct_output": "6"
+    },
+    {
+        "desired_task": "Convert the Roman Numeral 'MCMXCIV' to an integer",
+        "incomplete_code": "s = 'MCMXCIV'\nmaps = {'I': 1, 'V': 5, 'X': 10, 'L': 50, 'C': 100, 'D': 500, 'M': 1000}\ntotal = 0\nfor i in range(len(s)):\n    # Subtraction logic (IV, IX etc.) missing\n    total += maps[s[i]]\nprint(total)",
+        "correct_output": "1994"
+    },
+    {
+        "desired_task": "Compress the string 'aabcccccaaa' using basic Run Length Encoding (counts)",
+        "incomplete_code": "s = 'aabcccccaaa'\ncompressed = []\ncount = 1\nfor i in range(1, len(s)):\n    if s[i] == s[i-1]:\n        count += 1\n    else:\n        # Appending logic missing\n        count = 1\nprint(''.join(compressed))",
+        "correct_output": "a2b1c5a3"
+    },
+    {
+        "desired_task": "Find the missing number in the array containing n distinct numbers taken from 0, 1, 2, ..., n. Array: [3, 0, 1]",
+        "incomplete_code": "nums = [3, 0, 1]\nn = len(nums)\n# Sum formula logic missing (n*(n+1)/2)\nactual_sum = sum(nums)\nprint(expected_sum - actual_sum)",
+        "correct_output": "2"
+    }
+]
