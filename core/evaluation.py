@@ -9,3 +9,7 @@ from dataclasses import dataclass
 @dataclass
 class AbstractEvaluation:
     dataset: AbstractDataset
+
+@dataclass
+class BaseEvaluation(AbstractEvaluation):
+    dataset: AbstractDataset = None
