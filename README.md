@@ -65,3 +65,30 @@ python -m benchmark.tool_call
 ```
 
 A benchmark can be configured through the `config.yaml` file inside it's directory.
+
+
+### Dashboard
+
+Running a benchmark with `evaluationsaver_class` as `core.evaluationsaver.DashboardEvaluationSaver` with `output_path` inside `evaluations/` folder allows the streamlit powered dashboard app to compare different outputs (`runs`) of a benchmark.
+
+A simple config to register a run on the dashboard would be
+```yaml
+# ... other configs ...
+
+# EvaluationSaver config
+evaluationsaver_class: core.evaluationsaver.DashboardEvaluationSaver
+evaluationsaver_config:
+    benchmark_name: *benchmark_name  # Defined earlier in the config
+    run_id: *model_name  # Under agentbuilder_config
+    output_path: "evaluations/whatever.json"  # Or inside whatever folder you listed under `evaluations_folder` in `dashboard/config.yaml`
+```
+
+Then, on running the dashboard using
+```sh
+streamlit run dashboard/app.py
+```
+
+You will see your benchmark's leaderboard and model comparisons.
+
+Here is the dashboard of the `tool_call` benchmark:
+![Tool Call Benchmark Dashboard](tool_call_benchmark_dashboard.png)
