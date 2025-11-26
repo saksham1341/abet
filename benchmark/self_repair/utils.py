@@ -56,9 +56,12 @@ class SRBTranslator(LangGraphTranslator):
                 tries += 1
                 last_run_code = msg.tool_kwargs["code"]
         
-        code_output = run_code(
-            code=last_run_code
-        )
+        if last_run_code:
+            code_output = run_code(
+                code=last_run_code
+            )
+        else:
+            code_output = None
 
         return SRBAgentOutput(
             code_output=code_output,
@@ -84,6 +87,9 @@ class SRBEvaluator(BaseEvaluator):
         for key in keys:
             out = dataset.get_output(key)
             tgt = dataset.get_target(key)
+
+            if out.tries == 0 or out.code_output is None:
+                continue
 
             agent_code_output = out.code_output[:-1]   # Removing the default `\n` at the end
             target_code_output = tgt

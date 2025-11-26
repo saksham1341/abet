@@ -48,5 +48,205 @@
         "desired_task": "Find the missing number in the array containing n distinct numbers taken from 0, 1, 2, ..., n. Array: [3, 0, 1]",
         "incomplete_code": "nums = [3, 0, 1]\nn = len(nums)\n# Sum formula logic missing (n*(n+1)/2)\nactual_sum = sum(nums)\nprint(expected_sum - actual_sum)",
         "correct_output": "2"
+    },
+    {
+        "desired_task": "Check if the string '()[]{}' contains valid balanced parentheses",
+        "incomplete_code": "s = '()[]{}'\nstack = []\nmapping = {')': '(', ']': '[', '}': '{'}\nvalid = True\nfor char in s:\n    if char in mapping:\n        # Pop/Check logic missing\n        pass\n    else:\n        stack.append(char)\nprint(valid and not stack)",
+        "correct_output": "True"
+    },
+    {
+        "desired_task": "Calculate the Greatest Common Divisor (GCD) of 48 and 18 using the Euclidean algorithm",
+        "incomplete_code": "a, b = 48, 18\nwhile b:\n    # Euclidean step missing (a becomes b, b becomes remainder)\n    pass\nprint(a)",
+        "correct_output": "6"
+    },
+    {
+        "desired_task": "Find the indices of two numbers in [2, 7, 11, 15] that add up to target 9",
+        "incomplete_code": "nums = [2, 7, 11, 15]\ntarget = 9\nseen = {}\nresult = []\nfor i, num in enumerate(nums):\n    complement = target - num\n    # Lookup logic missing\n    seen[num] = i\nprint(result)",
+        "correct_output": "[0, 1]"
+    },
+    {
+        "desired_task": "Transpose a 2x2 matrix [[1, 2], [3, 4]] to [[1, 3], [2, 4]]",
+        "incomplete_code": "matrix = [[1, 2], [3, 4]]\nrows = len(matrix)\ncols = len(matrix[0])\n# List comprehension or nested loop logic missing\ntransposed = [[0] * rows for _ in range(cols)]\nprint(transposed)",
+        "correct_output": "[[1, 3], [2, 4]]"
+    },
+    {
+        "desired_task": "Count the number of 1-bits (Hamming Weight) in the binary representation of 11 (1011)",
+        "incomplete_code": "n = 11\ncount = 0\nwhile n:\n    # Bitwise operation to clear least significant bit missing (n &= n-1)\n    count += 1\nprint(count)",
+        "correct_output": "3"
+    },
+    {
+        "desired_task": "Reverse the order of words in the string 'the sky is blue'",
+        "incomplete_code": "s = 'the sky is blue'\n# Split, Reverse, Join logic missing\nresult = ''\nprint(result)",
+        "correct_output": "blue is sky the"
+    },
+    {
+        "desired_task": "Calculate the sum of the primary diagonal elements in matrix [[1, 2, 3], [4, 5, 6], [7, 8, 9]]",
+        "incomplete_code": "mat = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]\ntotal = 0\nfor i in range(len(mat)):\n    # Access diagonal element logic missing\n    pass\nprint(total)",
+        "correct_output": "15"
+    },
+    {
+        "desired_task": "Find the most frequent character in the string 'banana'",
+        "incomplete_code": "s = 'banana'\ncount = {}\nfor char in s:\n    count[char] = count.get(char, 0) + 1\n# Logic to find key with max value missing\nprint(most_frequent)",
+        "correct_output": "a"
+    },
+    {
+        "desired_task": "Implement Bubble Sort to sort [64, 34, 25, 12]",
+        "incomplete_code": "arr = [64, 34, 25, 12]\nn = len(arr)\nfor i in range(n):\n    for j in range(0, n-i-1):\n        # Swap logic missing if current > next\n        pass\nprint(arr)",
+        "correct_output": "[12, 25, 34, 64]"
+    },
+    {
+        "desired_task": "Check if the number 29 is prime",
+        "incomplete_code": "num = 29\nis_prime = True\nif num > 1:\n    for i in range(2, int(num**0.5) + 1):\n        # Modulo check missing\n        pass\nprint(is_prime)",
+        "correct_output": "True"
+    },
+    {
+        "desired_task": "Move all zeroes to the end of the list [0, 1, 0, 3, 12] while maintaining relative order of non-zeroes",
+        "incomplete_code": "nums = [0, 1, 0, 3, 12]\ninsert_pos = 0\nfor num in nums:\n    if num != 0:\n        # assignment logic missing\n        insert_pos += 1\n# Fill remaining with zeros logic missing\nprint(nums)",
+        "correct_output": "[1, 3, 12, 0, 0]"
+    },
+    {
+        "desired_task": "Find the Longest Common Prefix among ['flower', 'flow', 'flight']",
+        "incomplete_code": "strs = ['flower', 'flow', 'flight']\nprefix = strs[0]\nfor s in strs[1:]:\n    # Loop to shorten prefix while comparison fails missing\n    pass\nprint(prefix)",
+        "correct_output": "fl"
+    },
+    {
+        "desired_task": "Remove duplicates from sorted array [1, 1, 2] in-place and return the new list",
+        "incomplete_code": "nums = [1, 1, 2]\ni = 0\nfor j in range(1, len(nums)):\n    # Comparison and assignment logic missing\n    pass\nprint(nums[:i+1])",
+        "correct_output": "[1, 2]"
+    },
+    {
+        "desired_task": "Merge two sorted lists [1, 3] and [2, 4] into a new sorted list",
+        "incomplete_code": "l1 = [1, 3]\nl2 = [2, 4]\nmerged = []\ni = j = 0\n# While loop comparison logic missing\nmerged.extend(l1[i:])\nmerged.extend(l2[j:])\nprint(merged)",
+        "correct_output": "[1, 2, 3, 4]"
+    },
+    {
+        "desired_task": "Determine if 'abc' is a subsequence of 'ahbgdc'",
+        "incomplete_code": "s = 'abc'\nt = 'ahbgdc'\ni = j = 0\nwhile i < len(s) and j < len(t):\n    # Pointer increment logic missing\n    j += 1\nprint(i == len(s))",
+        "correct_output": "True"
+    },
+    {
+        "desired_task": "Find the single element in [4, 1, 2, 1, 2] where every other element appears twice (using XOR)",
+        "incomplete_code": "nums = [4, 1, 2, 1, 2]\nresult = 0\nfor num in nums:\n    # XOR operation logic missing\n    pass\nprint(result)",
+        "correct_output": "4"
+    },
+    {
+        "desired_task": "Generate the first 10 Fibonacci numbers starting 0, 1",
+        "incomplete_code": "fib = [0, 1]\nfor i in range(2, 10):\n    # Sum of previous two logic missing\n    pass\nprint(fib)",
+        "correct_output": "[0, 1, 1, 2, 3, 5, 8, 13, 21, 34]"
+    },
+    {
+        "desired_task": "Rotate the list [1, 2, 3, 4, 5] to the right by k=2 steps",
+        "incomplete_code": "nums = [1, 2, 3, 4, 5]\nk = 2\nk = k % len(nums)\n# Slicing logic missing (nums[:] = ...)\nprint(nums)",
+        "correct_output": "[4, 5, 1, 2, 3]"
+    },
+    {
+        "desired_task": "Check if integer 16 is a Power of Two using bit manipulation",
+        "incomplete_code": "n = 16\n# Bitwise check logic missing (n > 0 and n & (n-1) == 0)\nis_power = False\nprint(is_power)",
+        "correct_output": "True"
+    },
+    {
+        "desired_task": "Calculate the sum of all multiples of 3 or 5 below 10",
+        "incomplete_code": "limit = 10\ntotal = 0\nfor i in range(limit):\n    # Modulo logic missing\n    pass\nprint(total)",
+        "correct_output": "23"
+    },
+    {
+        "desired_task": "Find the maximum sum of a contiguous subarray in [-2, 1, -3, 4, -1, 2, 1, -5, 4] (Kadane's Algorithm)",
+        "incomplete_code": "nums = [-2, 1, -3, 4, -1, 2, 1, -5, 4]\nmax_so_far = nums[0]\nmax_ending_here = nums[0]\nfor i in range(1, len(nums)):\n    # Logic to compare current num vs current num + previous sum missing\n    max_so_far = max(max_so_far, max_ending_here)\nprint(max_so_far)",
+        "correct_output": "6"
+    },
+    {
+        "desired_task": "Generate the first 5 rows of Pascal's Triangle",
+        "incomplete_code": "numRows = 5\ntriangle = []\nfor i in range(numRows):\n    row = [1] * (i + 1)\n    for j in range(1, i):\n        # Sum of two elements from previous row logic missing\n        pass\n    triangle.append(row)\nprint(triangle)",
+        "correct_output": "[[1], [1, 1], [1, 2, 1], [1, 3, 3, 1], [1, 4, 6, 4, 1]]"
+    },
+    {
+        "desired_task": "Merge overlapping intervals [[1,3],[2,6],[8,10],[15,18]]",
+        "incomplete_code": "intervals = [[1,3],[2,6],[8,10],[15,18]]\nintervals.sort(key=lambda x: x[0])\nmerged = []\nfor interval in intervals:\n    # Overlap comparison logic missing (if not merged or merged[-1][1] < interval[0])\n    pass\nprint(merged)",
+        "correct_output": "[[1, 6], [8, 10], [15, 18]]"
+    },
+    {
+        "desired_task": "Find the product of array except self for [1, 2, 3, 4] without using division",
+        "incomplete_code": "nums = [1, 2, 3, 4]\nres = [1] * len(nums)\nprefix = 1\nfor i in range(len(nums)):\n    res[i] = prefix\n    prefix *= nums[i]\npostfix = 1\nfor i in range(len(nums) - 1, -1, -1):\n    # Postfix multiplication logic missing\n    pass\nprint(res)",
+        "correct_output": "[24, 12, 8, 6]"
+    },
+    {
+        "desired_task": "Determine if strings 'egg' and 'add' are isomorphic",
+        "incomplete_code": "s = 'egg'\nt = 'add'\nmap_s_t = {}\nmap_t_s = {}\nis_iso = True\nfor c1, c2 in zip(s, t):\n    # Bi-directional mapping check missing\n    pass\nprint(is_iso)",
+        "correct_output": "True"
+    },
+    {
+        "desired_task": "Calculate the number of distinct ways to climb 5 stairs taking 1 or 2 steps at a time",
+        "incomplete_code": "n = 5\nif n <= 2: print(n)\nelse:\n    a, b = 1, 2\n    for _ in range(3, n + 1):\n        # Fibonacci-style update logic missing\n        pass\n    print(b)",
+        "correct_output": "8"
+    },
+    {
+        "desired_task": "Rotate a 3x3 matrix [[1,2,3],[4,5,6],[7,8,9]] 90 degrees clockwise in-place",
+        "incomplete_code": "matrix = [[1,2,3],[4,5,6],[7,8,9]]\nn = len(matrix)\n# Transpose logic\nfor i in range(n):\n    for j in range(i, n):\n        matrix[i][j], matrix[j][i] = matrix[j][i], matrix[i][j]\n# Row reversal logic missing\nprint(matrix)",
+        "correct_output": "[[7, 4, 1], [8, 5, 2], [9, 6, 3]]"
+    },
+    {
+        "desired_task": "Find the index where 35 should be inserted in sorted array [1, 3, 5, 6] to maintain order",
+        "incomplete_code": "nums = [1, 3, 5, 6]\ntarget = 5\nleft, right = 0, len(nums) - 1\nwhile left <= right:\n    mid = (left + right) // 2\n    if nums[mid] == target:\n        print(mid); break\n    # Left/Right update logic missing\nelse:\n    print(left)",
+        "correct_output": "2"
+    },
+    {
+        "desired_task": "Check if 19 is a 'Happy Number' (sum of squared digits eventually equals 1)",
+        "incomplete_code": "n = 19\nseen = set()\nwhile n != 1 and n not in seen:\n    seen.add(n)\n    # Logic to calculate sum of squares of digits missing\n    n = 0 \nprint(n == 1)",
+        "correct_output": "True"
+    },
+    {
+        "desired_task": "Add one to the large integer represented as array [1, 2, 9]",
+        "incomplete_code": "digits = [1, 2, 9]\nfor i in range(len(digits)-1, -1, -1):\n    if digits[i] < 9:\n        digits[i] += 1\n        break\n    # Logic to handle 9s becoming 0 missing\nprint(digits)",
+        "correct_output": "[1, 3, 0]"
+    },
+    {
+        "desired_task": "Find the container with most water from heights [1,8,6,2,5,4,8,3,7]",
+        "incomplete_code": "height = [1,8,6,2,5,4,8,3,7]\nleft, right = 0, len(height) - 1\nmax_area = 0\nwhile left < right:\n    # Area calculation logic missing\n    if height[left] < height[right]:\n        left += 1\n    else:\n        right -= 1\nprint(max_area)",
+        "correct_output": "49"
+    },
+    {
+        "desired_task": "Reverse integer -123 ensuring signed result",
+        "incomplete_code": "x = -123\nsign = -1 if x < 0 else 1\nx = abs(x)\nres = 0\nwhile x:\n    # Modulo and multiplication logic missing\n    x //= 10\nprint(sign * res)",
+        "correct_output": "-321"
+    },
+    {
+        "desired_task": "Can ransom note 'aa' be constructed from magazine 'aab'?",
+        "incomplete_code": "ransom = 'aa'\nmagazine = 'aab'\nfrom collections import Counter\ncounts = Counter(magazine)\ncan_construct = True\nfor char in ransom:\n    # Check and decrement logic missing\n    pass\nprint(can_construct)",
+        "correct_output": "True"
+    },
+    {
+        "desired_task": "Find the length of the longest palindromic substring in 'babad'",
+        "incomplete_code": "s = 'babad'\ndef expand(l, r):\n    while l >= 0 and r < len(s) and s[l] == s[r]:\n        l -= 1; r += 1\n    return s[l+1:r]\nres = ''\nfor i in range(len(s)):\n    # Call expand for odd and even length missing\n    pass\nprint(res)",
+        "correct_output": "bab"
+    },
+    {
+        "desired_task": "Evaluate Reverse Polish Notation: ['2', '1', '+', '3', '*']",
+        "incomplete_code": "tokens = ['2', '1', '+', '3', '*']\nstack = []\nfor t in tokens:\n    if t not in '+-*/':\n        stack.append(int(t))\n    else:\n        # Pop two operands and apply operator logic missing\n        pass\nprint(stack[0])",
+        "correct_output": "9"
+    },
+    {
+        "desired_task": "Minimum path sum in grid [[1,3,1],[1,5,1],[4,2,1]]",
+        "incomplete_code": "grid = [[1,3,1],[1,5,1],[4,2,1]]\nm, n = len(grid), len(grid[0])\nfor i in range(1, m): grid[i][0] += grid[i-1][0]\nfor j in range(1, n): grid[0][j] += grid[0][j-1]\nfor i in range(1, m):\n    for j in range(1, n):\n        # DP min logic missing\n        pass\nprint(grid[-1][-1])",
+        "correct_output": "7"
+    },
+    {
+        "desired_task": "Sort colors [2, 0, 2, 1, 1, 0] (Dutch National Flag problem) in-place",
+        "incomplete_code": "nums = [2, 0, 2, 1, 1, 0]\nlow, mid, high = 0, 0, len(nums)-1\nwhile mid <= high:\n    if nums[mid] == 0:\n        nums[low], nums[mid] = nums[mid], nums[low]\n        low += 1; mid += 1\n    elif nums[mid] == 1:\n        mid += 1\n    else:\n        # Swap with high logic missing\n        pass\nprint(nums)",
+        "correct_output": "[0, 0, 1, 1, 2, 2]"
+    },
+    {
+        "desired_task": "Find the majority element (> n/2 times) in [3, 2, 3] (Boyer-Moore Voting)",
+        "incomplete_code": "nums = [3, 2, 3]\ncandidate = None\ncount = 0\nfor num in nums:\n    if count == 0:\n        candidate = num\n    # Increment/Decrement logic missing\nprint(candidate)",
+        "correct_output": "3"
+    },
+    {
+        "desired_task": "Add Binary strings '11' and '1'",
+        "incomplete_code": "a = '11'\nb = '1'\nres = []\ncarry = 0\ni, j = len(a)-1, len(b)-1\nwhile i >= 0 or j >= 0 or carry:\n    # Sum calculation and update carry logic missing\n    i -= 1; j -= 1\nprint(''.join(res[::-1]))",
+        "correct_output": "100"
+    },
+    {
+        "desired_task": "Count bits set to 1 for all numbers from 0 to 5",
+        "incomplete_code": "n = 5\nans = [0] * (n + 1)\nfor i in range(1, n + 1):\n    # DP logic (ans[i] = ans[i >> 1] + (i & 1)) missing\n    pass\nprint(ans)",
+        "correct_output": "[0, 1, 1, 2, 1, 2]"
     }
 ]

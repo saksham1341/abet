@@ -21,7 +21,7 @@ datasetloader_config:
 # AgentRunner configurations
 agentrunner_class: core.agentrunner.SyncThreadPoolAgentRunner
 agentrunner_config:
-  thread_count: 10
+  thread_count: 5
 
 # Evaluator configurations
 evaluator_class: benchmark.self_repair.utils.SRBEvaluator
