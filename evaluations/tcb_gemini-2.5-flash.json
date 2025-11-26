@@ -1,5 +1,0 @@
-{
-    "benchmark_name": "Tool Call Benchmark",
-    "run_id": "Gemini 2.5 Flash",
-    "results": {"ahr": 0.09411764705, "tp": 0.6868686868686869, "tsa": 0.6745098039215687}
-}

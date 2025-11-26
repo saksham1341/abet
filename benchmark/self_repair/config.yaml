@@ -22,7 +22,7 @@ datasetloader_config:
 # AgentRunner configurations
 agentrunner_class: core.agentrunner.SyncThreadPoolAgentRunner
 agentrunner_config:
-  thread_count: 5
+  thread_count: 2
 
 # Evaluator configurations
 evaluator_class: benchmark.self_repair.utils.SRBEvaluator
@@ -34,4 +34,4 @@ evaluationsaver_class: core.evaluationsaver.DashboardEvaluationSaver
 evaluationsaver_config:
   benchmark_name: *benchmark_name
   run_id: *model_name
-  path: "evaluations/srb_gemini-2.5-pro.json"
+  output_dir: "evaluations"

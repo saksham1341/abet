@@ -4,6 +4,7 @@ DashboardEvaluationSaver saves an evaluation for our dashboard to be able to vis
 
 from core.evaluation import AbstractEvaluation
 from .base import BaseEvaluationSaver
+from pathlib import Path
 import json
 
 
@@ -20,5 +21,5 @@ class DashboardEvaluationSaver(BaseEvaluationSaver):
             if isinstance(v, (int , float)):
                 data["results"][k] = v
 
-        with open(self.config["output_path"], "w") as f:
+        with open(Path(self.config["output_dir"], f"{data['benchmark_name']}_{data['run_id']}.json"), "w") as f:
             json.dump(data, f)
