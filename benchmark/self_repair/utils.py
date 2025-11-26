@@ -73,7 +73,6 @@ class SRBEvaluation(AbstractEvaluation):
     sr: float     # Any try success rate
     ftsr: float   # First try success rate
     scr: float    # Self correcting rate
-    ls: float     # Linter score
 
 class SRBEvaluator(BaseEvaluator):
     def _evaluate(self, dataset: ListDataset) -> SRBEvaluation:
@@ -89,9 +88,9 @@ class SRBEvaluator(BaseEvaluator):
             tgt = dataset.get_target(key)
 
             if out.tries == 0 or out.code_output is None:
-                continue
+                continue  # Agent didn't run any code
 
-            agent_code_output = out.code_output[:-1]   # Removing the default `\n` at the end
+            agent_code_output = out.code_output.rstrip()   # Removing unintended `\n` at the end
             target_code_output = tgt
 
             if agent_code_output == target_code_output:
@@ -108,14 +107,12 @@ class SRBEvaluator(BaseEvaluator):
         ftsr = (first_try_successes / total_successes) if total_successes != 0 else 0
         second_tries = total_successes - first_try_successes
         scr =  second_try_successes / second_tries if second_tries != 0 else 0
-        ls = 0
 
         return SRBEvaluation(
             dataset=dataset,
             sr=sr,
             ftsr=ftsr,
-            scr=scr,
-            ls=ls
+            scr=scr
         )
 
 class SRBEvaluationSaver(BaseEvaluationSaver):
