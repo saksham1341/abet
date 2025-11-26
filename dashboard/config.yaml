@@ -1,0 +1,10 @@
+# Dashboard config
+evaluations_folder: "evaluations"
+
+# Benchmark Configs
+benchmark_configs:
+  "Tool Call Benchmark":
+    scoring_weights:
+      tsa: 1
+      ahr: -1
+      tp: 1

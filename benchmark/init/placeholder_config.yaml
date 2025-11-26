@@ -1,4 +1,5 @@
 # Placeholder config for a benchmark
+benchmark_name: &benchmark_name null
 
 # AgentBuilder Configurations
 agentbuilder_class: null

@@ -1,0 +1,5 @@
+{
+    "benchmark_name": "Self Repair Benchmark",
+    "run_id": "Gemini 2.5 Flash",
+    "results": {"sr": 1.0, "ftsr": 1.0, "scr": 0}
+}
