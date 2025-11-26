@@ -8,6 +8,7 @@ import threading
 import multiprocessing
 import queue
 from typing import List, Any, Callable
+from time import sleep
 
 class SyncSequentialAgentRunner(BaseAgentRunner):
     def _run(self) -> None:
@@ -36,21 +37,29 @@ class SyncThreadPoolAgentRunner(BaseAgentRunner):
         super().__init__(*args, **kwargs)
 
         self.thread_count = self.config["thread_count"]
+        self.max_tries_for_an_input = self.config.set("max_tries_for_an_input", 3)
         self.q = queue.Queue()
 
         keys = self.dataset.get_keys()
         for key in keys:
-            self.q.put(key)
+            self.q.put((key, 0))
 
     def _target(self, name: str) -> None:
         while not self.q.empty():
             try:
-                key = self.q.get()
+                key, tries = self.q.get()
             except queue.Empty:
                 break
 
             inp = self.dataset.get_input(key)
-            native_out = self.agent(inp)
+            try:
+                native_out = self.agent(inp)
+            except Exception as e:
+                if tries < self.max_tries_for_an_input:
+                    self.q.put((key, tries + 1))
+                
+                continue
+
             out = self.translator(native_out)
 
             self.dataset.set_output(key, out)

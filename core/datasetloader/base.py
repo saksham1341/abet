@@ -15,3 +15,7 @@ class AbstractDatasetLoader:
     
     def __call__(self) -> AbstractDataset:
         return self._load_dataset()
+
+class BaseDatasetLoader(AbstractDatasetLoader):
+    def __init__(self, config: Dict) -> None:
+        self.config = config

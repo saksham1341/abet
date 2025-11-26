@@ -17,3 +17,7 @@ class AbstractEvaluationSaver:
         return self._save_evaluation(
             evaluation=evaluation
         )
+
+class BaseEvaluationSaver(AbstractEvaluationSaver):
+    def __init__(self, config: Dict) -> None:
+        self.config = config

@@ -16,3 +16,7 @@ class AbstractEvaluator:
 
     def __call__(self, dataset: AbstractDataset) -> AbstractEvaluation:
         return self._evaluate(dataset)
+
+class BaseEvaluator(AbstractEvaluator):
+    def __init__(self, config: Dict) -> None:
+        self.config = config

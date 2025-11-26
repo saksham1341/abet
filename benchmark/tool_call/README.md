@@ -28,8 +28,6 @@ $$
     * $| \cdot |$ denotes the count (cardinality) of the set.
     * $\cap$ denotes the intersection (tools present in both).
 
----
-
 ### 2. Argument Hallucination Rate (AHR)
 This measures **Schema Violation**: The percentage of arguments that are incorrect or invented. This is calculated **only** for tools where the Agent's tool name matches the Gold Standard.
 
@@ -43,8 +41,6 @@ $$
     * $A_{invalid}$ is the count of arguments for tool $t$ that are either:
         1.  **Hallucinated Keys:** Parameter names not present in the function definition.
         2.  **Incorrect Values:** Values that differ from the Gold Standard (or fail validation).
-
----
 
 ### 3. Trajectory Precision (TP)
 This measures **Sequential Accuracy**: The edit distance required to transform the agent's path into the correct path. This uses the **Levenshtein Similarity** method we discussed.

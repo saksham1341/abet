@@ -8,7 +8,7 @@ from core.evaluator import AbstractEvaluator
 from core.evaluation import AbstractEvaluation
 from core.evaluationsaver import AbstractEvaluationSaver
 from core.message import ToolCallMessage, AnyMessage
-from core.agentoutput import AgentOutputWithMessages
+from core.agentoutput import AbstractAgentOutput
 from core.translator import LangGraphTranslator
 from dataclasses import dataclass
 from typing import List, Dict
@@ -17,7 +17,7 @@ import Levenshtein
 
 
 @dataclass
-class ToolCallBenchmarkAgentOutput(AgentOutputWithMessages):
+class ToolCallBenchmarkAgentOutput(AbstractAgentOutput):
     tool_call_names: List = None
     tool_call_args: List = None
 
@@ -35,7 +35,6 @@ class ToolCallBenchmarkTranslator(LangGraphTranslator):
             tool_call_args.append(msg.tool_kwargs)
         
         return ToolCallBenchmarkAgentOutput(
-            messages=o.messages,
             tool_call_names=tool_call_names,
             tool_call_args=tool_call_args
         )
