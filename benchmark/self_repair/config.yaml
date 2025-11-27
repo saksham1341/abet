@@ -1,9 +1,10 @@
 # Placeholder config for a benchmark
+benchmark_name: &benchmark_name "Self Repair Benchmark"
 
 # AgentBuilder Configurations
 agentbuilder_class: core.agentbuilder.LangGraphAgentBuilder
 agentbuilder_config:
-  model_name: gemini-2.5-pro
+  model_name: &model_name gemini-2.5-pro
   model_class: langchain_google_genai.ChatGoogleGenerativeAI
   tools: benchmark.self_repair.tools.tools
   system_prompt_path: benchmark/self_repair/system_prompt.txt
@@ -21,7 +22,7 @@ datasetloader_config:
 # AgentRunner configurations
 agentrunner_class: core.agentrunner.SyncThreadPoolAgentRunner
 agentrunner_config:
-  thread_count: 5
+  thread_count: 2
 
 # Evaluator configurations
 evaluator_class: benchmark.self_repair.utils.SRBEvaluator
@@ -29,6 +30,8 @@ evaluator_config:
   {}
 
 # EvaluationSaver configurations
-evaluationsaver_class: benchmark.self_repair.utils.SRBEvaluationSaver
+evaluationsaver_class: core.evaluationsaver.DashboardEvaluationSaver
 evaluationsaver_config:
-  path: "evaluation.json"
+  benchmark_name: *benchmark_name
+  run_id: *model_name
+  output_dir: "evaluations"

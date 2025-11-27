@@ -1,6 +1,8 @@
+benchmark_name: &benchmark_name "Tool Call Benchmark"
+
 agentbuilder_class: core.agentbuilder.LangGraphAgentBuilder
 agentbuilder_config:
-  model_name: gemini-2.5-pro
+  model_name: &model_name gemini-2.5-pro
   model_class: langchain_google_genai.ChatGoogleGenerativeAI
   tools: benchmark.tool_call.tools.tools
   system_prompt_path: benchmark/tool_call/system_prompt.txt
@@ -14,11 +16,13 @@ datasetloader_config:
 
 agentrunner_class: core.agentrunner.SyncThreadPoolAgentRunner
 agentrunner_config:
-  thread_count: 10
+  thread_count: 5
 
 evaluator_class: benchmark.tool_call.utils.ToolCallBenchmarkEvaluator
 evaluator_config: {}
 
-evaluationsaver_class: benchmark.tool_call.utils.ToolCallBenchmarkEvaluationSaver
+evaluationsaver_class: core.evaluationsaver.DashboardEvaluationSaver
 evaluationsaver_config:
-  output_path: evaluation.json
+  benchmark_name: *benchmark_name
+  run_id: *model_name
+  output_dir: "evaluations"

@@ -11,12 +11,30 @@ from typing import List, Any, Callable
 from time import sleep
 
 class SyncSequentialAgentRunner(BaseAgentRunner):
-    def _run(self) -> None:
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__()
+
+        self.max_tries_for_an_input = self.config.get("max_tries_for_an_input", 3)
+        self.q = queue.Queue()
+
         keys = self.dataset.get_keys()
         for key in keys:
+            self.q.put((key, 0))
+    
+    def _run(self) -> None:
+        while not self.q.empty():
+            key, tries = self.q.get()
+
             inp = self.dataset.get_input(key)
-            native_out = self.agent(inp)
-            out = self.translator(native_out)
+            try:
+                agent_out = self.agent(inp)
+            except Exception:
+                if tries < self.max_tries_for_an_input:
+                    self.q.put((key, tries + 1))
+
+                continue
+            
+            out = self.translator(agent_out)
 
             self.dataset.set_output(key, out)
 
@@ -37,7 +55,7 @@ class SyncThreadPoolAgentRunner(BaseAgentRunner):
         super().__init__(*args, **kwargs)
 
         self.thread_count = self.config["thread_count"]
-        self.max_tries_for_an_input = self.config.set("max_tries_for_an_input", 3)
+        self.max_tries_for_an_input = self.config.get("max_tries_for_an_input", 3)
         self.q = queue.Queue()
 
         keys = self.dataset.get_keys()
@@ -86,6 +104,7 @@ class SyncProcessPoolAgentRunner(BaseAgentRunner):
         super().__init__(*args, **kwargs)
 
         self.process_count = self.config["process_count"]
+        self.max_tries_for_an_input = self.config.get("max_tries_for_an_input", 3)
         self.iq = multiprocessing.Queue()
         self.oq = multiprocessing.Queue()
 
@@ -94,6 +113,7 @@ class SyncProcessPoolAgentRunner(BaseAgentRunner):
             self.iq.put({
                 "key": key,
                 "inp": self.dataset.get_input(key),
+                "tries": 0
             })
 
     def _target(self, name: str, agent: Callable, translator: AbstractTranslator, iq: multiprocessing.Queue, oq: multiprocessing.Queue) -> None:
@@ -103,8 +123,19 @@ class SyncProcessPoolAgentRunner(BaseAgentRunner):
             except multiprocessing.queues.Empty:
                 break
 
-            key, inp = msg["key"], msg["inp"]
-            native_out = agent(inp)
+            key, inp, tries = msg["key"], msg["inp"], msg["tries"]
+            try:
+                native_out = agent(inp)
+            except Exception:
+                if tries < self.max_tries_for_an_input:
+                    iq.put({
+                        "key": key,
+                        "inp": inp,
+                        "tries": tries + 1
+                    })
+                
+                continue
+            
             out = translator(native_out)
 
             oq.put({

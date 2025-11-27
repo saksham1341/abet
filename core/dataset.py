@@ -27,11 +27,14 @@ class AbstractDataset:
         raise NotImplementedError()
 
 @dataclass
-class ListDataset(AbstractDataset):
+class BaseDataset(AbstractDataset):
+    metadata: Dict = field(default_factory=dict)
+
+@dataclass
+class ListDataset(BaseDataset):
     inputs: List[Any] = field(default_factory=list)
     targets: List[Any] = field(default_factory=list)
     outputs: List[AbstractAgentOutput] = field(default_factory=list)
-    metadata: Dict = field(default_factory=dict)
 
     def get_keys(self) -> List[int]:
         return list(range(len(self.inputs)))

@@ -9,11 +9,13 @@ from dataclasses import dataclass, field
 
 @dataclass
 class AbstractMessage:
-    content: str = None
-    token_counts: Dict = field(default_factory=dict)
+    content: str
+    token_counts: Dict
 
 @dataclass
 class BaseMessage(AbstractMessage):
+    content: str = None
+    token_counts: Dict = field(default_factory=dict)
     message_type: str = "BaseMessage"
 
 @dataclass
@@ -39,9 +41,15 @@ class ToolCallMessage(BaseMessage):
 @dataclass
 class ToolResponseMessage(BaseMessage):
     message_type: str = "ToolResponseMessage"
-    
+
     tool_call_id: str = None
 
 @dataclass
-class AnyMessage(ErrorMessage, UserMessage, AIMessage, ToolCallMessage, ToolResponseMessage):
+class AnyMessage(
+    ErrorMessage,
+    UserMessage,
+    AIMessage,
+    ToolCallMessage,
+    ToolResponseMessage
+):
     pass
