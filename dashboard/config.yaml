@@ -1,10 +1,51 @@
 # Dashboard config
+
+# Location of evaluations
 evaluations_folder: "evaluations"
 
 # Benchmark Configs
 benchmark_configs:
   "Tool Call Benchmark":
-    scoring_weights:
-      tsa: 1
-      ahr: -1
-      tp: 1
+    description: |
+      A comprehensive evaluation suite designed to assess an LLM's proficiency in utilizing external tools. This benchmark tests the model's ability to bridge natural language instructions with executable API calls, focusing on decision-making accuracy, schema adherence, and multi-step planning logic.
+    metrics:
+      tsa:
+        alternate_name: "Tool Selection Accuracy"
+        description: |
+          `tsa` measures the frequency with which the model identifies the correct tool from a provided list of candidates. It evaluates the model's ability to distinguish relevant utilities from irrelevant ones based on the user's intent.  
+          A higher `tsa` represents a better model.
+        scoring_weight: 1
+      ahr:
+        alternate_name: "Argument Hallucination Rate"
+        description: |
+          `ahr` quantifies the percentage of generated arguments that do not adhere to the defined tool schema. This metric highlights instances where the model invents non-existent parameters, hallucinates keys, or provides invalid data types.  
+          A lower `ahr` represents a better model.
+        scoring_weight: -1
+      tp:
+        alternate_name: "Trajectory Precision"
+        description: |
+          `tp` assesses the logical flow and efficiency of the multi-step execution path. It compares the model's sequence of tool calls against an optimal "golden trajectory" to ensure steps are taken in the correct order without redundancy, loops, or deviation.  
+          A higher `tp` represents a better model.
+        scoring_weight: 1
+  "Self Repair Benchmark":
+    description: |
+      A specialized evaluation suite designed to test the model's autonomous debugging and error-correction capabilities. This benchmark presents the model with coding tasks and analyzes its ability to not only generate initial solutions but also interpret execution errors and iteratively refine the code to achieve a working solution without human intervention.
+    metrics:
+      sr:
+        alternate_name: "Any Try Success Rate"
+        description: |
+          `sr` measures the model's ultimate problem-solving reliability. It calculates the percentage of tasks where the model eventually arrives at the correct solution, regardless of how many repair attempts or iterations were required to fix initial errors.  
+          A higher `sr` represents a better model.
+        scoring_weight: 1
+      ftsr:
+        alternate_name: "First Try Success Rate"
+        description: |
+          `ftsr` evaluates the model's precision in zero-shot code generation. It tracks the percentage of tasks where the initial code submission runs successfully and produces the correct output without requiring any subsequent debugging or self-repair loops.  
+          A higher `ftsr` represents a better model.
+        scoring_weight: 1
+      scr:
+        alternate_name: "Self Correction Rate"
+        description: |
+          `scr` isolates the model's debugging intelligence. It specifically measures the success rate on tasks where the initial attempt failed, evaluating how effectively the model uses error feedback (tracebacks) to diagnose faults and generate a valid fix.  
+          A higher `scr` represents a better model.
+        scoring_weight: 1

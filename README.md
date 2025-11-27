@@ -28,6 +28,11 @@ quickly and easily implement agent benchmarks and evaluate them.
 |   |__ datasetloader/                  # Defines AbstractDatasetLoader
 |   |__ evaluationsaver/                # Defines AbstractEvaluationSaver
 |   |__ translator/                     # Defines AbstractTranslator
+|__ dashboard/                          # Streamlit powered Dashboard
+|   |__ __init__.py
+|   |__ app.py                          # Main app
+|   |__ utils.py                        # Dashboard utilities
+|   |__ config.yaml                     # Dashboard config
 |__ README.md                           # You are here
 ```
 
@@ -92,3 +97,5 @@ You will see your benchmark's leaderboard and model comparisons.
 
 Here is the dashboard of the `tool_call` benchmark:
 ![Tool Call Benchmark Dashboard](tool_call_benchmark_dashboard.png)
+
+To customize your benchmark's dashboard edit the `dashboard/config.yml` file.
