@@ -17,11 +17,11 @@ class SyncSequentialAgentRunner(BaseAgentRunner):
         self.max_tries_for_an_input = self.config.get("max_tries_for_an_input", 3)
         self.q = queue.Queue()
 
+    def _run(self) -> None:
         keys = self.dataset.get_keys()
         for key in keys:
             self.q.put((key, 0))
     
-    def _run(self) -> None:
         while not self.q.empty():
             key, tries = self.q.get()
 
@@ -38,34 +38,19 @@ class SyncSequentialAgentRunner(BaseAgentRunner):
 
             self.dataset.set_output(key, out)
 
-def _split_keys(keys: List[Any], n: int) -> List[List[Any]]:
-    K = len(keys)
-    STEP = K // n
-    
-    _ = []
-    for i in range(0, K, STEP):
-        _.append(
-            keys[i: i + STEP]
-        )
-    
-    return _
-
 class SyncThreadPoolAgentRunner(BaseAgentRunner):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
 
-        self.thread_count = self.config["thread_count"]
+        self.worker_count = self.config.get("worker_count", 1)
         self.max_tries_for_an_input = self.config.get("max_tries_for_an_input", 3)
-        self.q = queue.Queue()
-
-        keys = self.dataset.get_keys()
-        for key in keys:
-            self.q.put((key, 0))
+        self.iq = queue.Queue()
+        self.oq = queue.Queue()
 
     def _target(self, name: str) -> None:
-        while not self.q.empty():
+        while True:
             try:
-                key, tries = self.q.get()
+                key, tries = self.iq.get()
             except queue.Empty:
                 break
 
@@ -74,15 +59,19 @@ class SyncThreadPoolAgentRunner(BaseAgentRunner):
                 native_out = self.agent(inp)
             except Exception as e:
                 if tries < self.max_tries_for_an_input:
-                    self.q.put((key, tries + 1))
+                    self.iq.put((key, tries + 1))
                 
                 continue
 
             out = self.translator(native_out)
 
-            self.dataset.set_output(key, out)
+            self.oq.put((key, out))
 
     def _run(self) -> None:
+        keys = self.dataset.get_keys()
+        for key in keys:
+            self.iq.put((key, 0))
+        
         threads = [
             threading.Thread(
                 target=self._target,
@@ -98,23 +87,21 @@ class SyncThreadPoolAgentRunner(BaseAgentRunner):
         
         for thread in threads:
             thread.join()
+        
+        while not self.oq.empty():
+            item = self.oq.get()
+            key, out = item
+
+            self.dataset.set_output(key, out)
 
 class SyncProcessPoolAgentRunner(BaseAgentRunner):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
 
-        self.process_count = self.config["process_count"]
+        self.worker_count = self.config.get("worker_count", 1)
         self.max_tries_for_an_input = self.config.get("max_tries_for_an_input", 3)
         self.iq = multiprocessing.Queue()
         self.oq = multiprocessing.Queue()
-
-        keys = self.dataset.get_keys()
-        for key in keys:
-            self.iq.put({
-                "key": key,
-                "inp": self.dataset.get_input(key),
-                "tries": 0
-            })
 
     def _target(self, name: str, agent: Callable, translator: AbstractTranslator, iq: multiprocessing.Queue, oq: multiprocessing.Queue) -> None:
         while not iq.empty():
@@ -144,6 +131,14 @@ class SyncProcessPoolAgentRunner(BaseAgentRunner):
             })
 
     def _run(self) -> None:
+        keys = self.dataset.get_keys()
+        for key in keys:
+            self.iq.put({
+                "key": key,
+                "inp": self.dataset.get_input(key),
+                "tries": 0
+            })
+        
         processes = [
             multiprocessing.Process(
                 target=self._target,

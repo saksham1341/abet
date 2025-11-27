@@ -20,9 +20,9 @@ datasetloader_config:
   path: "benchmark/self_repair/dataset.json"
 
 # AgentRunner configurations
-agentrunner_class: core.agentrunner.SyncThreadPoolAgentRunner
+agentrunner_class: core.agentrunner.AsyncConcurrentAgentRunner
 agentrunner_config:
-  thread_count: 2
+  worker_count: 4
 
 # Evaluator configurations
 evaluator_class: benchmark.self_repair.utils.SRBEvaluator

@@ -6,6 +6,10 @@
 A.B.E.T. (Agent Benchmark and Evaluation Toolkit) is a package which provides tools to 
 quickly and easily implement agent benchmarks and evaluate them.
 
+## Live
+
+The project is hosted using Streamlit [here](https://sxm-abet.streamlit.app)
+
 ## Project Structure
 
 ```py

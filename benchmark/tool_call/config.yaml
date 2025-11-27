@@ -14,9 +14,9 @@ datasetloader_class: benchmark.tool_call.utils.ToolCallBenchmarkDatasetLoader
 datasetloader_config:
   path: benchmark/tool_call/dataset.json
 
-agentrunner_class: core.agentrunner.SyncThreadPoolAgentRunner
+agentrunner_class: core.agentrunner.AsyncConcurrentAgentRunner
 agentrunner_config:
-  thread_count: 5
+  worker_count: 5
 
 evaluator_class: benchmark.tool_call.utils.ToolCallBenchmarkEvaluator
 evaluator_config: {}
