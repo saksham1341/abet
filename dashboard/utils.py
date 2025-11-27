@@ -159,7 +159,7 @@ def display_leaderboard(data, name_col="name", score_col="score"):
     max_score = df[score_col].max()
 
     # 2. Header
-    st.subheader("Leaderboard")
+    st.header("Leaderboard")
     
     # 3. Iterate and Display
     for index, row in df.iterrows():
@@ -182,45 +182,62 @@ def display_leaderboard(data, name_col="name", score_col="score"):
             color = "gray"
 
         # Create a container for each row
-        with st.container(border=True):
-            c1, c2, c3 = st.columns([1, 4, 1])
+        with st.container(border=True, vertical_alignment="center"):
+            c1, c2, c3 = st.columns([1, 10, 1])
             
             # Column 1: Rank/Emoji
             with c1:
-                st.markdown(f"### {emoji}")
+                st.markdown(f"{emoji}")
             
             # Column 2: Name
             with c2:
-                st.markdown(f"**{name}**")
+                st.markdown(f"{name}")
             
             # Column 3: Numeric Score
             with c3:
-                st.metric(label="Score", value=score)
+                st.markdown(f"{score}")
 
 def render_compiled_evaluation(ce: CompiledEvaluation):
-    st.header(ce.benchmark_name)
+    st.set_page_config(
+        page_title=f"{ce.benchmark_name} | A.B.E.T.",
+        layout="wide"
+    )
+
+    st.title(ce.benchmark_name)
     st.markdown(ce.get_description())
     
     with st.spinner():
         leaderboard_df = get_compiled_evaluation_leaderboard(ce)
-    
-    # st.subheader("Leaderboards")
-    # st.dataframe(leaderboard_df)
+
+    st.divider()
 
     display_leaderboard(leaderboard_df, "run_id", "score")
 
     st.divider()
 
-    for col in ce.get_metrics():
-        m_config = ce.get_metric_config(col)
+    st.header("Evaluation Details")
 
-        altername_name = m_config["alternate_name"]
-        sh = f"`{col}`" + (f' / {altername_name}' if altername_name else '')
-        st.subheader(sh)
-        st.markdown(m_config["description"])
-        st.bar_chart(ce.df[col])
-        st.divider()
+    def _render_metric_in_container(m, col):
+        with col:
+            m_config = ce.get_metric_config(m)
+
+            altername_name = m_config["alternate_name"]
+            sh = f"`{m}`" + (f' / {altername_name}' if altername_name else '')
+            st.subheader(sh)
+            st.markdown(m_config["description"])
+            st.bar_chart(ce.df[m], x_label="Run", y_label="Metric Value", horizontal=True)
     
+    metrics = ce.get_metrics()
+    for idx in range(0, len(metrics), 2):
+        if idx < len(metrics) - 1:
+            _ = zip(metrics[idx: idx + 2], st.columns([1, 1], border=True))
+            for m, col in _:
+                _render_metric_in_container(m, col)
+        else:
+            m = metrics[idx]
+            col = st.container(border=True)
+            _render_metric_in_container(m, col)
+
     st.markdown("Made with <3 by [saksham1341](https://github.com/saksham1341/abet)")
 
 def compiled_evaluation_page_generator(ce: CompiledEvaluation) -> Callable:
@@ -230,21 +247,16 @@ def compiled_evaluation_page_generator(ce: CompiledEvaluation) -> Callable:
     return _
 
 def render_home_page():
-    """
-    Renders the A.B.E.T. Project Home Page.
-    Contains project description, structure, and usage info from README.md.
-    """
     st.set_page_config(
-        page_title="A.B.E.T. | Home",
-        page_icon="🏠",
+        page_title="Home | A.B.E.T.",
         layout="wide"
     )
 
     # --- Header Section ---
-    st.title("🤖 A.B.E.T.")
+    st.title("A.B.E.T.")
     st.subheader("Agent Benchmark and Evaluation Toolkit")
     
-    st.info("ℹ️ **Note:** This project is currently a work in progress.")
+    st.info("**Note:** This project is currently a work in progress.")
 
     st.markdown("""
     **A.B.E.T.** is a comprehensive package designed to provide tools to 
@@ -254,7 +266,7 @@ def render_home_page():
     st.divider()
 
     # --- Project Structure Section ---
-    st.header("📂 Project Structure")
+    st.header("Project Structure")
     st.markdown("The toolkit is organized into core components, benchmarks, and visualization tools.")
     
     st.code("""
@@ -278,9 +290,9 @@ def render_home_page():
     st.divider()
 
     # --- Program Flow Section ---
-    st.header("wm Program Flow")
+    st.header("Program Flow")
     
-    col1, col2 = st.columns([1, 1])
+    col1, col2 = st.columns([2, 1])
     
     with col1:
         st.markdown("""
@@ -295,17 +307,13 @@ def render_home_page():
         """)
     
     with col2:
-        # Placeholder for the flow image. 
-        # In a real deployment, you would ensure 'flow.png' is accessible or hosted.
-        st.caption("Flow Visualization")
-        st.image("flow.png", caption="Program Flow Diagram", width='stretch')
-        # Fallback text if image is missing in this context
-        # st.warning("Ensure `flow.png` is in the running directory to view the diagram.")
+        st.caption("Program Flow Diagram")
+        st.image("flow.png", width='stretch')
 
     st.divider()
 
     # --- Usage Section ---
-    st.header("🚀 How to Run")
+    st.header("How to Run")
 
     st.subheader("1. Setup")
     st.markdown("Clone the repository and install dependencies:")
@@ -320,21 +328,24 @@ python -m pip install -r requirements.txt
     st.code("python -m benchmark.tool_call", language="bash")
     
     st.subheader("3. Dashboard")
+    st.info("To register a benchmark result into the dashboard, the `core.evaluationsaver.DashboardEvaluationSaver` or it's subclass must be used as the `evaluationsaver_class` with `output_dir` equal to the `evaluations_folder` of `dashboard/config.yaml`.")
     st.markdown("To view the results (like the one you are seeing now), run:")
     st.code("streamlit run dashboard/app.py", language="bash")
+
+    st.divider()
+    st.markdown("Made with <3 by [saksham1341](https://github.com/saksham1341/abet)")
 
 def generate_pages(ces: List[CompiledEvaluation]) -> List[st.Page]:    
     return [
         st.Page(
             page=render_home_page,
-            title="A.B.E.T.",
-            url_path="home",
+            title="Home",
+            url_path="index",
             default=True
-        )
-    ] + [
+        )] + [
         st.Page(
             page=compiled_evaluation_page_generator(ce),
             title=ce.benchmark_name,
-            url_path=ce.benchmark_name
+            url_path=f"{ce.benchmark_name}"
         ) for ce in ces
     ]
