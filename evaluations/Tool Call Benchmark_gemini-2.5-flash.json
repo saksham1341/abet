@@ -1,1 +1,1 @@
-{"benchmark_name": "Tool Call Benchmark", "run_id": "gemini-2.5-flash", "results": {"tsa": 0.7215686274509804, "ahr": 0.03137254901960784, "tp": 0.7387205387205389}}
+{"benchmark_name": "Tool Call Benchmark", "run_id": "gemini-2.5-flash", "results": {"tsa": 0.7215686274509804, "ahr": 0.054901960784313725, "tp": 0.7516835016835018}}
