@@ -1,3 +1,3 @@
 from .base import AbstractAgentRunner, BaseAgentRunner
 from .synchronous import SyncSequentialAgentRunner, SyncProcessPoolAgentRunner, SyncThreadPoolAgentRunner
-from .asynchronous import AsyncSequentialRunner, AsyncConcurrentRunner
+from .asynchronous import AsyncSequentialAgentRunner, AsyncConcurrentAgentRunner
