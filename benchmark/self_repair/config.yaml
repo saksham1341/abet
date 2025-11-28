@@ -4,7 +4,7 @@ benchmark_name: &benchmark_name "Self Repair Benchmark"
 # AgentBuilder Configurations
 agentbuilder_class: core.agentbuilder.LangGraphAgentBuilder
 agentbuilder_config:
-  model_name: &model_name gemini-2.5-flash
+  model_name: &model_name gemini-2.5-pro
   model_class: langchain_google_genai.ChatGoogleGenerativeAI
   tools: benchmark.self_repair.tools.tools
   system_prompt_path: benchmark/self_repair/system_prompt.txt

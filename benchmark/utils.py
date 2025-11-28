@@ -13,7 +13,10 @@ from core.evaluation import AbstractEvaluation
 from core.evaluationsaver import AbstractEvaluationSaver
 from typing import Any, Dict, TypeVar, Type, Callable
 import importlib
-from tqdm import tqdm
+import logging
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(name)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 AgentBuilder_T = TypeVar("AgentBuilder_T", bound=AbstractAgentBuilder)
 Translator_T = TypeVar("Translator_T", bound=AbstractTranslator)
@@ -30,10 +33,12 @@ def import_item(s: str) -> Any:
     return getattr(importlib.import_module(module_name), item_name)
 
 def get_agentbuilder_class_from_config(config: Dict) -> Type[AgentBuilder_T]:
+    logger.info(f"Importing agent builder class {config['agentbuilder_class']}.")
     return import_item(config["agentbuilder_class"])
 
 def create_agentbuilder_from_config(config: Dict) -> AbstractAgentBuilder:
     agentbuilder_class = get_agentbuilder_class_from_config(config)
+    logger.info("Initializing agent object.")
     agentbuilder_obj = agentbuilder_class(
         config=config["agentbuilder_config"]
     )
@@ -47,10 +52,12 @@ def create_agent_from_config(config: Dict) -> Callable:
     return agent
 
 def get_translator_class_from_config(config: Dict) -> Type[Translator_T]:
+    logger.info(f"Importing translator class {config['translator_class']}.")
     return import_item(config["translator_class"])
 
 def create_translator_from_config(config: Dict) -> AbstractTranslator:
     translator_class = get_translator_class_from_config(config)
+    logger.info("Initializing translator object.")
     translator_obj = translator_class(
         config=config["translator_config"]
     )
@@ -66,10 +73,12 @@ def translate_from_config(config: Dict, native_output: Any) -> AbstractAgentOutp
     return agent_output
 
 def get_datasetloader_class_from_config(config: Dict) -> Type[DatasetLoader_T]:
+    logger.info(f"Importing dataset loader class {config['datasetloader_class']}.")
     return import_item(config["datasetloader_class"])
 
 def create_datasetloader_from_config(config: Dict) -> AbstractDatasetLoader:
     datasetloader_class = get_datasetloader_class_from_config(config)
+    logger.info("Initializing dataset loader object.")
     datasetloader_obj = datasetloader_class(
         config=config["datasetloader_config"]
     )
@@ -83,10 +92,12 @@ def load_dataset_from_config(config: Dict) -> AbstractDataset:
     return dataset
 
 def get_agentrunner_class_from_config(config: Dict) -> Type[AgentRunner_T]:
+    logger.info(f"Importing agent runner class {config['agentrunner_class']}.")
     return import_item(config["agentrunner_class"])
 
 def create_agentrunner_from_config(config: Dict, agent: Callable, translator: AbstractTranslator, dataset: AbstractDataset) -> AbstractAgentRunner:
     agentrunner_class = get_agentrunner_class_from_config(config)
+    logger.info("Initializing agent runner object.")
     agentrunner_obj = agentrunner_class(
         agent=agent,
         translator=translator,
@@ -106,10 +117,12 @@ def run_agent_from_config(config: Dict, agent: Callable, translator: AbstractTra
     agentrunner_obj()
 
 def get_evaluator_class_from_config(config: Dict) -> Type[Evaluator_T]:
+    logger.info(f"Importing evaluator class {config['evaluator_class']}.")
     return import_item(config["evaluator_class"])
 
 def create_evaluator_from_config(config: Dict) -> AbstractEvaluator:
     evaluator_class = get_evaluator_class_from_config(config)
+    logger.info("Initializing evaluator object.")
     evaluator_obj = evaluator_class(
         config=config["evaluator_config"]
     )
@@ -125,6 +138,7 @@ def evaluate_from_config(config: Dict, dataset: AbstractDataset) -> AbstractEval
     return evaluation
 
 def get_evaluationsaver_class_from_config(config: Dict) -> EvaluationSaver_T:
+    logger.info(f"Importing evaluation saver class {config['evaluationsaver_class']}.")
     return import_item(config["evaluationsaver_class"])
 
 def create_evaluationsaver_from_config(config: Dict) -> AbstractEvaluationSaver:
@@ -145,21 +159,25 @@ def save_evaluation_from_config(config: Dict, evaluation: AbstractEvaluation) ->
 
 def run(config: Dict = None) -> None:
     # build agent
+    logger.info("Creating agent.")
     agent = create_agent_from_config(
         config=config
     )
 
     # create translator
+    logger.info("Creating translator.")
     translator = create_translator_from_config(
         config=config
     )
     
     # load dataset
+    logger.info("Loading dataset.")
     dataset = load_dataset_from_config(
         config=config
     )
 
     # create agentrunner
+    logger.info("Creating agent runner.")
     agent_runner = create_agentrunner_from_config(
         config=config,
         agent=agent,
@@ -168,24 +186,29 @@ def run(config: Dict = None) -> None:
     )
 
     # create evaluator
+    logger.info("Creating evaluator.")
     evaluator = create_evaluator_from_config(
         config=config
     )
 
     # create evaluation saver
+    logger.info("Creating evaluation saver.")
     evaluation_saver = create_evaluationsaver_from_config(
         config=config
     )
 
     # run agent
+    logger.info("Starting agent runner.")
     agent_runner()
     
     # evaluate
+    logger.info("Starting evaluator.")
     evaluation = evaluator(
         dataset=dataset
     )
 
     # save evaluation
+    logger.info("Starting evaluation saver.")
     result = evaluation_saver(
         evaluation=evaluation
     )

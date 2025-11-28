@@ -5,6 +5,9 @@ AbstractAgentRunner class for standardized agent runner interfaces.
 from core.translator import AbstractTranslator
 from core.dataset import AbstractDataset
 from typing import Callable, Dict
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class AbstractAgentRunner:
@@ -21,6 +24,7 @@ class AbstractAgentRunner:
         raise NotImplementedError()
     
     def __call__(self) -> None:
+        logger.info(f"Running AgentRunner[{self.__class__.__name__}]")
         self._run()
 
 class BaseAgentRunner(AbstractAgentRunner):

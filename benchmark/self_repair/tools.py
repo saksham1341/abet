@@ -26,10 +26,20 @@ def run_code(code: str, input_key: str) -> str:
 
     Args:
         code (str): The code to run.
+        input_key (str): The input_key provided in your prompt.
     Returns:
         str: The output of the code or traceback if any exception occures.
     """
-    
+
+    # check if input key is valid if not return error
+    if input_key is not None:
+        try:
+            input_key = int(input_key)
+            correct_output = dataset[input_key]["correct_output"]
+        except:
+            return "Error: Invalid input key passed, make sure you pass the same input key as given in the prompt"
+
+    # check quota
     if input_key is not None:
         if input_key not in tries:
             tries[input_key] = 1
@@ -56,9 +66,8 @@ def run_code(code: str, input_key: str) -> str:
         if result.returncode == 0:
             output = result.stdout.rstrip()
             if input_key is not None:
-                expected_output = dataset[input_key]["correct_output"]
-                if output != expected_output:
-                    return f"Error: Wrong Output\nOUTPUT: {output}\nEXPECTED: {expected_output}."
+                if output != correct_output:
+                    return f"Error: Wrong Output\nOUTPUT: {output}\nEXPECTED: {correct_output}."
             return result.stdout if result.stdout else "Success (No Output)"
         else:
             return f"Error:\n{result.stderr}\n{result.stdout}"

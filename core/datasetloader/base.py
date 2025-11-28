@@ -4,6 +4,9 @@ AbstractDatasetLoader class
 
 from core.dataset import AbstractDataset
 from typing import Dict
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class AbstractDatasetLoader:
@@ -14,6 +17,7 @@ class AbstractDatasetLoader:
         raise NotImplementedError()
     
     def __call__(self) -> AbstractDataset:
+        logger.info("Loading dataset.")
         return self._load_dataset()
 
 class BaseDatasetLoader(AbstractDatasetLoader):

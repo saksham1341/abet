@@ -250,8 +250,9 @@ def render_compiled_evaluation(ce: CompiledEvaluation):
             _render_metric_in_container(m, col)
     
     st.divider()
-    with st.container(border=True):
-        st.subheader("Samples")
+    st.subheader("Samples")
+    container_height = 300 if ce.samples else "content"
+    with st.container(border=True, height=container_height):
         if ce.samples:
             st.write(ce.samples)
         else:
