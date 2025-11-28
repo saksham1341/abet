@@ -96,7 +96,7 @@ class ToolCallBenchmarkEvaluator(BaseEvaluator):
 
             total_tool_calls = len(tgt_tool_call_names)
             correct_tool_calls = 0
-            total_args = len(tgt_tool_call_args)
+            total_args = 0
             correct_args = 0
             add_to_samples = False
             for i in range(total_tool_calls):
@@ -117,6 +117,8 @@ class ToolCallBenchmarkEvaluator(BaseEvaluator):
 
                 out_args = out_tool_call_args[i]
                 tgt_args = tgt_tool_call_args[i]
+
+                total_args += len(tgt_args)
 
                 for k in tgt_args.keys():
                     if k not in out_args or out_args[k] != tgt_args[k]:
