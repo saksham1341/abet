@@ -20,13 +20,13 @@ benchmark_configs:
         description: |
           `ahr` quantifies the percentage of generated arguments that do not adhere to the defined tool schema. This metric highlights instances where the model invents non-existent parameters, hallucinates keys, or provides invalid data types.  
           A lower `ahr` represents a better model.
-        scoring_weight: -1
+        scoring_weight: -1.5
       tp:
         alternate_name: "Trajectory Precision"
         description: |
           `tp` assesses the logical flow and efficiency of the multi-step execution path. It compares the model's sequence of tool calls against an optimal "golden trajectory" to ensure steps are taken in the correct order without redundancy, loops, or deviation.  
           A higher `tp` represents a better model.
-        scoring_weight: 1
+        scoring_weight: 1.5
   "Self Repair Benchmark":
     description: |
       A specialized evaluation suite designed to test the model's autonomous debugging and error-correction capabilities. This benchmark presents the model with coding tasks and analyzes its ability to not only generate initial solutions but also interpret execution errors and iteratively refine the code to achieve a working solution without human intervention.

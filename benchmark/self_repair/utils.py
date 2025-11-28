@@ -93,13 +93,11 @@ class SRBEvaluator(BaseEvaluator):
             out = dataset.get_output(key)
             tgt = dataset.get_target(key)
             sample = {
-                "input": inp,
+                "input": json.loads(inp),
                 "output": out.__dict__,
                 "target": tgt
             }
-
-            pprint(sample)
-
+            
             if out.tries == 0 or out.code_output is None:
                 samples.append(sample)
 
@@ -120,9 +118,9 @@ class SRBEvaluator(BaseEvaluator):
                 samples.append(sample)
         
         sr = total_successes / total_items
-        ftsr = (first_try_successes / total_successes) if total_successes != 0 else 0
+        ftsr = first_try_successes / total_tries
         other_tries = total_successes - first_try_successes
-        scr =  other_try_successes / other_tries if other_tries != 0 else 0
+        scr =  other_try_successes / other_tries if other_tries != 0 else 1
         ats = total_tries / total_items
 
         return SRBEvaluation(
