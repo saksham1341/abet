@@ -17,7 +17,7 @@ import datetime
 import importlib
 import logging
 
-fmt = '%(asctime)s - %(levelname)s - %(name)s - %(message)s'
+fmt = '%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(funcName)s - %(message)s'
 logging.basicConfig(
     level=logging.INFO,
     format=fmt
@@ -167,9 +167,8 @@ def save_evaluation_from_config(config: Dict, evaluation: AbstractEvaluation) ->
 def run(config: Dict = None) -> None:
     # save logs 
     if config.get("logs_dir", None):
-        logging.info(f"Saving logs to {logger_file_path.absolute()}")
-        
         logger_file_path = Path(config["logs_dir"], f"{datetime.datetime.now()}_{config['benchmark_name']}.log")
+        logging.info(f"Saving logs to {logger_file_path.absolute()}")
         handler = logging.FileHandler(
             filename=logger_file_path,
         )

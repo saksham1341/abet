@@ -17,7 +17,7 @@ with open(dataset_path, "r") as f:
 tries = {}
 tries_limit = 5
 
-def run_code(code: str, input_key: str) -> str:
+def run_code(code: str, input_key: int) -> str:
     """
     Run a python code and compare against it's correct output (using the given input_key).
     Returns the traceback if some exception occures during execution of the code,
@@ -26,7 +26,7 @@ def run_code(code: str, input_key: str) -> str:
 
     Args:
         code (str): The code to run.
-        input_key (str): The input_key provided in your prompt.
+        input_key (int): The input_key provided in your prompt.
     Returns:
         str: The output of the code or traceback if any exception occures.
     """
@@ -67,7 +67,7 @@ def run_code(code: str, input_key: str) -> str:
             output = result.stdout.rstrip()
             if input_key is not None:
                 if output != correct_output:
-                    return f"Error: Wrong Output\nOUTPUT: {output}\nEXPECTED: {correct_output}."
+                    return f"Error: Wrong Output"
             return result.stdout if result.stdout else "Success (No Output)"
         else:
             return f"Error:\n{result.stderr}\n{result.stdout}"

@@ -14,6 +14,7 @@ from .tools import run_code
 from dataclasses import dataclass
 from typing import Dict
 import json
+from pprint import pprint
 
 
 class SRBDatasetLoader(BaseDatasetLoader):
@@ -82,9 +83,9 @@ class SRBEvaluator(BaseEvaluator):
         
         total_items = len(keys)
         total_successes = 0
+        total_tries = 0
         first_try_successes = 0
         other_try_successes = 0
-        total_tries = 0
         samples = []
 
         for key in keys:
@@ -97,23 +98,23 @@ class SRBEvaluator(BaseEvaluator):
                 "target": tgt
             }
 
+            pprint(sample)
+
             if out.tries == 0 or out.code_output is None:
                 samples.append(sample)
 
                 continue  # Agent didn't run any code
+            total_tries += out.tries
 
             agent_code_output = out.code_output.rstrip()   # Removing unintended `\n` at the end
             target_code_output = tgt
 
             if agent_code_output == target_code_output:
                 total_successes += 1
-                total_tries += out.tries
 
                 if out.tries == 1:
                     first_try_successes += 1
                 else:
-                    if out.tries > 2:
-                        samples.append(sample)
                     other_try_successes += 1
             else:
                 samples.append(sample)

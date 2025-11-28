@@ -134,9 +134,9 @@ def score_single_compiled_evaluation(ce: CompiledEvaluation) -> Dict:
         df[col] = df[col] * abs(w)
     
     # final scores
-    scores = df.sum(axis=1).to_dict()
+    scores = df.mean(axis=1) * 100
 
-    return scores
+    return scores.to_dict()
 
 def get_compiled_evaluation_leaderboard(ce: CompiledEvaluation) -> pd.DataFrame:
     # Sort
@@ -193,20 +193,23 @@ def display_leaderboard(data, name_col="name", score_col="score"):
             color = "gray"
 
         # Create a container for each row
-        with st.container(border=True, vertical_alignment="center"):
+        with st.container(border=False, vertical_alignment="center"):
             c1, c2, c3 = st.columns([1, 10, 1])
             
             # Column 1: Rank/Emoji
             with c1:
-                st.markdown(f"{emoji}")
+                with st.container(border=True, horizontal_alignment="center"):
+                    st.markdown(f"{emoji}")
             
             # Column 2: Name
             with c2:
-                st.markdown(f"{name}")
+                with st.container(border=True, horizontal_alignment="center"):
+                    st.markdown(f"{name}")
             
             # Column 3: Numeric Score
             with c3:
-                st.markdown(f"{score}")
+                with st.container(border=True, horizontal_alignment="center"):
+                    st.markdown(f"{score:.2f}")
 
 def render_compiled_evaluation(ce: CompiledEvaluation):
     st.set_page_config(
