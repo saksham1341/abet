@@ -49,3 +49,9 @@ benchmark_configs:
           `scr` isolates the model's debugging intelligence. It specifically measures the success rate on tasks where the initial attempt failed, evaluating how effectively the model uses error feedback (tracebacks) to diagnose faults and generate a valid fix.  
           A higher `scr` represents a better model.
         scoring_weight: 1
+      ats:
+        alternate_name: "Average Tries for Success"
+        description: |
+          `ats` calculates the average number of tries it took the agent to get the code correct.  
+          A lower `ats` represents a better model.
+        scoring_weight: -1

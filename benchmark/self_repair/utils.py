@@ -8,9 +8,8 @@ from core.translator import LangGraphTranslator
 from core.agentoutput import AbstractAgentOutput
 from core.agentrunner import SyncThreadPoolAgentRunner
 from core.message import ToolCallMessage
-from core.evaluation import AbstractEvaluation
+from core.evaluation import DashboardEvaluation
 from core.evaluator import BaseEvaluator
-from core.evaluationsaver import BaseEvaluationSaver
 from .tools import run_code
 from dataclasses import dataclass
 from typing import Dict
@@ -24,8 +23,9 @@ class SRBDatasetLoader(BaseDatasetLoader):
         
         inputs = []
         targets = []
-        for row in raw_data:
+        for idx, row in enumerate(raw_data):
             inputs.append(json.dumps({
+                "input_key": idx,
                 "desired_task": row["desired_task"],
                 "incomplete_code": row["incomplete_code"]
             }))
@@ -58,8 +58,9 @@ class SRBTranslator(LangGraphTranslator):
         
         if last_run_code:
             code_output = run_code(
-                code=last_run_code
-            )
+                code=last_run_code,
+                input_key=None  # The tool does not check against input_key if it is None
+            ).rstrip()
         else:
             code_output = None
 
@@ -69,10 +70,11 @@ class SRBTranslator(LangGraphTranslator):
         )
 
 @dataclass
-class SRBEvaluation(AbstractEvaluation):
-    sr: float     # Any try success rate
-    ftsr: float   # First try success rate
-    scr: float    # Self correcting rate
+class SRBEvaluation(DashboardEvaluation):
+    sr: float = None     # Any try success rate
+    ftsr: float = None   # First try success rate
+    scr: float = None    # Self correcting rate
+    ats: float = None    # Averate Tries for Sucess
 
 class SRBEvaluator(BaseEvaluator):
     def _evaluate(self, dataset: ListDataset) -> SRBEvaluation:
@@ -81,13 +83,23 @@ class SRBEvaluator(BaseEvaluator):
         total_items = len(keys)
         total_successes = 0
         first_try_successes = 0
-        second_try_successes = 0
+        other_try_successes = 0
+        total_tries = 0
+        samples = []
 
         for key in keys:
+            inp = dataset.get_input(key)
             out = dataset.get_output(key)
             tgt = dataset.get_target(key)
+            sample = {
+                "input": inp,
+                "output": out.__dict__,
+                "target": tgt
+            }
 
             if out.tries == 0 or out.code_output is None:
+                samples.append(sample)
+
                 continue  # Agent didn't run any code
 
             agent_code_output = out.code_output.rstrip()   # Removing unintended `\n` at the end
@@ -95,29 +107,28 @@ class SRBEvaluator(BaseEvaluator):
 
             if agent_code_output == target_code_output:
                 total_successes += 1
+                total_tries += out.tries
 
                 if out.tries == 1:
                     first_try_successes += 1
-                elif out.tries == 2:
-                    second_try_successes += 1
                 else:
-                    total_successes -= 1  # In case the agent succeeded in more than 2 tries
+                    if out.tries > 2:
+                        samples.append(sample)
+                    other_try_successes += 1
+            else:
+                samples.append(sample)
         
         sr = total_successes / total_items
         ftsr = (first_try_successes / total_successes) if total_successes != 0 else 0
-        second_tries = total_successes - first_try_successes
-        scr =  second_try_successes / second_tries if second_tries != 0 else 0
+        other_tries = total_successes - first_try_successes
+        scr =  other_try_successes / other_tries if other_tries != 0 else 0
+        ats = total_tries / total_items
 
         return SRBEvaluation(
             dataset=dataset,
             sr=sr,
             ftsr=ftsr,
-            scr=scr
+            scr=scr,
+            ats=ats,
+            samples=samples
         )
-
-class SRBEvaluationSaver(BaseEvaluationSaver):
-    def _save_evaluation(self, evaluation: SRBEvaluation) -> bool:
-        del evaluation.dataset
-
-        with open(self.config["path"], "w") as f:
-            json.dump(evaluation.__dict__, f)

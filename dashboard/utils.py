@@ -2,7 +2,7 @@
 Dashboard utils
 """
 
-from typing import List, Dict
+from typing import List, Dict, Callable
 from os import listdir
 import json
 from dataclasses import dataclass
@@ -10,7 +10,6 @@ import pandas as pd
 from pathlib import Path
 import matplotlib.pyplot as plt
 import streamlit as st
-from typing import Callable
 
 
 @dataclass
@@ -18,6 +17,7 @@ class Evaluation:
     benchmark_name: str
     run_id: str
     results: Dict
+    samples: List
 
 def load_evaluations(directory: str) -> List[Evaluation]:
     evaluations = []
@@ -40,7 +40,8 @@ def load_evaluations(directory: str) -> List[Evaluation]:
                 evaluations.append(Evaluation(
                     benchmark_name=_["benchmark_name"],
                     run_id=_["run_id"],
-                    results=_["results"]
+                    results=_["results"],
+                    samples=_["samples"]
                 ))
         except Exception as e:
             print(f"Error [{e}] loading file [{item}], skipping.")
@@ -52,6 +53,7 @@ class CompiledEvaluation:
     benchmark_name: str
     config: Dict
     df: pd.DataFrame
+    samples: Dict
 
     def get_description(self) -> str:
         return self.config.get("description", "")
@@ -70,15 +72,23 @@ class CompiledEvaluation:
 
 def compile_evaluations(evaluations: List[Evaluation], config: Dict) -> List[CompiledEvaluation]:
     benchmark_wise_results = {}
+    benchmark_wise_samples = {}
     for e in evaluations:
         if e.benchmark_name not in benchmark_wise_results:
             benchmark_wise_results[e.benchmark_name] = []
+        
+        if e.benchmark_name not in benchmark_wise_samples:
+            benchmark_wise_samples[e.benchmark_name] = {}
         
         data = {
             "run_id": e.run_id
         }
         data.update(e.results)
         benchmark_wise_results[e.benchmark_name].append(data)
+
+        benchmark_wise_samples[e.benchmark_name].update({
+            e.run_id: e.samples
+        })
     
     benchmark_wise_dfs = {
         k: pd.DataFrame(v)
@@ -93,6 +103,7 @@ def compile_evaluations(evaluations: List[Evaluation], config: Dict) -> List[Com
         CompiledEvaluation(
             benchmark_name=k,
             df=v,
+            samples=benchmark_wise_samples.get(k, {}),
             config=config.get("benchmark_configs", {}).get(k, {})
         ) for k, v in benchmark_wise_dfs.items()
     ]
@@ -237,7 +248,16 @@ def render_compiled_evaluation(ce: CompiledEvaluation):
             m = metrics[idx]
             col = st.container(border=True)
             _render_metric_in_container(m, col)
+    
+    st.divider()
+    with st.container(border=True):
+        st.subheader("Samples")
+        if ce.samples:
+            st.write(ce.samples)
+        else:
+            st.write("No samples generated.")
 
+    st.divider()
     st.markdown("Made with <3 by [saksham1341](https://github.com/saksham1341/abet)")
 
 def compiled_evaluation_page_generator(ce: CompiledEvaluation) -> Callable:
@@ -259,8 +279,9 @@ def render_home_page():
     st.info("**Note:** This project is currently a work in progress.")
 
     st.markdown("""
-    **A.B.E.T.** is a comprehensive package designed to provide tools to 
-    **quickly and easily implement agent benchmarks and evaluate them**.
+    A.B.E.T. (Agent Benchmark & Evaluation Toolkit) is a lightweight, modular framework for **building, running, and analyzing LLM agent benchmarks**. It provides a complete pipeline—from dataset loading to agent execution, evaluation, and visualization—making it easy to design custom benchmarks or plug in prebuilt ones.
+
+The goal is to offer a flexible, extensible environment for evaluating **agentic behavior**, **tool-call reliability**, **self-repair**, and other emerging LLM capabilities.
     """)
 
     st.divider()
@@ -271,21 +292,37 @@ def render_home_page():
     
     st.code("""
 |__ benchmark/                          # Benchmarks live here
-|   |__ utils.py                        # The main run() function and other benchmarking utilities
-|   |__ init/                           # benchmark.init command implementation
-|   |__ tool_call/                      # Example: Tool calling benchmark
-|__ core/                               # Core components
-|   |__ agentoutput.py                  # Defines AbstractAgentOutput
-|   |__ dataset.py                      # Defines AbstractDataset
-|   |__ evaluation.py                   # Defines AbstractEvaluation
-|   |__ message.py                      # Defines multiple message types
+|   |__ utils.py                        # run() + shared benchmark utilities
+|   |__ init/                           # Template generator: benchmark.init
+|   |   |__ __main__.py
+|   |   |__ placeholder_config.yaml
+|   |   |__ placeholder_init.py
+|   |   |__ placeholder_main.py
+|   |__ tool_call/                      # Tool-call evaluation benchmark
+|   |__ self_repair/                    # (Optional) Self-repair benchmark
+|
+|__ core/                               # Core abstractions and runtime
+|   |__ agentoutput.py                  # AbstractAgentOutput
+|   |__ dataset.py                      # AbstractDataset
+|   |__ evaluation.py                   # AbstractEvaluation
+|   |__ message.py                      # Standard message types
 |   |__ agentbuilder/                   # AgentBuilder implementations
-|   |__ agentrunner/                    # AgentRunner implementations
-|   |__ datasetloader/                  # AbstractDatasetLoader
-|   |__ evaluationsaver/                # AbstractEvaluationSaver
-|   |__ translator/                     # AbstractTranslator
-|__ dashboard/                          # Streamlit powered Dashboard
-    """, language="text")
+|   |__ agentrunner/                    # Runners: sync + async
+|   |   |__ synchronous.py              # Sequential, multithreaded, multiprocessing
+|   |   |__ asynchronous.py             # Async sequential & concurrent runners
+|   |__ datasetloader/                  # DatasetLoader base
+|   |__ evaluationsaver/                # EvaluationSaver base
+|   |   |__ dashboard.py                # DashboardEvaluationSaver
+|   |__ translator/                     # Output→Message translators
+|
+|__ dashboard/                          # Streamlit-powered dashboard
+|   |__ app.py                          # Main UI
+|   |__ utils.py                        # Dashboard utilities
+|   |__ config.yaml                     # Dashboard configuration
+|
+|__ evaluations/                        # Stored evaluation results
+|
+|__ README.md                           # You are here""", language="text")
 
     st.divider()
 
@@ -298,12 +335,15 @@ def render_home_page():
         st.markdown("""
         The system consists of several components that work together to evaluate an agent:
 
-        1. **AgentBuilder**: Produces an Agent instance.
-        2. **DatasetLoader**: Loads and produces a Dataset.
-        3. **Translator**: Translates Agent's outputs to standardised Messages.
-        4. **AgentRunner**: Processes the dataset, populating it with translated agent outputs.
-        5. **Evaluator**: Generates an Evaluation object from the updated dataset.
-        6. **EvaluationSaver**: Stores or exports the final evaluation results.
+        1. **AgentBuilder** constructs an agent from configuration.
+        2. **DatasetLoader** loads a dataset into a standardized Dataset object.
+        3. **Translator** converts raw agent outputs into normalized Message objects.
+        4. **AgentRunner** executes the agent across the dataset (sync, threaded, multiprocess, or async).
+        5. The dataset is populated with outputs and passed to an **Evaluator**.
+        6. The **Evaluator** produces an Evaluation object.
+        7. **EvaluationSaver** exports or stores the evaluation (JSON, dashboard results, etc.).
+
+        This architecture allows *any* benchmark to be defined through simple config files and modular Python components.
         """)
     
     with col2:
@@ -320,17 +360,43 @@ def render_home_page():
     st.code("""
 git clone https://github.com/saksham1341/abet
 cd abet
-python -m pip install -r requirements.txt
-    """, language="bash")
+python -m pip install -r requirements.txt""", language="bash")
 
     st.subheader("2. Running a Benchmark")
     st.markdown("Execute a benchmark as a python module:")
     st.code("python -m benchmark.tool_call", language="bash")
-    
+    st.markdown("""
+    Benchmarks are configured via the `config.yaml` file inside their directory.
+    This includes:
+
+    * agent builder class
+    * runner type (sync/async/threaded/process)
+    * evaluator class
+    * evaluation saver configuration
+    * dataset path
+    * translator class
+    """)
+
     st.subheader("3. Dashboard")
-    st.info("To register a benchmark result into the dashboard, the `core.evaluationsaver.DashboardEvaluationSaver` or it's subclass must be used as the `evaluationsaver_class` with `output_dir` equal to the `evaluations_folder` of `dashboard/config.yaml`.")
-    st.markdown("To view the results (like the one you are seeing now), run:")
-    st.code("streamlit run dashboard/app.py", language="bash")
+    st.markdown("""
+        If a benchmark uses
+    `core.evaluationsaver.DashboardEvaluationSaver`
+    and saves results under `evaluations/`, the Streamlit dashboard can visualize:
+
+    * model comparisons
+    * per-metric analysis
+    * leaderboard-style views
+
+    Minimal example snippet:
+    """)
+    st.code("""
+evaluationsaver_class: core.evaluationsaver.DashboardEvaluationSaver
+evaluationsaver_config:
+    benchmark_name: *benchmark_name
+    run_id: *model_name
+    output_path: "evaluations/my_run.json" """, language="yaml")
+    st.markdown("Launch the dashboard:")
+    st.code("streamlit run dashboard_app.py", language="bash")
 
     st.divider()
     st.markdown("Made with <3 by [saksham1341](https://github.com/saksham1341/abet)")

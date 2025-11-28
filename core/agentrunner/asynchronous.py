@@ -25,7 +25,7 @@ class AsyncConcurrentAgentRunner(BaseAgentRunner):
             print(f"KEY[{key}] >> WORKER[{name}]")
             
             try:
-                agent_out = await asyncio.to_thread(self.agent, (inp,))
+                agent_out = await asyncio.to_thread(self.agent, inp)
                 
                 out = self.translator(agent_out)
                 await self.oq.put((key, out))

@@ -3,7 +3,7 @@ ABET messages module
 """
 
 import json
-from typing import Dict, ClassVar
+from typing import Dict, ClassVar, Union
 from dataclasses import dataclass, field
 
 

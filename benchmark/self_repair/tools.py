@@ -6,10 +6,23 @@ import sys
 import subprocess
 import tempfile
 import os
+import json
+from pathlib import Path
 
-def run_code(code: str) -> str:
+
+dataset_path = Path(Path(__file__).parent, "dataset.json")
+with open(dataset_path, "r") as f:
+    dataset = json.load(f)
+
+tries = {}
+tries_limit = 5
+
+def run_code(code: str, input_key: str) -> str:
     """
-    Run a python code.
+    Run a python code and compare against it's correct output (using the given input_key).
+    Returns the traceback if some exception occures during execution of the code,
+    and also when code output does not match the correct output.
+    Also returns an error if maimum tries reached.
 
     Args:
         code (str): The code to run.
@@ -17,6 +30,14 @@ def run_code(code: str) -> str:
         str: The output of the code or traceback if any exception occures.
     """
     
+    if input_key is not None:
+        if input_key not in tries:
+            tries[input_key] = 1
+        elif tries[input_key] == 5:
+            return "Error: Maximum attempts made. You can not run any code now. Terminate."
+        else:
+            tries[input_key] += 1
+
     # Create a temporary python file
     with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as temp:
         temp.write(code)
@@ -33,6 +54,11 @@ def run_code(code: str) -> str:
         
         # Combine stdout and stderr for the agent
         if result.returncode == 0:
+            output = result.stdout.rstrip()
+            if input_key is not None:
+                expected_output = dataset[input_key]["correct_output"]
+                if output != expected_output:
+                    return f"Error: Wrong Output\nOUTPUT: {output}\nEXPECTED: {expected_output}."
             return result.stdout if result.stdout else "Success (No Output)"
         else:
             return f"Error:\n{result.stderr}\n{result.stdout}"
