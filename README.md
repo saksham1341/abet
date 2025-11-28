@@ -11,7 +11,7 @@ The goal is to offer a flexible, extensible environment for evaluating **agentic
 ## **Live Demo**
 
 The dashboard is hosted on Streamlit:
-**[https://sxm-abet.streamlit.app](https://sxm-abet.streamlit.app)**
+**[https://abet-sxm.streamlit.app](https://abet-sxm.streamlit.app)**
 
 ---
 
