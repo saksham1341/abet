@@ -12,10 +12,17 @@ from core.evaluator import AbstractEvaluator
 from core.evaluation import AbstractEvaluation
 from core.evaluationsaver import AbstractEvaluationSaver
 from typing import Any, Dict, TypeVar, Type, Callable
+from pathlib import Path
+import datetime
 import importlib
 import logging
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(name)s - %(message)s')
+fmt = '%(asctime)s - %(levelname)s - %(name)s - %(message)s'
+logging.basicConfig(
+    level=logging.INFO,
+    format=fmt
+)
+
 logger = logging.getLogger(__name__)
 
 AgentBuilder_T = TypeVar("AgentBuilder_T", bound=AbstractAgentBuilder)
@@ -158,6 +165,23 @@ def save_evaluation_from_config(config: Dict, evaluation: AbstractEvaluation) ->
     return result
 
 def run(config: Dict = None) -> None:
+    # save logs 
+    if config.get("logs_dir", None):
+        logging.info(f"Saving logs to {logger_file_path.absolute()}")
+        
+        logger_file_path = Path(config["logs_dir"], f"{datetime.datetime.now()}_{config['benchmark_name']}.log")
+        handler = logging.FileHandler(
+            filename=logger_file_path,
+        )
+        formatter = logging.Formatter(
+            fmt=fmt
+        )
+        handler.setFormatter(formatter)
+        handler.setLevel(logging.DEBUG)
+        
+        root_logger = logging.getLogger()
+        root_logger.addHandler(handler)
+
     # build agent
     logger.info("Creating agent.")
     agent = create_agent_from_config(

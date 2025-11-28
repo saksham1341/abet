@@ -1,4 +1,5 @@
 benchmark_name: &benchmark_name "Tool Call Benchmark"
+logs_dir: "logs"
 
 agentbuilder_class: core.agentbuilder.LangGraphAgentBuilder
 agentbuilder_config:
