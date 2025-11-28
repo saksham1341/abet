@@ -1,63 +1,75 @@
-# A.B.E.T.
+# **A.B.E.T. — Agent Benchmark & Evaluation Toolkit**
 
-> [!NOTE] 
-> This is a work in progress.
+> **Note:** This project is a work in progress. Core functionality is implemented, and additional documentation & logging are being added.
 
-A.B.E.T. (Agent Benchmark and Evaluation Toolkit) is a package which provides tools to 
-quickly and easily implement agent benchmarks and evaluate them.
+A.B.E.T. (Agent Benchmark & Evaluation Toolkit) is a lightweight, modular framework for **building, running, and analyzing LLM agent benchmarks**. It provides a complete pipeline—from dataset loading to agent execution, evaluation, and visualization—making it easy to design custom benchmarks or plug in prebuilt ones.
 
-## Live
+The goal is to offer a flexible, extensible environment for evaluating **agentic behavior**, **tool-call reliability**, **self-repair**, and other emerging LLM capabilities.
 
-The project is hosted using Streamlit [here](https://sxm-abet.streamlit.app)
+---
 
-## Project Structure
+## **Live Demo**
+
+The dashboard is hosted on Streamlit:
+**[https://sxm-abet.streamlit.app](https://sxm-abet.streamlit.app)**
+
+---
+
+## **Project Structure**
 
 ```py
 |__ benchmark/                          # Benchmarks live here
-|   |__ utils.py                        # The main run() function and other benchmarking utilities
-|   |__ init/                           # Implementation of benchmark.init command which creates a template benchmark directory
+|   |__ utils.py                        # run() + shared benchmark utilities
+|   |__ init/                           # Template generator: benchmark.init
 |   |   |__ __main__.py
-|   |   |__ placeholder_config.yaml     # Placeholder config file
-|   |   |__ placeholder_init.py         # Placeholder __init__.py file
-|   |   |__ placeholder_main.py         # Placeholder __main__.py file
-|   |__ tool_call/                      # Implementation of a benchmark for tool calling abilities
-|       |__ ...
-|__ core/                               # Core components
-|   |__ agentoutput.py                  # Defines AbstractAgentOutput
-|   |__ dataset.py                      # Defines AbstractDataset
-|   |__ evaluation.py                   # Defines AbstractEvaluation
-|   |__ message.py                      # Defines multiple message types
-|   |__ agentbuilder/                   # Some AgentBuilder implementations
-|   |__ agentrunner/                    # Some AgentRunner implementations (Synchronous, Multithreaded, Multiprocessed, Asynchronous)
-|   |__ datasetloader/                  # Defines AbstractDatasetLoader
-|   |__ evaluationsaver/                # Defines AbstractEvaluationSaver
-|   |__ translator/                     # Defines AbstractTranslator
-|__ dashboard/                          # Streamlit powered Dashboard
-|   |__ __init__.py
-|   |__ app.py                          # Main app
+|   |   |__ placeholder_config.yaml
+|   |   |__ placeholder_init.py
+|   |   |__ placeholder_main.py
+|   |__ tool_call/                      # Tool-call evaluation benchmark
+|   |__ self_repair/                    # (Optional) Self-repair benchmark
+|
+|__ core/                               # Core abstractions and runtime
+|   |__ agentoutput.py                  # AbstractAgentOutput
+|   |__ dataset.py                      # AbstractDataset
+|   |__ evaluation.py                   # AbstractEvaluation
+|   |__ message.py                      # Standard message types
+|   |__ agentbuilder/                   # AgentBuilder implementations
+|   |__ agentrunner/                    # Runners: sync + async
+|   |   |__ synchronous.py              # Sequential, multithreaded, multiprocessing
+|   |   |__ asynchronous.py             # Async sequential & concurrent runners
+|   |__ datasetloader/                  # DatasetLoader base
+|   |__ evaluationsaver/                # EvaluationSaver base
+|   |__ translator/                     # Output→Message translators
+|
+|__ dashboard/                          # Streamlit-powered dashboard
+|   |__ app.py                          # Main UI
 |   |__ utils.py                        # Dashboard utilities
-|   |__ config.yaml                     # Dashboard config
+|   |__ config.yaml                     # Dashboard configuration
+|
+|__ evaluations/                        # Stored evaluation results
+|
 |__ README.md                           # You are here
 ```
 
-## Program Flow
+---
+
+## **End-to-End System Flow**
 
 ![Program Flow Diagram](flow.png)
 
-The system consists of several components that work together to evaluate an agent.
-1. AgentBuilder produces an Agent.
-2. DatasetLoader produces a Dataset.
-3. Translator produces a Translator instance that translates Agent's outputs to standardised Messages.
-4. The AgentRunner processes the dataset, populating it's outputs with translated agent outputs.
-5. The Updated Dataset is passed into the Evaluator.
-6. The Evaluator generates an Evaluation object.
-7. The Evaluation is then passed to an EvaluationSaver, which stores or exports evaluation results.
+1. **AgentBuilder** constructs an agent from configuration.
+2. **DatasetLoader** loads a dataset into a standardized Dataset object.
+3. **Translator** converts raw agent outputs into normalized Message objects.
+4. **AgentRunner** executes the agent across the dataset (sync, threaded, multiprocess, or async).
+5. The dataset is populated with outputs and passed to an **Evaluator**.
+6. The **Evaluator** produces an Evaluation object.
+7. **EvaluationSaver** exports or stores the evaluation (JSON, dashboard results, etc.).
 
-## How to run
+This architecture allows *any* benchmark to be defined through simple config files and modular Python components.
 
-### Setting up
+---
 
-First clone the repository and install required dependencies.
+## **Setup**
 
 ```sh
 git clone https://github.com/saksham1341/abet
@@ -65,41 +77,94 @@ cd abet
 python -m pip install -r requirements.txt
 ```
 
-### Running a benchmark
+---
 
-To run a benchmark, just execute it as a python module.
+## **Running a Benchmark**
+
+Each benchmark can be executed directly as a Python module:
 
 ```sh
 python -m benchmark.tool_call
 ```
 
-A benchmark can be configured through the `config.yaml` file inside it's directory.
+Benchmarks are configured via the `config.yaml` file inside their directory.
+This includes:
 
+* agent builder class
+* runner type (sync/async/threaded/process)
+* evaluator class
+* evaluation saver configuration
+* dataset path
+* translator class
 
-### Dashboard
+---
 
-Running a benchmark with `evaluationsaver_class` as `core.evaluationsaver.DashboardEvaluationSaver` with `output_path` inside `evaluations/` folder allows the streamlit powered dashboard app to compare different outputs (`runs`) of a benchmark.
+## **Dashboard Overview**
 
-A simple config to register a run on the dashboard would be
+If a benchmark uses
+`core.evaluationsaver.DashboardEvaluationSaver`
+and saves results under `evaluations/`, the Streamlit dashboard can visualize:
+
+* model comparisons
+* multiple runs of a benchmark
+* per-metric analysis
+* leaderboard-style views
+
+Minimal example snippet:
+
 ```yaml
-# ... other configs ...
-
-# EvaluationSaver config
 evaluationsaver_class: core.evaluationsaver.DashboardEvaluationSaver
 evaluationsaver_config:
-    benchmark_name: *benchmark_name  # Defined earlier in the config
-    run_id: *model_name  # Under agentbuilder_config
-    output_path: "evaluations/whatever.json"  # Or inside whatever folder you listed under `evaluations_folder` in `dashboard/config.yaml`
+    benchmark_name: *benchmark_name
+    run_id: *model_name
+    output_path: "evaluations/my_run.json"
 ```
 
-Then, on running the dashboard using
+Launch the dashboard:
+
 ```sh
-streamlit run dashboard/app.py
+streamlit run dashboard_app.py
 ```
 
-You will see your benchmark's leaderboard and model comparisons.
+Example (Tool-Call Benchmark):
 
-Here is the dashboard of the `tool_call` benchmark:
 ![Tool Call Benchmark Dashboard](tool_call_benchmark_dashboard.png)
 
-To customize your benchmark's dashboard edit the `dashboard/config.yml` file.
+Customize dashboard behavior through `dashboard/config.yaml`.
+
+---
+
+## **Built-In Benchmarks**
+
+### **1. Tool-Call Benchmark**
+
+Evaluates:
+
+* correct tool selection
+* correctness of tool arguments
+* structure of tool-call messages
+
+Useful for testing **agentic grounding**, **API usage**, and **tool reliability**.
+
+---
+
+### **2. Self-Repair Benchmark** *(optional WIP)*
+
+Evaluates:
+
+* the model’s ability to detect its own errors
+* correctness of self-corrections
+* robustness under iterative feedback
+
+Useful for studying **model introspection and failure recovery**.
+
+---
+
+## **Status**
+
+✔ Core architecture implemented
+✔ Sync & async runners
+✔ Dashboard with run comparison
+✔ Example benchmarks included (in progress)
+⬜ Documentation (in progress)
+⬜ Logging & robustness improvements (ongoing)

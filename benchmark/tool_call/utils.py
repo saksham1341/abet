@@ -2,11 +2,10 @@
 Tool Call Benchmark Evaluator
 """
 
-from core.datasetloader import AbstractDatasetLoader
+from core.datasetloader import BaseDatasetLoader
 from core.dataset import ListDataset
-from core.evaluator import AbstractEvaluator
-from core.evaluation import AbstractEvaluation
-from core.evaluationsaver import AbstractEvaluationSaver
+from core.evaluator import BaseEvaluator
+from core.evaluation import DashboardEvaluation
 from core.message import ToolCallMessage, AnyMessage
 from core.agentoutput import AbstractAgentOutput
 from core.translator import LangGraphTranslator
@@ -39,10 +38,11 @@ class ToolCallBenchmarkTranslator(LangGraphTranslator):
             tool_call_args=tool_call_args
         )
 
-class ToolCallBenchmarkDatasetLoader(AbstractDatasetLoader):
-    def __init__(self, config: Dict) -> None:
-        self.config = config
-        self.path = config["path"]
+class ToolCallBenchmarkDatasetLoader(BaseDatasetLoader):
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+
+        self.path = self.config["path"]
     
     def _load_dataset(self) -> ListDataset:
         with open(self.path, "r") as f:
@@ -63,25 +63,30 @@ class ToolCallBenchmarkDatasetLoader(AbstractDatasetLoader):
         )
 
 @dataclass
-class ToolCallBenchmarkEvaluation(AbstractEvaluation):
-    tsa: float     # Tool Selection Accuracy
-    ahr: float     # Argument Hallucination Rate
-    tp: float      # Trajectory Precision
+class ToolCallBenchmarkEvaluation(DashboardEvaluation):
+    tsa: float = None     # Tool Selection Accuracy
+    ahr: float = None     # Argument Hallucination Rate
+    tp: float = None      # Trajectory Precision
 
-class ToolCallBenchmarkEvaluator(AbstractEvaluator):
-    def __init__(self, config: Dict) -> None:
-        self.config = config
-
-    def _evaluate(self, dataset: ListDataset) -> ToolCallBenchmarkEvaluation:
+class ToolCallBenchmarkEvaluator(BaseEvaluator):
+    def _evaluate(self, dataset: ListDataset) -> DashboardEvaluation:
         keys = dataset.get_keys()
         total_correct_tool_calls = 0
         grand_total_tool_calls = 0
         total_correct_args = 0
         grand_total_args = 0
         total_tp = 0
+        samples = []
+
         for key in keys:
+            inp = dataset.get_input(key)
             out = dataset.get_output(key)
             tgt = dataset.get_target(key)
+            sample = {
+                "input": inp,
+                "output": out.__dict__,
+                "target": tgt
+            }
 
             out_tool_call_names = out.tool_call_names
             tgt_tool_call_names = tgt["tool_call_names"]
@@ -93,14 +98,19 @@ class ToolCallBenchmarkEvaluator(AbstractEvaluator):
             correct_tool_calls = 0
             total_args = len(tgt_tool_call_args)
             correct_args = 0
+            add_to_samples = False
             for i in range(total_tool_calls):
                 ttc = tgt_tool_call_names[i]
                 try:
                     otc = out_tool_call_names[i]
                 except IndexError:
+                    add_to_samples = True
+
                     break
 
                 if ttc != otc:
+                    add_to_samples = True
+
                     continue
             
                 correct_tool_calls += 1
@@ -110,9 +120,13 @@ class ToolCallBenchmarkEvaluator(AbstractEvaluator):
 
                 for k in tgt_args.keys():
                     if k not in out_args or out_args[k] != tgt_args[k]:
+                        add_to_samples = True
                         continue
 
                     correct_args += 1
+                
+            if add_to_samples:
+                samples.append(sample)
 
             total_correct_tool_calls += correct_tool_calls
             grand_total_tool_calls += total_tool_calls
@@ -133,17 +147,6 @@ class ToolCallBenchmarkEvaluator(AbstractEvaluator):
             dataset=dataset,
             tsa=tsa,
             ahr=ahr,
-            tp=tp
+            tp=tp,
+            samples=samples
         )
-
-class ToolCallBenchmarkEvaluationSaver(AbstractEvaluationSaver):
-    def __init__(self, config: Dict) -> None:
-        self.config = config
-    
-    def _save_evaluation(self, evaluation: ToolCallBenchmarkEvaluation) -> bool:
-        del evaluation.dataset
-
-        with open(self.config["output_path"], "w") as f:
-            json.dump(evaluation.__dict__, f)
-
-        return True
