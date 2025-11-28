@@ -1,9 +1,11 @@
 """
-Tool Call Benchmark AbstractAgentBuilder Module
+AbstractAgentBuilder Module
 """
 
 from typing import Callable
+import logging
 
+logger = logging.getLogger(__name__)
 
 class AbstractAgentBuilder:
     def __init__(self, config: dict) -> None:
@@ -13,6 +15,7 @@ class AbstractAgentBuilder:
         raise NotImplementedError()
     
     def __call__(self) -> Callable:
+        logger.info(f"Running AgentBuilder[{self.__class__.__name__}]")
         return self._build()
 
 class BaseAgentBuilder(AbstractAgentBuilder):

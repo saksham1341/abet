@@ -9,15 +9,20 @@ import multiprocessing
 import queue
 from typing import List, Any, Callable
 from time import sleep
+import logging
+
+logger = logging.getLogger(__name__)
 
 class SyncSequentialAgentRunner(BaseAgentRunner):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__()
 
         self.max_tries_for_an_input = self.config.get("max_tries_for_an_input", 3)
-        self.q = queue.Queue()
+        self.q = None
 
     def _run(self) -> None:
+        self.q = queue.Queue()
+
         keys = self.dataset.get_keys()
         for key in keys:
             self.q.put((key, 0))
@@ -25,16 +30,24 @@ class SyncSequentialAgentRunner(BaseAgentRunner):
         while not self.q.empty():
             key, tries = self.q.get()
 
+            logger.info(f"KEY[{key}] >> WORKER[0]")
+
             inp = self.dataset.get_input(key)
             try:
                 agent_out = self.agent(inp)
-            except Exception:
+            except Exception as e:
+                logger.error(f"Error running input KEY[{key}]: {e}")
                 if tries < self.max_tries_for_an_input:
+                    logger.info(f"KEY[{key}] returned to queue.")
                     self.q.put((key, tries + 1))
+                else:
+                    logger.info(f"Maximum retries for KEY[{key}] raeched, dropped.")
 
                 continue
             
             out = self.translator(agent_out)
+
+            logger.info(f"WORKER[0] >> OUT[{key}]")
 
             self.dataset.set_output(key, out)
 
@@ -50,14 +63,19 @@ class SyncThreadPoolAgentRunner(BaseAgentRunner):
     def _target(self, name: str) -> None:
         while True:
             try:
-                key, tries = self.iq.get()
+                item = self.iq.get()
             except queue.Empty:
                 break
+
+            key, inp, tries = item
+
+            logger.info(f"INP[{key}] >> WORKER[{name}]")
 
             inp = self.dataset.get_input(key)
             try:
                 native_out = self.agent(inp)
             except Exception as e:
+                logger.error(f"Error while running KEY[{key}] through the agent: {e}")
                 if tries < self.max_tries_for_an_input:
                     self.iq.put((key, tries + 1))
                 
@@ -67,11 +85,15 @@ class SyncThreadPoolAgentRunner(BaseAgentRunner):
 
             self.oq.put((key, out))
 
+            logger.info(f"WORKER[{name}] >> KEY[{key}]")
+
     def _run(self) -> None:
+        logger.info(f"Populating input queue.")
         keys = self.dataset.get_keys()
         for key in keys:
-            self.iq.put((key, 0))
+            self.iq.put((key, self.dataset.get_input(key), 0))
         
+        logger.info(f"Launching {self.worker_count} workers.")
         threads = [
             threading.Thread(
                 target=self._target,
@@ -88,11 +110,14 @@ class SyncThreadPoolAgentRunner(BaseAgentRunner):
         for thread in threads:
             thread.join()
         
+        logger.info(f"Draining output queue.")
         while not self.oq.empty():
             item = self.oq.get()
             key, out = item
 
             self.dataset.set_output(key, out)
+        
+        logger.info(f"Run completed.")
 
 class SyncProcessPoolAgentRunner(BaseAgentRunner):
     def __init__(self, *args, **kwargs) -> None:
@@ -111,6 +136,9 @@ class SyncProcessPoolAgentRunner(BaseAgentRunner):
                 break
 
             key, inp, tries = msg["key"], msg["inp"], msg["tries"]
+            
+            logger.info(f"INP[{key}] >> WORKER[{name}]")
+
             try:
                 native_out = agent(inp)
             except Exception:
@@ -130,7 +158,10 @@ class SyncProcessPoolAgentRunner(BaseAgentRunner):
                 "out": out
             })
 
+            logging.info(f"WORKER[{name}] >> OUT[{key}]")
+
     def _run(self) -> None:
+        logger.info("Populating input queue.")
         keys = self.dataset.get_keys()
         for key in keys:
             self.iq.put({
@@ -139,6 +170,7 @@ class SyncProcessPoolAgentRunner(BaseAgentRunner):
                 "tries": 0
             })
         
+        logger.info(f"Launching {self.worker_count} workers.")
         processes = [
             multiprocessing.Process(
                 target=self._target,
@@ -159,9 +191,12 @@ class SyncProcessPoolAgentRunner(BaseAgentRunner):
         for process in processes:
             process.join()
         
+        logger.info("Draining output queue.")
         while not self.oq.empty():
             msg = self.oq.get()
 
             key, out = msg["key"], msg["out"]
 
             self.dataset.set_output(key, out)
+        
+        logger.info("Run completed.")

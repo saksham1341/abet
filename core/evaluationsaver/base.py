@@ -4,7 +4,9 @@ AbstractEvaluationSaver class
 
 from core.evaluation import AbstractEvaluation
 from typing import Dict
+import logging
 
+logger = logging.getLogger(__name__)
 
 class AbstractEvaluationSaver:
     def __init__(self, config: Dict) -> None:
@@ -14,6 +16,7 @@ class AbstractEvaluationSaver:
         raise NotImplementedError()
     
     def __call__(self, evaluation: AbstractEvaluation) -> bool:
+        logger.info(f"Saving Evaluation.")
         return self._save_evaluation(
             evaluation=evaluation
         )

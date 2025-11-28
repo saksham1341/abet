@@ -5,6 +5,9 @@ Asynchronous Agent Runners
 from .base import BaseAgentRunner
 import asyncio
 import traceback
+import logging
+
+logger = logging.getLogger(__name__)
 
 class AsyncConcurrentAgentRunner(BaseAgentRunner):
     def __init__(self, *args, **kwargs) -> None:
@@ -22,7 +25,7 @@ class AsyncConcurrentAgentRunner(BaseAgentRunner):
             
             key, inp, tries = item
 
-            print(f"KEY[{key}] >> WORKER[{name}]")
+            logger.info(f"INP[{key}] >> WORKER[{name}]")
             
             try:
                 agent_out = await asyncio.to_thread(self.agent, inp)
@@ -31,24 +34,28 @@ class AsyncConcurrentAgentRunner(BaseAgentRunner):
                 await self.oq.put((key, out))
                 
             except Exception as e:
+                logger.error(f"Error while running input with KEY[{key}]: {e}")
+
                 if tries < self.max_tries_for_an_input:
                     await self.iq.put((key, inp, tries + 1))
             finally:
                 self.iq.task_done()
 
-                print(f"WORKER[{name}] >> OUT[{key}]")
+                logger.info(f"WORKER[{name}] >> OUT[{key}]")
 
     async def _async_run(self) -> None:
         self.iq = asyncio.Queue()
         self.oq = asyncio.Queue()
 
+        logger.info("Populating input queue.")
         keys = self.dataset.get_keys()
         for key in keys:
             self.iq.put_nowait((key, self.dataset.get_input(key), 0))
 
         # Create Workers
+        logger.info(f"Launching {self.worker_count} workers.")
         workers = [
-            asyncio.create_task(self._worker(f"AsyncRunner#{i}"))
+            asyncio.create_task(self._worker(f"AsyncConcurrentAgentRunner#{i}"))
             for i in range(self.worker_count)
         ]
 
@@ -60,9 +67,12 @@ class AsyncConcurrentAgentRunner(BaseAgentRunner):
         
         await asyncio.gather(*workers, return_exceptions=True)
 
+        logger.info("Draining output queue.")
         while not self.oq.empty():
             key, out = await self.oq.get()
             self.dataset.set_output(key, out)
+        
+        logger.info("Run completed.")
 
     def _run(self) -> None:
         return asyncio.run(self._async_run())

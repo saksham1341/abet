@@ -1,8 +1,9 @@
 benchmark_name: &benchmark_name "Tool Call Benchmark"
+logs_dir: "logs"
 
 agentbuilder_class: core.agentbuilder.LangGraphAgentBuilder
 agentbuilder_config:
-  model_name: &model_name gemini-2.5-flash
+  model_name: &model_name gemini-2.5-flash-lite
   model_class: langchain_google_genai.ChatGoogleGenerativeAI
   tools: benchmark.tool_call.tools.tools
   system_prompt_path: benchmark/tool_call/system_prompt.txt
