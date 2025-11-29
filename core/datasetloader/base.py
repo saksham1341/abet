@@ -18,7 +18,19 @@ class AbstractDatasetLoader:
     
     def __call__(self) -> AbstractDataset:
         logger.info("Loading dataset.")
-        return self._load_dataset()
+        resp = self._load_dataset()
+        
+        keys = resp.get_keys()
+        samples = []
+        for key in keys[:10]:
+            samples.append({
+                "key": key,
+                "inp": resp.get_input(key),
+                "tgt": resp.get_target(key)
+            })
+        logger.debug(f"Dataset loaded with {len(keys)} keys. Sample: {samples}")
+
+        return resp
 
 class BaseDatasetLoader(AbstractDatasetLoader):
     def __init__(self, config: Dict) -> None:

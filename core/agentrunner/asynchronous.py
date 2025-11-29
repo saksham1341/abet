@@ -35,9 +35,13 @@ class AsyncConcurrentAgentRunner(BaseAgentRunner):
                 
             except Exception as e:
                 logger.error(f"Error while running input with KEY[{key}]: {e}")
+                logger.debug(f"Error Details:\nINP: {inp}\nERR: {traceback.format_exc()}")
 
                 if tries < self.max_tries_for_an_input:
+                    logger.info(f"KEY[{key}] returned to queue.")
                     await self.iq.put((key, inp, tries + 1))
+                else:
+                    logger.info(f"Maximum retries for KEY[{key}] raeched, dropped.")
             finally:
                 self.iq.task_done()
 
@@ -71,7 +75,7 @@ class AsyncConcurrentAgentRunner(BaseAgentRunner):
         while not self.oq.empty():
             key, out = await self.oq.get()
             self.dataset.set_output(key, out)
-        
+            logger.debug(f"Set OUT[{out}] to KEY[{key}]")
         logger.info("Run completed.")
 
     def _run(self) -> None:

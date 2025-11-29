@@ -57,13 +57,14 @@ class SRBTranslator(LangGraphTranslator):
                 tries += 1
                 last_run_code = msg.tool_kwargs["code"]
         
+        code_output = None
         if last_run_code:
-            code_output = run_code(
+            code_run_result = run_code(
                 code=last_run_code,
                 input_key=None  # The tool does not check against input_key if it is None
-            ).rstrip()
-        else:
-            code_output = None
+            )
+
+            code_output = code_run_result["content"].rstrip()
 
         return SRBAgentOutput(
             code_output=code_output,

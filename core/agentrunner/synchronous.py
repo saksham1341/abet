@@ -37,6 +37,8 @@ class SyncSequentialAgentRunner(BaseAgentRunner):
                 agent_out = self.agent(inp)
             except Exception as e:
                 logger.error(f"Error running input KEY[{key}]: {e}")
+                logger.debug(f"Error Details:\nINP: {inp}\nERR: {traceback.format_exc()}")
+
                 if tries < self.max_tries_for_an_input:
                     logger.info(f"KEY[{key}] returned to queue.")
                     self.q.put((key, tries + 1))
@@ -50,6 +52,7 @@ class SyncSequentialAgentRunner(BaseAgentRunner):
             logger.info(f"WORKER[0] >> OUT[{key}]")
 
             self.dataset.set_output(key, out)
+            logger.debug(f"Set OUT[{out}] to KEY[{key}]")
 
 class SyncThreadPoolAgentRunner(BaseAgentRunner):
     def __init__(self, *args, **kwargs) -> None:
@@ -76,8 +79,13 @@ class SyncThreadPoolAgentRunner(BaseAgentRunner):
                 native_out = self.agent(inp)
             except Exception as e:
                 logger.error(f"Error while running KEY[{key}] through the agent: {e}")
+                logger.debug(f"Error Details:\nINP: {inp}\nERR: {traceback.format_exc()}")
+
                 if tries < self.max_tries_for_an_input:
+                    logger.info(f"KEY[{key}] returned to queue.")
                     self.iq.put((key, tries + 1))
+                else:
+                    logger.info(f"Maximum retries for KEY[{key}] raeched, dropped.")
                 
                 continue
 
@@ -101,7 +109,7 @@ class SyncThreadPoolAgentRunner(BaseAgentRunner):
                 kwargs={
                     "name": f"SyncThreadPoolAgentRunner#{i}"
                 }
-            ) for i in range(self.thread_count)
+            ) for i in range(self.worker_count)
         ]
 
         for thread in threads:
@@ -182,7 +190,7 @@ class SyncProcessPoolAgentRunner(BaseAgentRunner):
                     "iq": self.iq,
                     "oq": self.oq
                 }
-            ) for i in range(self.process_count)
+            ) for i in range(self.worker_count)
         ]
 
         for process in processes:

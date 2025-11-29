@@ -16,10 +16,14 @@ class AbstractTranslator:
         raise NotImplementedError()
     
     def __call__(self, native_output: Any) -> AbstractAgentOutput:
-        logging.info("Translating.")
-        return self._translate(
+        logging.info("Translating native output.")
+        resp = self._translate(
             native_output=native_output
         )
+        logging.info("Native output translated succesfully.")
+        logging.debug(f"Translation generated.\nNative Output: {native_output}\nTranslated Output: {resp}")
+
+        return resp
 
 class BaseTranslator(AbstractTranslator):
     config: Dict

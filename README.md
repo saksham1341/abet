@@ -117,7 +117,10 @@ evaluationsaver_class: core.evaluationsaver.DashboardEvaluationSaver
 evaluationsaver_config:
     benchmark_name: *benchmark_name
     run_id: *model_name
-    output_path: "evaluations/my_run.json"
+    metrics:
+        - metric_1
+        - metric_2
+    output_dir: "evaluations"
 ```
 
 Launch the dashboard:
