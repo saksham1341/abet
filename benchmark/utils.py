@@ -19,7 +19,7 @@ import logging
 
 fmt = '%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(funcName)s - %(message)s'
 logging.basicConfig(
-    level=logging.INFO,
+    level=logging.DEBUG,
     format=fmt
 )
 
@@ -168,7 +168,7 @@ def run(config: Dict = None) -> None:
     # save logs 
     if config.get("logs_dir", None):
         logger_file_path = Path(config["logs_dir"], f"{datetime.datetime.now()}_{config['benchmark_name']}.log")
-        logging.info(f"Saving logs to {logger_file_path.absolute()}")
+        logger.info(f"Saving logs to {logger_file_path.absolute()}")
         handler = logging.FileHandler(
             filename=logger_file_path,
         )

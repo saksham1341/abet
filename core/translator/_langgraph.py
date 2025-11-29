@@ -20,6 +20,9 @@ from langchain_core.messages import (
     ToolMessage
 ) 
 from typing import Dict, List, Union
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class LangGraphTranslator(BaseTranslator):
@@ -77,6 +80,8 @@ class LangGraphTranslator(BaseTranslator):
 
                 if isinstance(translated_messages[-1], _ErrorMessage):
                     break
+
+        logger.debug(f"Translating langgraph agent messages.\nMSGS: {messages}\nTRNS: {translated_messages}")
 
         return AgentOutputWithMessages(
             messages=translated_messages

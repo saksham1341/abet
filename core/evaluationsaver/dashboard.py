@@ -7,6 +7,9 @@ from .base import BaseEvaluationSaver
 from pathlib import Path
 from typing import List,Dict
 import json
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class DashboardEvaluationSaver(BaseEvaluationSaver):
@@ -23,6 +26,8 @@ class DashboardEvaluationSaver(BaseEvaluationSaver):
                 data["results"][k] = v
             
         data["samples"] = getattr(evaluation, "samples", None)
+
+        logger.debug(f"Saving evaluation with data: {data}")
 
         with open(Path(self.config["output_dir"], f"{data['benchmark_name']}_{data['run_id']}.json"), "w") as f:
             json.dump(data, f)

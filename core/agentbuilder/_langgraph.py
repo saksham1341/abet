@@ -5,13 +5,16 @@ Tool Call Benchmark LangGraphAgentBuilder module
 from .base import BaseAgentBuilder
 from langchain.agents import create_agent
 from langchain.tools import BaseTool, tool
-from typing import List, Callable
+from typing import List, Callable, Union, Any
 import importlib
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class LangGraphAgentBuilder(BaseAgentBuilder):
     tools: List[BaseTool]
-    model: str
+    model: Union[str, Any]
     system_prompt: str
     
     def __init__(self, config: dict) -> None:
@@ -42,13 +45,18 @@ class LangGraphAgentBuilder(BaseAgentBuilder):
         self.system_prompt = open(config["system_prompt_path"], "r").read()
 
     def _build(self) -> Callable:
-        agent = create_agent(
-            model=self.model,
-            tools=self.tools,
-            system_prompt=self.system_prompt
-        )
+        kwargs = {
+            "model": self.model,
+            "tools": self.tools,
+            "system_prompt": self.system_prompt
+        }
+    
+        logger.debug(f"Calling langgraph.create_agent with args: {kwargs}")
+        
+        agent = create_agent(**kwargs)
 
         def _(inp: str):
+            logger.debug(f"Sending INP[{inp}] to agent.")
             resp = agent.invoke(
                 input={
                     "messages": [
@@ -60,6 +68,8 @@ class LangGraphAgentBuilder(BaseAgentBuilder):
                 },
                 stream_mode="values"
             )
+
+            logger.debug(f"Agentic call finished.\nINP: {inp}\nOUT: {resp}")
 
             return resp
         

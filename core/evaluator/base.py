@@ -18,7 +18,11 @@ class AbstractEvaluator:
 
     def __call__(self, dataset: AbstractDataset) -> AbstractEvaluation:
         logger.info("Evaluating dataset.")
-        return self._evaluate(dataset)
+        resp = self._evaluate(dataset)
+        logger.info("Dataset succesfully evaluated.")
+        logger.debug(f"Evaluation generated: {resp}")
+
+        return resp
 
 class BaseEvaluator(AbstractEvaluator):
     def __init__(self, config: Dict) -> None:
