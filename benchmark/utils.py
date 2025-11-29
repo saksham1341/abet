@@ -181,6 +181,9 @@ def run(config: Dict = None) -> None:
         root_logger = logging.getLogger()
         root_logger.addHandler(handler)
 
+    logger.info("Preparing Evaluation")
+    preparing_since = datetime.datetime.now()
+
     # build agent
     logger.info("Creating agent.")
     agent = create_agent_from_config(
@@ -235,3 +238,7 @@ def run(config: Dict = None) -> None:
     result = evaluation_saver(
         evaluation=evaluation
     )
+
+    _ = datetime.datetime.now()
+    total_run_time = _ - preparing_since
+    logger.info(f"Evaluation complete. Total Time: {total_run_time.total_seconds()}s")
