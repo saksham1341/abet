@@ -26,7 +26,7 @@ class DashboardEvaluationSaver(BaseEvaluationSaver):
             if isinstance(v, (int , float)):
                 data["results"][k] = v
             else:
-                logging.error(f"Metric {k} invalid or not found in the evaluation, skipping.")
+                logging.error(f"Metric {k} with value {v} is invalid or not found in the evaluation, skipping.")
             
         data["samples"] = getattr(evaluation, "samples", None)
 

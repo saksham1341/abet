@@ -1,0 +1,44 @@
+# Placeholder config for a benchmark
+benchmark_name: &benchmark_name KMMLU Benchmark
+logs_dir: logs
+
+# AgentBuilder Configurations
+agentbuilder_class: core.agentbuilder.LangGraphAgentBuilder
+agentbuilder_config:
+  model_name: &model_name gemini-2.5-flash-lite
+  model_class: langchain_google_genai.ChatGoogleGenerativeAI
+  system_prompt_path: "benchmark/kmmlu/system_prompt.txt"
+
+# Translator Configurations
+translator_class: benchmark.kmmlu.utils.KMMLUTranslator
+translator_config:
+  {}
+
+# DatasetLoader configurations
+datasetloader_class: benchmark.kmmlu.utils.KMMLUDatasetLoader
+datasetloader_config:
+  categories: &categories
+    # - Accounting
+    # - Agricultural-Sciences
+    - Computer-Science
+    - Criminal-Law
+    - Civil-Engineering
+    - Chemistry
+
+# AgentRunner configurations
+agentrunner_class: core.agentrunner.AsyncConcurrentAgentRunner
+agentrunner_config:
+  worker_count: 100
+
+# Evaluator configurations
+evaluator_class: benchmark.kmmlu.utils.KMMLUEvaluator
+evaluator_config:
+  {}
+
+# EvaluationSaver configurations
+evaluationsaver_class: benchmark.kmmlu.utils.KMMLUEvaluationSaver
+evaluationsaver_config:
+  benchmark_name: *benchmark_name
+  run_id: *model_name
+  metrics: *categories
+  output_dir: evaluations
