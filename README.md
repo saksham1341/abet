@@ -15,6 +15,25 @@ The dashboard is hosted on Streamlit:
 
 ---
 
+## **End-to-End System Flow**
+
+![Program Flow Diagram](flow.png)
+
+ABET uses **6 core components** to evaluate an agent.
+
+| Module            | Responsibility                                                  |
+| ----------------- | --------------------------------------------------------------- |
+| `DatasetLoader`   | Loads raw data from files/APIs into a unified dataset structure |
+| `AgentBuilder`    | Builds an agent (LLM interface, model config, tools)            |
+| `AgentRunner`     | Executes the agent across the dataset (async or sync)           |
+| `Translator`      | Converts model-native outputs → internal structured messages    |
+| `Evaluator`       | Computes metrics and gathers sample-level diagnostics           |
+| `EvaluationSaver` | Saves results for dashboard ingestion                           |
+
+This architecture allows *any* benchmark to be defined through simple config files and modular Python components.
+
+---
+
 ## **Project Structure**
 
 ```py
@@ -25,8 +44,9 @@ The dashboard is hosted on Streamlit:
 |   |   |__ placeholder_config.yaml
 |   |   |__ placeholder_init.py
 |   |   |__ placeholder_main.py
+|   |__ kmmlu/                          # KMMLU Benchmark
 |   |__ tool_call/                      # Tool-call evaluation benchmark
-|   |__ self_repair/                    # (Optional) Self-repair benchmark
+|   |__ self_repair/                    # Self-repair benchmark
 |
 |__ core/                               # Core abstractions and runtime
 |   |__ agentoutput.py                  # AbstractAgentOutput
@@ -53,19 +73,15 @@ The dashboard is hosted on Streamlit:
 
 ---
 
-## **End-to-End System Flow**
+## Available Benchmarks
 
-![Program Flow Diagram](flow.png)
+| Benchmark             | Focus                                                               | Details                   |
+| --------------------- | ------------------------------------------------------------------- | ------------------------ |
+| KMMLU Benchmark       | Korean-language knowledge & reasoning multiple-choice exam          | [KMMLU Benchmark's README.md](`benchmark/kmmlu/`)                 |
+| Tool Call Benchmark   | Agentic tool selection, argument correctness, trajectory similarity | [Tool Call Benchmark's README.md](`benchmark/tool_call/`)          |
+| Self-Repair Benchmark | Iterative debugging using `run_code`                                | [Self Repair Benchmark's README.md](`benchmark/self_repair/`) |
 
-1. **AgentBuilder** constructs an agent from configuration.
-2. **DatasetLoader** loads a dataset into a standardized Dataset object.
-3. **Translator** converts raw agent outputs into normalized Message objects.
-4. **AgentRunner** executes the agent across the dataset (sync, threaded, multiprocess, or async).
-5. The dataset is populated with outputs and passed to an **Evaluator**.
-6. The **Evaluator** produces an Evaluation object.
-7. **EvaluationSaver** exports or stores the evaluation (JSON, dashboard results, etc.).
-
-This architecture allows *any* benchmark to be defined through simple config files and modular Python components.
+Each benchmark has its **own README** inside its folder explaining the pipeline.
 
 ---
 
@@ -99,6 +115,19 @@ This includes:
 
 ---
 
+## **Adding a New Benchmark**
+
+1. run `python -m benchmark.init <your_benchmark_name>`
+2. Add your dataset loader
+3. Implement your translator + agent output dataclass
+4. Write an evaluator + evaluation dataclass
+5. Fill the `config.yaml`
+6. Add dashboard metadata
+
+A.B.E.T. handles the rest.
+
+---
+
 ## **Dashboard Overview**
 
 If a benchmark uses
@@ -129,45 +158,12 @@ Launch the dashboard:
 streamlit run dashboard_app.py
 ```
 
-Example (Tool-Call Benchmark):
-
-![Tool Call Benchmark Dashboard](tool_call_benchmark_dashboard.png)
-
 Customize dashboard behavior through `dashboard/config.yaml`.
 
 ---
 
-## **Built-In Benchmarks**
+## Future developments
 
-### **1. Tool-Call Benchmark**
-
-Evaluates:
-
-* correct tool selection
-* correctness of tool arguments
-* structure of tool-call messages
-
-Useful for testing **agentic grounding**, **API usage**, and **tool reliability**.
-
----
-
-### **2. Self-Repair Benchmark** *(optional WIP)*
-
-Evaluates:
-
-* the model’s ability to detect its own errors
-* correctness of self-corrections
-* robustness under iterative feedback
-
-Useful for studying **model introspection and failure recovery**.
-
----
-
-## **Status**
-
-✔ Core architecture implemented
-✔ Sync & async runners
-✔ Dashboard with run comparison
-✔ Example benchmarks included (in progress)
-⬜ Documentation (in progress)
-⬜ Logging & robustness improvements (ongoing)
+- Implementing a BFCL benchmark (v1 for now, expand later)
+- Documentation
+- command line config customization

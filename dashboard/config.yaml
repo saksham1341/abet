@@ -5,6 +5,46 @@ evaluations_folder: "evaluations"
 
 # Benchmark Configs
 benchmark_configs:
+  "KMMLU Benchmark":
+    description: |
+      The KMMLU Benchmark is a broad-domain multiple-choice evaluation suite designed to test a model’s knowledge across key academic and professional fields. It measures domain-specific understanding, problem-solving skill, and the ability to apply learned concepts to practical questions. All tasks are presented in Korean, assessing both knowledge and language grounding.
+    metrics:
+      Accounting:
+        alternate_name: "Accounting Knowledge"
+        description: |
+          Measures the model’s understanding of financial accounting principles, reporting standards, auditing fundamentals, and practical bookkeeping decision-making.  
+          A higher score represents stronger domain knowledge.
+        scoring_weight: 1
+      Agricultural-Sciences:
+        alternate_name: "Agricultural Sciences"
+        description: |
+          Evaluates comprehension of crop science, soil management, animal science, agricultural technology, and ecological principles relevant to modern agricultural practice.  
+          A higher score represents stronger domain knowledge.
+        scoring_weight: 1
+      Computer-Science:
+        alternate_name: "Computer Science Fundamentals"
+        description: |
+          Tests the model’s grasp of algorithms, data structures, operating systems, networking, databases, computational theory, and general CS problem-solving.  
+          A higher score represents stronger domain knowledge.
+        scoring_weight: 1
+      Criminal-Law:
+        alternate_name: "Criminal Law Knowledge"
+        description: |
+          Assesses understanding of criminal statutes, legal interpretation, procedural principles, and the application of legal reasoning in criminal justice scenarios.  
+          A higher score represents stronger domain knowledge.
+        scoring_weight: 1
+      Civil-Engineering:
+        alternate_name: "Civil Engineering"
+        description: |
+          Measures knowledge of structural engineering, materials science, construction methods, geotechnical analysis, and infrastructure design.  
+          A higher score represents stronger domain knowledge.
+        scoring_weight: 1
+      Chemistry:
+        alternate_name: "Chemistry"
+        description: |
+          Tests understanding of general, organic, and inorganic chemistry concepts, including reactions, thermodynamics, atomic structure, and laboratory reasoning.  
+          A higher score represents stronger domain knowledge.
+        scoring_weight: 1
   "Tool Call Benchmark":
     description: |
       A comprehensive evaluation suite designed to assess an LLM's proficiency in utilizing external tools. This benchmark tests the model's ability to bridge natural language instructions with executable API calls, focusing on decision-making accuracy, schema adherence, and multi-step planning logic.
@@ -55,43 +95,3 @@ benchmark_configs:
           `ats` calculates the average number of tries it took the agent to get the code correct.  
           A lower `ats` represents a better model.
         scoring_weight: -0.25
-  "KMMLU Benchmark":
-    description: |
-      The KMMLU Benchmark is a broad-domain multiple-choice evaluation suite designed to test a model’s knowledge across key academic and professional fields. It measures domain-specific understanding, problem-solving skill, and the ability to apply learned concepts to practical questions. All tasks are presented in Korean, assessing both knowledge and language grounding.
-    metrics:
-      Accounting:
-        alternate_name: "Accounting Knowledge"
-        description: |
-          Measures the model’s understanding of financial accounting principles, reporting standards, auditing fundamentals, and practical bookkeeping decision-making.  
-          A higher score represents stronger domain knowledge.
-        scoring_weight: 1
-      Agricultural-Sciences:
-        alternate_name: "Agricultural Sciences"
-        description: |
-          Evaluates comprehension of crop science, soil management, animal science, agricultural technology, and ecological principles relevant to modern agricultural practice.  
-          A higher score represents stronger domain knowledge.
-        scoring_weight: 1
-      Computer-Science:
-        alternate_name: "Computer Science Fundamentals"
-        description: |
-          Tests the model’s grasp of algorithms, data structures, operating systems, networking, databases, computational theory, and general CS problem-solving.  
-          A higher score represents stronger domain knowledge.
-        scoring_weight: 1
-      Criminal-Law:
-        alternate_name: "Criminal Law Knowledge"
-        description: |
-          Assesses understanding of criminal statutes, legal interpretation, procedural principles, and the application of legal reasoning in criminal justice scenarios.  
-          A higher score represents stronger domain knowledge.
-        scoring_weight: 1
-      Civil-Engineering:
-        alternate_name: "Civil Engineering"
-        description: |
-          Measures knowledge of structural engineering, materials science, construction methods, geotechnical analysis, and infrastructure design.  
-          A higher score represents stronger domain knowledge.
-        scoring_weight: 1
-      Chemistry:
-        alternate_name: "Chemistry"
-        description: |
-          Tests understanding of general, organic, and inorganic chemistry concepts, including reactions, thermodynamics, atomic structure, and laboratory reasoning.  
-          A higher score represents stronger domain knowledge.
-        scoring_weight: 1

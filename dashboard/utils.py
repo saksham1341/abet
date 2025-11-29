@@ -103,13 +103,19 @@ def compile_evaluations(evaluations: List[Evaluation], config: Dict) -> List[Com
     for k, v in benchmark_wise_dfs.items():
         benchmark_wise_dfs[k] = v.set_index("run_id")
 
+    # Sort the compiled evaluations based on the order provided in config
+    sorted_benchmark_wise_dfs = {
+        k: benchmark_wise_dfs[k]
+        for k in sorted(benchmark_wise_dfs, key=lambda x: (list(config["benchmark_configs"].keys()).index(x) + 1) or len(benchmark_wise_dfs))
+    }
+
     return [
         CompiledEvaluation(
             benchmark_name=k,
             df=v,
             samples=benchmark_wise_samples.get(k, {}),
             config=config.get("benchmark_configs", {}).get(k, {})
-        ) for k, v in benchmark_wise_dfs.items()
+        ) for k, v in sorted_benchmark_wise_dfs.items()
     ]
 
 def score_single_compiled_evaluation(ce: CompiledEvaluation) -> Dict:    
@@ -322,6 +328,33 @@ def render_home_page():
     The goal is to offer a flexible, extensible environment for evaluating **agentic behavior**, **tool-call reliability**, **self-repair**, and other emerging LLM capabilities.
         """)
 
+
+    # --- Program Flow Section ---
+    with st.container(border=True):
+        st.header("Program Flow")
+        
+        col1, col2 = st.columns([1.5, 1])
+        
+        with col1:
+            st.markdown("""
+ABET uses **6 core components** to evaluate an agent.
+
+| Module            | Responsibility                                                  |
+| ----------------- | --------------------------------------------------------------- |
+| `DatasetLoader`   | Loads raw data from files/APIs into a unified dataset structure |
+| `AgentBuilder`    | Builds an agent (LLM interface, model config, tools)            |
+| `AgentRunner`     | Executes the agent across the dataset (async or sync)           |
+| `Translator`      | Converts model-native outputs → internal structured messages    |
+| `Evaluator`       | Computes metrics and gathers sample-level diagnostics           |
+| `EvaluationSaver` | Saves results for dashboard ingestion                           |
+
+This architecture allows *any* benchmark to be defined through simple config files and modular Python components.
+            """)
+        
+        with col2:
+            st.caption("Program Flow Diagram")
+            st.image("flow.png", width='stretch')
+    
     # --- Project Structure Section ---
     with st.container(border=True):
         st.header("Project Structure")
@@ -361,80 +394,72 @@ def render_home_page():
 |
 |__ README.md                           # You are here""", language="text")
 
-    # --- Program Flow Section ---
-    with st.container(border=True):
-        st.header("Program Flow")
-        
-        col1, col2 = st.columns([1.5, 1])
-        
-        with col1:
-            st.markdown("""
-            The system consists of several components that work together to evaluate an agent:
-
-            1. **AgentBuilder** constructs an agent from configuration.
-            2. **DatasetLoader** loads a dataset into a standardized Dataset object.
-            3. **Translator** converts raw agent outputs into normalized Message objects.
-            4. **AgentRunner** executes the agent across the dataset (sync, threaded, multiprocess, or async).
-            5. The dataset is populated with outputs and passed to an **Evaluator**.
-            6. The **Evaluator** produces an Evaluation object.
-            7. **EvaluationSaver** exports or stores the evaluation (JSON, dashboard results, etc.).
-
-            This architecture allows *any* benchmark to be defined through simple config files and modular Python components.
-            """)
-        
-        with col2:
-            st.caption("Program Flow Diagram")
-            st.image("flow.png", width='stretch')
-
     # --- Usage Section ---
+    col1, col2 = st.columns([1, 1])
+    with col1:
+        with st.container(border=True):
+            st.header("How to Run")
+
+            st.subheader("1. Setup")
+            st.markdown("Clone the repository and install dependencies:")
+            st.code("""
+    git clone https://github.com/saksham1341/abet
+    cd abet
+    python -m pip install -r requirements.txt""", language="bash")
+
+            st.subheader("2. Running a Benchmark")
+            st.markdown("Each benchmark can be executed directly as a Python module:")
+            st.code("python -m benchmark.tool_call", language="bash")
+            st.markdown("""
+    Benchmarks are configured via the `config.yaml` file inside their directory.
+    This includes:
+
+    * agent builder class
+    * runner type (sync/async/threaded/process)
+    * evaluator class
+    * evaluation saver configuration
+    * dataset path
+    * translator class
+            """)
+
+    with col2:
+        with st.container(border=True):
+            st.header("Dashboard")
+            st.markdown("""
+    If a benchmark uses `core.evaluationsaver.DashboardEvaluationSaver`
+    and saves results under `evaluations/`, the Streamlit dashboard can visualize:
+
+    * model comparisons
+    * per-metric analysis
+    * leaderboard-style views
+
+    Minimal example snippet:
+            """)
+            st.code("""
+    evaluationsaver_class: core.evaluationsaver.DashboardEvaluationSaver
+    evaluationsaver_config:
+        benchmark_name: *benchmark_name
+        run_id: *model_name
+        metrics:
+            - metric_1
+            - metric_2
+        output_dir: evaluations" """, language="yaml")
+            st.markdown("Launch the dashboard:")
+            st.code("streamlit run dashboard_app.py", language="bash")
+            st.markdown("Customize dashboard behaviour through `dashboard/config.yaml`")
+    
     with st.container(border=True):
-        st.header("How to Run")
-
-        st.subheader("1. Setup")
-        st.markdown("Clone the repository and install dependencies:")
-        st.code("""
-git clone https://github.com/saksham1341/abet
-cd abet
-python -m pip install -r requirements.txt""", language="bash")
-
-        st.subheader("2. Running a Benchmark")
-        st.markdown("Execute a benchmark as a python module:")
-        st.code("python -m benchmark.tool_call", language="bash")
+        st.header("Adding a new benchmark")
         st.markdown("""
-        Benchmarks are configured via the `config.yaml` file inside their directory.
-        This includes:
+1. run `python -m benchmark.init <your_benchmark_name>`
+2. Add your dataset loader
+3. Implement your translator + agent output dataclass
+4. Write an evaluator + evaluation dataclass
+5. Fill the `config.yaml`
+6. Add dashboard metadata
 
-        * agent builder class
-        * runner type (sync/async/threaded/process)
-        * evaluator class
-        * evaluation saver configuration
-        * dataset path
-        * translator class
-        """)
-
-        st.subheader("3. Dashboard")
-        st.markdown("""
-            If a benchmark uses
-        `core.evaluationsaver.DashboardEvaluationSaver`
-        and saves results under `evaluations/`, the Streamlit dashboard can visualize:
-
-        * model comparisons
-        * per-metric analysis
-        * leaderboard-style views
-
-        Minimal example snippet:
-        """)
-        st.code("""
-evaluationsaver_class: core.evaluationsaver.DashboardEvaluationSaver
-evaluationsaver_config:
-    benchmark_name: *benchmark_name
-    run_id: *model_name
-    metrics:
-        - metric_1
-        - metric_2
-    output_dir: evaluations" """, language="yaml")
-        st.markdown("Launch the dashboard:")
-        st.code("streamlit run dashboard_app.py", language="bash")
+A.B.E.T. handles the rest.
+""")
 
 def generate_pages(ces: List[CompiledEvaluation]) -> List[st.Page]:    
     return [
