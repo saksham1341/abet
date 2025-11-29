@@ -1,19 +1,123 @@
 # Tool Call Benchmark
 
-> [!NOTE]
-> This is a work in progress.
+**Evaluates LLM agents’ ability to select, sequence, and invoke tools correctly.**
 
-## Description
+Live at Streamlit [here](https://sxm-abet.streamlit.app/Tool%20Call%20Benchmark)
 
-This tool call benchmark evaluates a model on 3 values:
-1. **Tool Selection Accuracy** (0 to 1 higher is better)  
-How many times does the model select the correct tool?
-2. **Argument Hallucination Rate** (0 to 1 lower is better):  
-How many times does the model hallucinate arguments?
-3. **Trajectory Precision** (0 to 1 higher is better):  
-How close is the model's execution to gold standard?
+---
 
-## Formulas
+## Purpose
+
+This benchmark measures:
+
+* **Tool selection accuracy (TSA)**
+* **Argument hallucination rate (AHR)**
+* **Trajectory precision (TP)** — similarity of model’s tool-call sequence to ground truth
+
+It simulates an agentic workflow where an LLM answers queries by correctly invoking deterministic tools.
+
+---
+
+## Pipeline Summary
+
+```
+TCBDatasetLoader → LangGraphAgentBuilder → AsyncConcurrentAgentRunner → TCBTranslator → TCBEvaluator → DashboardEvaluationSaver
+```
+
+---
+
+# 1. Dataset Loading
+
+**Loaded with:** `ToolCallBenchmarkDatasetLoader`
+
+The dataset is a JSON list where each entry contains:
+
+* `"input"`: user text
+* `"target"`: expected ordered list of tool calls
+
+The loader:
+
+1. Reads the dataset from `dataset.json`
+2. Builds a `ListDataset` with:
+
+   * `inputs[i] = input text`
+   * `targets[i] = expected tool sequence, names, and args`
+
+The dataset is now ready to be consumed by the agent.
+
+---
+
+# 2. Agent Construction
+
+Built using:
+
+```
+core.agentbuilder.LangGraphAgentBuilder
+```
+
+This builder:
+
+* Loads the model (`gemini-2.5-flash` or any configured LLM)
+* Loads tools from `benchmark/tool_call/tools.py`
+* Loads a system prompt from `system_prompt.txt`
+* Wraps tools using LangChain’s tool APIs
+* Builds a LangGraph agent capable of tool calls
+
+---
+
+# 3. Running the Agent
+
+The benchmark uses:
+
+```
+AsyncConcurrentAgentRunner
+```
+
+Meaning:
+
+* Multiple dataset entries are processed at once
+* Retries are supported
+* Timeout and worker counts are configurable
+
+For each sample:
+
+```
+raw_output = agent(input_text)
+translated_output = translator(raw_output)
+dataset.set_output(key, translated_output)
+```
+
+---
+
+# 4. Translating Outputs
+
+Translator: `ToolCallBenchmarkTranslator`
+
+Translation steps:
+
+1. Call `LangGraphTranslator` to convert LangGraph messages → internal messages (`AIMessage`, `ToolCallMessage`, etc.).
+2. Extract:
+
+   * `tool_call_names`: sequence of tools invoked
+   * `tool_call_args`: arguments used per tool call
+
+Produces:
+
+```
+ToolCallBenchmarkAgentOutput(
+    messages=[...],
+    tool_call_names=[...],
+    tool_call_args=[...]
+)
+```
+
+---
+
+# 5. Evaluating Results
+
+Evaluator: `ToolCallBenchmarkEvaluator`
+
+Metrics computed:
 
 ### 1. Tool Selection Accuracy (TSA)
 This measures **Recall**: The percentage of expected tools that the agent successfully identified.
@@ -55,3 +159,37 @@ $$
     * $|P|$ denotes the length of the list (number of steps).
     * $\text{lev}(a, b)$ is the Levenshtein Distance (minimum number of insertions, deletions, or substitutions to change $a$ to $b$).
     * *Note: If the max length is 0 (both empty), the score is 1.0.*
+
+Samples include:
+
+* Input text
+* Expected tool sequence
+* Actual output
+
+---
+
+# 6. Dashboard Integration
+
+Evaluation results are saved via:
+
+```
+DashboardEvaluationSaver
+```
+
+And appear under:
+
+```
+evaluations/Tool Call Benchmark_<run_id>.json
+```
+
+Ready for visualization in the dashboard.
+
+---
+
+# Summary
+
+This benchmark tests the core competencies of agentic LLMs in realistic tool-use scenarios, including:
+
+* Call selection
+* Tool argument grounding
+* Multi-step reasoning with external functions
