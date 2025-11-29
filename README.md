@@ -160,3 +160,10 @@ streamlit run dashboard_app.py
 
 Customize dashboard behavior through `dashboard/config.yaml`.
 
+---
+
+## Future developments
+
+- Implementing a BFCL benchmark (v1 for now, expand later)
+- Documentation
+- command line config customization
