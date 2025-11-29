@@ -17,6 +17,12 @@ with open(dataset_path, "r") as f:
 tries = {}
 tries_limit = 5
 
+def create_tool_response(success: bool, content: str) -> dict:
+    return {
+        "success": success,
+        "content": content
+    }
+
 def run_code(code: str, input_key: int) -> str:
     """
     Run a python code and compare against it's correct output (using the given input_key).
@@ -28,7 +34,10 @@ def run_code(code: str, input_key: int) -> str:
         code (str): The code to run.
         input_key (int): The input_key provided in your prompt.
     Returns:
-        str: The output of the code or traceback if any exception occures.
+        dict: {
+            success (bool): Indicates if the code is correct, i.e., gives the desired output,
+            content (str): If the code is correct, this is the output of the code, otherwise this is the error in the code.
+        }
     """
 
     # check if input key is valid if not return error
@@ -37,14 +46,14 @@ def run_code(code: str, input_key: int) -> str:
             input_key = int(input_key)
             correct_output = dataset[input_key]["correct_output"]
         except:
-            return "Error: Invalid input key passed, make sure you pass the same input key as given in the prompt"
+            return create_tool_response(False, "Error: Invalid input key passed, make sure you pass the same input key as given in the prompt")
 
     # check quota
     if input_key is not None:
         if input_key not in tries:
             tries[input_key] = 1
         elif tries[input_key] == 5:
-            return "Error: Maximum attempts made. You can not run any code now. Terminate."
+            return create_tool_response(False, "Error: Maximum attempts made. You can not run any code now. Terminate.")
         else:
             tries[input_key] += 1
 
@@ -62,20 +71,30 @@ def run_code(code: str, input_key: int) -> str:
             timeout=10 # Built-in timeout handling
         )
         
+        # Cleanup the file
+        if os.path.exists(temp_path):
+            os.remove(temp_path)
+        
         # Combine stdout and stderr for the agent
         if result.returncode == 0:
             output = result.stdout.rstrip()
-            if input_key is not None:
+            if input_key is not None:    
                 if output != correct_output:
-                    return f"Error: Wrong Output"
-            return result.stdout if result.stdout else "Success (No Output)"
+                    return create_tool_response(False, "Error: Wrong output.")
+            return create_tool_response(True, result.stdout if result.stdout else "")
         else:
-            return f"Error:\n{result.stderr}\n{result.stdout}"
+            return create_tool_response(False, f"Error:\n{result.stderr}\n{result.stdout}")
 
     except subprocess.TimeoutExpired:
-        return "Timeout: Code execution took longer than 10 seconds."
+        # Cleanup the file
+        if os.path.exists(temp_path):
+            os.remove(temp_path)
+        return create_tool_response(False, "Timeout: Code execution took longer than 10 seconds.")
     except Exception as e:
-        return f"System Execution Error: {str(e)}"
+        # Cleanup the file
+        if os.path.exists(temp_path):
+            os.remove(temp_path)
+        return create_tool_response(False, f"System Execution Error: {str(e)}")
     finally:
         # Cleanup the file
         if os.path.exists(temp_path):
