@@ -8,9 +8,13 @@ import json
 from dataclasses import dataclass
 import pandas as pd
 from pathlib import Path
-import matplotlib.pyplot as plt
 import streamlit as st
+import plotly.graph_objects as go
+import matplotlib.colors as mcolors
+import random
 
+
+COLORS = list(mcolors.CSS4_COLORS.keys())
 
 @dataclass
 class Evaluation:
@@ -124,7 +128,7 @@ def score_single_compiled_evaluation(ce: CompiledEvaluation) -> Dict:
         df[col] = df[col].fillna(0)
         
         # Scale from 0 to 1
-        df[col] = (df[col] - df[col].min()) / (df[col].max() - df[col].min())
+        df[col] = df[col] / df[col].max()
 
         # apply weight direction
         if w < 0:
@@ -194,7 +198,7 @@ def display_leaderboard(data, name_col="name", score_col="score"):
 
         # Create a container for each row
         with st.container(border=False, vertical_alignment="center"):
-            c1, c2, c3 = st.columns([1, 10, 1])
+            c1, c2, c3 = st.columns([1, 5, 1.5])
             
             # Column 1: Rank/Emoji
             with c1:
@@ -211,6 +215,33 @@ def display_leaderboard(data, name_col="name", score_col="score"):
                 with st.container(border=True, horizontal_alignment="center"):
                     st.markdown(f"{score:.2f}")
 
+def get_compiled_evaluation_spider_chart(ce: CompiledEvaluation) -> go.Figure:
+    df = ce.df
+    
+    categories = df.columns.tolist()
+    categories += [categories[0]]
+
+    fig = go.Figure()
+    for run_id, r in df.iterrows():
+        data = r.tolist()
+        data += [data[0]]
+
+        fig.add_trace(go.Scatterpolar(
+            r=data,
+            theta=categories,
+            fill='toself',
+            name=run_id,
+            fillcolor=random.choice(COLORS),
+            opacity=0.5,
+        ))
+
+    fig.update_layout(
+        showlegend=True, # Show the legend to distinguish traces
+        plot_bgcolor='rgba(0, 0, 200, 0.5)',  # Light grey with some transparency for the plot area
+    )
+
+    return fig
+
 def render_compiled_evaluation(ce: CompiledEvaluation):
     st.set_page_config(
         page_title=f"{ce.benchmark_name} | A.B.E.T.",
@@ -218,16 +249,22 @@ def render_compiled_evaluation(ce: CompiledEvaluation):
     )
 
     st.title(ce.benchmark_name)
-    st.markdown(ce.get_description())
+    st.html("Made with ❤️ by <a href='https://github.com/saksham1341/abet'><img src='https://img.shields.io/badge/saksham1341-gray.svg' alt='sakshamm1341'></a>")
     
-    with st.spinner():
-        leaderboard_df = get_compiled_evaluation_leaderboard(ce)
+    st.header("Description")
+    st.markdown(ce.get_description())
 
-    st.divider()
+    col1, col2 = st.columns([1, 1])
+    with col1:
+        st.header("Summary")
+        with st.spinner():
+            chart = get_compiled_evaluation_spider_chart(ce)
+        st.plotly_chart(chart)
+    with col2:
+        with st.spinner():
+            leaderboard_df = get_compiled_evaluation_leaderboard(ce)
 
-    display_leaderboard(leaderboard_df, "run_id", "score")
-
-    st.divider()
+        display_leaderboard(leaderboard_df, "run_id", "score")
 
     st.header("Evaluation Details")
 
@@ -252,17 +289,13 @@ def render_compiled_evaluation(ce: CompiledEvaluation):
             col = st.container(border=True)
             _render_metric_in_container(m, col)
     
-    st.divider()
-    st.subheader("Samples")
+    st.header("Samples")
     container_height = 300 if ce.samples else "content"
     with st.container(border=True, height=container_height):
         if ce.samples:
             st.write(ce.samples)
         else:
             st.write("No samples generated.")
-
-    st.divider()
-    st.markdown("Made with <3 by [saksham1341](https://github.com/saksham1341/abet)")
 
 def compiled_evaluation_page_generator(ce: CompiledEvaluation) -> Callable:
     def _():
@@ -278,23 +311,23 @@ def render_home_page():
 
     # --- Header Section ---
     st.title("A.B.E.T.")
-    st.subheader("Agent Benchmark and Evaluation Toolkit")
-    
+    st.html("Made with ❤️ by <a href='https://github.com/saksham1341/abet'><img src='https://img.shields.io/badge/saksham1341-gray.svg' alt='sakshamm1341'></a>")
     st.info("**Note:** This project is currently a work in progress.")
 
-    st.markdown("""
-    A.B.E.T. (Agent Benchmark & Evaluation Toolkit) is a lightweight, modular framework for **building, running, and analyzing LLM agent benchmarks**. It provides a complete pipeline—from dataset loading to agent execution, evaluation, and visualization—making it easy to design custom benchmarks or plug in prebuilt ones.
+    with st.container(border=True):
+        st.header("Agent Benchmark and Evaluation Toolkit")
+        st.markdown("""
+        This is a lightweight, modular framework for **building, running, and analyzing LLM agent benchmarks**. It provides a complete pipeline—from dataset loading to agent execution, evaluation, and visualization—making it easy to design custom benchmarks or plug in prebuilt ones.
 
-The goal is to offer a flexible, extensible environment for evaluating **agentic behavior**, **tool-call reliability**, **self-repair**, and other emerging LLM capabilities.
-    """)
-
-    st.divider()
+    The goal is to offer a flexible, extensible environment for evaluating **agentic behavior**, **tool-call reliability**, **self-repair**, and other emerging LLM capabilities.
+        """)
 
     # --- Project Structure Section ---
-    st.header("Project Structure")
-    st.markdown("The toolkit is organized into core components, benchmarks, and visualization tools.")
-    
-    st.code("""
+    with st.container(border=True):
+        st.header("Project Structure")
+        st.markdown("The toolkit is organized into core components, benchmarks, and visualization tools.")
+        
+        st.code("""
 |__ benchmark/                          # Benchmarks live here
 |   |__ utils.py                        # run() + shared benchmark utilities
 |   |__ init/                           # Template generator: benchmark.init
@@ -328,82 +361,80 @@ The goal is to offer a flexible, extensible environment for evaluating **agentic
 |
 |__ README.md                           # You are here""", language="text")
 
-    st.divider()
-
     # --- Program Flow Section ---
-    st.header("Program Flow")
-    
-    col1, col2 = st.columns([2, 1])
-    
-    with col1:
-        st.markdown("""
-        The system consists of several components that work together to evaluate an agent:
+    with st.container(border=True):
+        st.header("Program Flow")
+        
+        col1, col2 = st.columns([1.5, 1])
+        
+        with col1:
+            st.markdown("""
+            The system consists of several components that work together to evaluate an agent:
 
-        1. **AgentBuilder** constructs an agent from configuration.
-        2. **DatasetLoader** loads a dataset into a standardized Dataset object.
-        3. **Translator** converts raw agent outputs into normalized Message objects.
-        4. **AgentRunner** executes the agent across the dataset (sync, threaded, multiprocess, or async).
-        5. The dataset is populated with outputs and passed to an **Evaluator**.
-        6. The **Evaluator** produces an Evaluation object.
-        7. **EvaluationSaver** exports or stores the evaluation (JSON, dashboard results, etc.).
+            1. **AgentBuilder** constructs an agent from configuration.
+            2. **DatasetLoader** loads a dataset into a standardized Dataset object.
+            3. **Translator** converts raw agent outputs into normalized Message objects.
+            4. **AgentRunner** executes the agent across the dataset (sync, threaded, multiprocess, or async).
+            5. The dataset is populated with outputs and passed to an **Evaluator**.
+            6. The **Evaluator** produces an Evaluation object.
+            7. **EvaluationSaver** exports or stores the evaluation (JSON, dashboard results, etc.).
 
-        This architecture allows *any* benchmark to be defined through simple config files and modular Python components.
-        """)
-    
-    with col2:
-        st.caption("Program Flow Diagram")
-        st.image("flow.png", width='stretch')
-
-    st.divider()
+            This architecture allows *any* benchmark to be defined through simple config files and modular Python components.
+            """)
+        
+        with col2:
+            st.caption("Program Flow Diagram")
+            st.image("flow.png", width='stretch')
 
     # --- Usage Section ---
-    st.header("How to Run")
+    with st.container(border=True):
+        st.header("How to Run")
 
-    st.subheader("1. Setup")
-    st.markdown("Clone the repository and install dependencies:")
-    st.code("""
+        st.subheader("1. Setup")
+        st.markdown("Clone the repository and install dependencies:")
+        st.code("""
 git clone https://github.com/saksham1341/abet
 cd abet
 python -m pip install -r requirements.txt""", language="bash")
 
-    st.subheader("2. Running a Benchmark")
-    st.markdown("Execute a benchmark as a python module:")
-    st.code("python -m benchmark.tool_call", language="bash")
-    st.markdown("""
-    Benchmarks are configured via the `config.yaml` file inside their directory.
-    This includes:
+        st.subheader("2. Running a Benchmark")
+        st.markdown("Execute a benchmark as a python module:")
+        st.code("python -m benchmark.tool_call", language="bash")
+        st.markdown("""
+        Benchmarks are configured via the `config.yaml` file inside their directory.
+        This includes:
 
-    * agent builder class
-    * runner type (sync/async/threaded/process)
-    * evaluator class
-    * evaluation saver configuration
-    * dataset path
-    * translator class
-    """)
+        * agent builder class
+        * runner type (sync/async/threaded/process)
+        * evaluator class
+        * evaluation saver configuration
+        * dataset path
+        * translator class
+        """)
 
-    st.subheader("3. Dashboard")
-    st.markdown("""
-        If a benchmark uses
-    `core.evaluationsaver.DashboardEvaluationSaver`
-    and saves results under `evaluations/`, the Streamlit dashboard can visualize:
+        st.subheader("3. Dashboard")
+        st.markdown("""
+            If a benchmark uses
+        `core.evaluationsaver.DashboardEvaluationSaver`
+        and saves results under `evaluations/`, the Streamlit dashboard can visualize:
 
-    * model comparisons
-    * per-metric analysis
-    * leaderboard-style views
+        * model comparisons
+        * per-metric analysis
+        * leaderboard-style views
 
-    Minimal example snippet:
-    """)
-    st.code("""
+        Minimal example snippet:
+        """)
+        st.code("""
 evaluationsaver_class: core.evaluationsaver.DashboardEvaluationSaver
 evaluationsaver_config:
     benchmark_name: *benchmark_name
     run_id: *model_name
-    output_path: "evaluations/my_run.json" """, language="yaml")
-    st.markdown("Launch the dashboard:")
-    st.code("streamlit run dashboard_app.py", language="bash")
-
-    st.divider()
-    st.markdown("Made with <3 by [saksham1341](https://github.com/saksham1341/abet)")
+    metrics:
+        - metric_1
+        - metric_2
+    output_dir: evaluations" """, language="yaml")
+        st.markdown("Launch the dashboard:")
+        st.code("streamlit run dashboard_app.py", language="bash")
 
 def generate_pages(ces: List[CompiledEvaluation]) -> List[st.Page]:    
     return [

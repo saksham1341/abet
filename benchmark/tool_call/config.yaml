@@ -26,4 +26,8 @@ evaluationsaver_class: core.evaluationsaver.DashboardEvaluationSaver
 evaluationsaver_config:
   benchmark_name: *benchmark_name
   run_id: *model_name
-  output_dir: "evaluations"
+  metrics:
+    - tsa
+    - ahr
+    - tp
+  output_dir: evaluations

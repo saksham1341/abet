@@ -21,9 +21,12 @@ class DashboardEvaluationSaver(BaseEvaluationSaver):
 
         data["results"] = {}
         # only support integer and float values
-        for k, v in evaluation.__dict__.items():
+        for k in self.config["metrics"]:
+            v = getattr(evaluation, k, None)
             if isinstance(v, (int , float)):
                 data["results"][k] = v
+            else:
+                logging.error(f"Metric {k} invalid or not found in the evaluation, skipping.")
             
         data["samples"] = getattr(evaluation, "samples", None)
 
