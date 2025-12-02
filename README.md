@@ -77,9 +77,9 @@ This architecture allows *any* benchmark to be defined through simple config fil
 
 | Benchmark             | Focus                                                               | Details                   |
 | --------------------- | ------------------------------------------------------------------- | ------------------------ |
-| KMMLU Benchmark       | Korean-language knowledge & reasoning multiple-choice exam          | [KMMLU Benchmark's README.md](`benchmark/kmmlu/`)                 |
-| Tool Call Benchmark   | Agentic tool selection, argument correctness, trajectory similarity | [Tool Call Benchmark's README.md](`benchmark/tool_call/`)          |
-| Self-Repair Benchmark | Iterative debugging using `run_code`                                | [Self Repair Benchmark's README.md](`benchmark/self_repair/`) |
+| KMMLU Benchmark       | Korean-language knowledge & reasoning multiple-choice exam          | [KMMLU Benchmark's README.md](benchmark/kmmlu/)                 |
+| Tool Call Benchmark   | Agentic tool selection, argument correctness, trajectory similarity | [Tool Call Benchmark's README.md](benchmark/tool_call/)          |
+| Self-Repair Benchmark | Iterative debugging using `run_code`                                | [Self Repair Benchmark's README.md](benchmark/self_repair/) |
 
 Each benchmark has its **own README** inside its folder explaining the pipeline.
 
